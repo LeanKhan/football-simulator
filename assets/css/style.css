@@ -1,0 +1,47 @@
+/* Sports Blue #05F0FF
+
+*/
+
+body {
+  background-color: #101318 !important;
+}
+.results {
+  color: #01fd86 !important;
+}
+
+.purple-bg {
+  background-color: #3b0640 !important;
+}
+
+#match_details {
+  font-size: 16px;
+}
+
+#match_details_labels {
+  font-size: 14px;
+  text-align: center;
+  line-height: 25px;
+}
+
+#home_score,
+#away_score {
+  font-size: 65px;
+}
+.team-select {
+  height: 280px;
+}
+
+#score_divider span {
+  font-size: 60px;
+  font-weight: bold;
+  /* line-height: 10px; */
+}
+
+.pitch-bg {
+  background-image: url("file:///C:/done/football/assets/img/pitch1.jpg");
+  height: 600px;
+}
+/*#pitch-bg {
+  background-image: url("file:///C:/done/football/assets/img/pitch1.jpg");
+  height: 600px;
+}*/

@@ -1,0 +1,5 @@
+# Ignore stuff like...
+
+/node_modules
+/assets/img
+.vscode
