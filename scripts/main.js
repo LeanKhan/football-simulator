@@ -190,8 +190,8 @@ var controller = {
       }
     };
 
-    xhttp.open("GET", `"C:/xampp/htdocs/football-server/results.php"?q=fish`, true);
-    xhttp.send();
+    xhttp.open("POST", "/hey", true);
+    xhttp.send(JSON.stringify({ name: "Adamu" }));
   }
 };
 
@@ -218,7 +218,7 @@ var handlers = {
         let home_team_code = ev.target.value;
         home_team = Model[selected_league][ev.target.value];
         home_team_name_element.innerHTML = `${home_team_name}`;
-        home_team_icon.innerHTML = `<img src="./assets/img/${home_team_code}.png" height="150px" width="150px">`;
+        home_team_icon.innerHTML = `<img src="/img/${home_team_code}.png" height="150px" width="150px">`;
       });
     });
     // Away Team Selectors
@@ -228,7 +228,7 @@ var handlers = {
         let away_team_code = ev.target.value;
         away_team = Model[selected_league][ev.target.value];
         away_team_name_element.innerHTML = `${away_team_name}`;
-        away_team_icon.innerHTML = `<img src="./assets/img/${away_team_code}.png" height="150px" width="150px">`;
+        away_team_icon.innerHTML = `<img src="/img/${away_team_code}.png" height="150px" width="150px">`;
       });
     });
     simulate_button.addEventListener("click", ev => {
@@ -248,7 +248,7 @@ var handlers = {
     league_select.forEach((el, key) => {
       el.addEventListener("click", function(ev) {
         console.log("Here in league select!");
-        league_detail.innerHTML = `<img src="./assets/img/league${
+        league_detail.innerHTML = `<img src="/img/league${
           ev.target.value
         }_logo.png" height="72px">`;
         selected_league_text = ev.target.innerText;
