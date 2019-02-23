@@ -2,7 +2,9 @@ const express = require("express"),
   app = express(),
   path = require("path"),
   bodyparser = require("body-parser"),
-  router = express.Router();
+  router = express.Router(),
+  mongoose = require("mongoose"),
+  match_router = require("./controllers/matches");
 
 app.use(require("cors")());
 app.use(bodyparser.json());
@@ -16,17 +18,26 @@ app.use(bodyparser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "/scripts")));
 app.use(express.static(path.join(__dirname, "/assets")));
 
+// MongoDB Database Connection
+
+mongoose.connect("mongodb://localhost:27017/football-simulator", {
+  useNewUrlParser: true
+});
+
+mongoose.connection.on("error", () => {
+  console.log("Error in connection to database");
+});
+
+mongoose.connection.once("open", () => {
+  console.log("Connection to database successful! :)");
+});
+
 app.use("/", router);
+app.use("/match", match_router);
 
 router.get("/home", (req, res) => {
   // res.writeHead(200, { "Content-Type": "text/html" });
   res.sendFile(path.join(__dirname, "view/index.html"));
-});
-
-router.post("/new-match", (req, res) => {
-  let match_details = req.body.match;
-  
-  res.send("Match Successfully Created!");
 });
 
 app.use("*", (req, res) => {
