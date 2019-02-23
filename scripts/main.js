@@ -122,7 +122,6 @@ Match.prototype = {
     Probability Number<br>
     Attacking Form<br>
     Defensive Form<br>`;
-    console.log("Played at:", this.details.Time);
   },
   simulate() {
     this.startMatch();
@@ -194,7 +193,7 @@ var controller = {
 
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
-        document.getElementById("test").innerText = xhttp.responseText;
+        document.getElementById("notifications").innerText = xhttp.responseText;
       }
     };
 

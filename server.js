@@ -25,8 +25,8 @@ router.get("/home", (req, res) => {
 
 router.post("/new-match", (req, res) => {
   let match_details = req.body.match;
-  console.log(match_details);
-  res.send("Seen!");
+  
+  res.send("Match Successfully Created!");
 });
 
 app.use("*", (req, res) => {
