@@ -8,6 +8,11 @@ app.use(require("cors")());
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
 
+// tell express where our static files are. Images are in assets
+/**
+ * TODO:
+ * Move the /img and /scripts folder to /public
+ */
 app.use(express.static(path.join(__dirname, "/scripts")));
 app.use(express.static(path.join(__dirname, "/assets")));
 
@@ -18,10 +23,10 @@ router.get("/home", (req, res) => {
   res.sendFile(path.join(__dirname, "view/index.html"));
 });
 
-router.post("/hey", (req, res) => {
-  let name = req.body.name;
-  console.log("Hello " + name);
-  res.send("Seen!")
+router.post("/new-match", (req, res) => {
+  let match_details = req.body.match;
+  console.log(match_details);
+  res.send("Seen!");
 });
 
 app.use("*", (req, res) => {

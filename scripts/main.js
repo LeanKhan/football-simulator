@@ -31,9 +31,13 @@ function Match(teamA, teamB) {
     Season: "",
     Home: teamA.name,
     Away: teamB.name,
+    HomeScore: teamA.goals,
+    AwayScore: teamB.goals,
     Winner: "",
     Loser: "",
-    Draw: false
+    Draw: false,
+    Played: false,
+    Time: new Date()
   };
 }
 
@@ -48,7 +52,6 @@ Match.prototype = {
   startMatch() {
     this.calculateForm();
     this.match_title = this.teamA.name + " vs " + this.teamB.name;
-    this.time = new Date();
   },
   calculateChancesCreatedRate() {
     this.teamA.CCR =
@@ -98,6 +101,10 @@ Match.prototype = {
       this.details.Loser = this.teamA.name;
     }
 
+    this.details.Played = true;
+    this.details.HomeScore = this.teamA.goals;
+    this.details.AwayScore = this.teamB.goals;
+
     home_match_details = `<b>${this.teamA.CCR}</b><br>
     <b>${this.teamA.CCN}</b><br>
     <b>${this.teamA.probability_number}</b><br>
@@ -115,6 +122,7 @@ Match.prototype = {
     Probability Number<br>
     Attacking Form<br>
     Defensive Form<br>`;
+    console.log("Played at:", this.details.Time);
   },
   simulate() {
     this.startMatch();
@@ -190,8 +198,9 @@ var controller = {
       }
     };
 
-    xhttp.open("POST", "/hey", true);
-    xhttp.send(JSON.stringify({ name: "Adamu" }));
+    xhttp.open("POST", "/new-match", true);
+    xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhttp.send(JSON.stringify({ match: match.details }));
   }
 };
 
@@ -210,8 +219,9 @@ var handlers = {
     let away_team_name_element = document.getElementById("away_team_name");
     let home_team_icon = document.getElementById("home_icon");
     let away_team_icon = document.getElementById("away_icon");
-    let simulate_button = document.getElementById("simulate_button");
+    // let simulate_button = document.getElementById("simulate_button");
 
+    // Home team selectors
     home_team_select.forEach((el, key) => {
       el.addEventListener("click", ev => {
         let home_team_name = Model[selected_league][ev.target.value].name;
@@ -231,11 +241,13 @@ var handlers = {
         away_team_icon.innerHTML = `<img src="/img/${away_team_code}.png" height="150px" width="150px">`;
       });
     });
-    simulate_button.addEventListener("click", ev => {
-      var new_match = new Match(home_team, away_team);
-      new_match.details.League = selected_league_text;
-      view.showResults(new_match);
-    });
+    // // Simulate button
+    // simulate_button.addEventListener("click", ev => {
+    //   console.log("Simulate Button Clicked", ev);
+    //   var new_match = new Match(home_team, away_team);
+    //   new_match.details.League = selected_league_text;
+    //   view.showResults(new_match);
+    // });
   },
   setUpEventListeners() {
     // Select the league and teams
@@ -243,11 +255,11 @@ var handlers = {
     var away_team_selection_form = document.forms.away_team_select_form;
     let league_detail = document.getElementById("league_detail");
     let league_select = document.getElementsByName("league_select");
+    let simulate_button = document.getElementById("simulate_button");
 
     // Select league
     league_select.forEach((el, key) => {
       el.addEventListener("click", function(ev) {
-        console.log("Here in league select!");
         league_detail.innerHTML = `<img src="/img/league${
           ev.target.value
         }_logo.png" height="72px">`;
@@ -314,6 +326,12 @@ var handlers = {
             break;
         }
       });
+    });
+    simulate_button.addEventListener("click", ev => {
+      console.log("Simulate Button Clicked", ev);
+      var new_match = new Match(home_team, away_team);
+      new_match.details.League = selected_league_text;
+      view.showResults(new_match);
     });
   }
 };
