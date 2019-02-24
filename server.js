@@ -35,12 +35,12 @@ mongoose.connection.once("open", () => {
 app.use("/", router);
 app.use("/match", match_router);
 
-router.get("/home", (req, res) => {
+router.get("/", (req, res) => {
   // res.writeHead(200, { "Content-Type": "text/html" });
-  res.sendFile(path.join(__dirname, "view/index.html"));
+  res.sendFile(path.join(__dirname, "view/setup.html"));
 });
 
-app.use("*", (req, res) => {
+app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "view/404.html"));
 });
 

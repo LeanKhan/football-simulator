@@ -31,8 +31,8 @@ function Match(teamA, teamB) {
     Season: "",
     Home: teamA.name,
     Away: teamB.name,
-    HomeScore: teamA.goals,
-    AwayScore: teamB.goals,
+    HomeTeamScore: "",
+    AwayTeamScore: "",
     Winner: "",
     Loser: "",
     Draw: false,
@@ -101,9 +101,32 @@ Match.prototype = {
       this.details.Loser = this.teamA.name;
     }
 
+    this.details.HomeTeam = this.teamA.name;
+    this.details.AwayTeam = this.teamB.name;
+    this.details.Season = match_season;
     this.details.Played = true;
-    this.details.HomeScore = this.teamA.goals;
-    this.details.AwayScore = this.teamB.goals;
+    this.details.HomeTeamScore = this.teamA.goals;
+    this.details.AwayTeamScore = this.teamB.goals;
+
+    this.details.HomeTeamDetails = {
+      ChancesCreatedRate: this.teamA.CCR,
+      ChancesCreatedNumber: this.teamA.CCN,
+      ProbabilityNumber: this.teamA.probability_number,
+      DefensiveForm: this.teamA.defensive_form,
+      AttackingForm: this.teamA.attacking_form,
+      DefensiveClass: this.teamA.defensive_class,
+      AttackingClass: this.teamA.attacking_class
+    };
+
+    this.details.AwayTeamDetails = {
+      ChancesCreatedRate: this.teamB.CCR,
+      ChancesCreatedNumber: this.teamB.CCN,
+      ProbabilityNumber: this.teamB.probability_number,
+      DefensiveForm: this.teamB.defensive_form,
+      AttackingForm: this.teamB.attacking_form,
+      DefensiveClass: this.teamB.defensive_class,
+      AttackingClass: this.teamB.attacking_class
+    };
 
     home_match_details = `<b>${this.teamA.CCR}</b><br>
     <b>${this.teamA.CCN}</b><br>
@@ -161,18 +184,18 @@ var Model = {
 var view = {
   // Show teams
   showResults(match) {
-    let home_match_details_element = document.getElementById(
+    var home_match_details_element = document.getElementById(
       "home_match_details"
     );
-    let away_match_details_element = document.getElementById(
+    var away_match_details_element = document.getElementById(
       "away_match_details"
     );
-    let match_details_labels_element = document.getElementById(
+    var match_details_labels_element = document.getElementById(
       "match_details_labels"
     );
-    let home_score = document.getElementById("home_score");
-    let away_score = document.getElementById("away_score");
-    let score_divider = document.getElementById("score_divider");
+    var home_score = document.getElementById("home_score");
+    var away_score = document.getElementById("away_score");
+    var score_divider = document.getElementById("score_divider");
 
     match.simulate();
 
@@ -186,10 +209,10 @@ var view = {
     controller.sendToServer(match);
   }
 };
-
+var match_season;
 var controller = {
   sendToServer(match) {
-    var xhttp = new XMLHttpRequest();
+    let xhttp = new XMLHttpRequest();
 
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
@@ -200,6 +223,18 @@ var controller = {
     xhttp.open("POST", "/match/new", true);
     xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhttp.send(JSON.stringify({ match: match.details }));
+  },
+  getMatchTitle() {
+    let xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = () => {
+      if (xhttp.readyState == 4 && xhttp.status == 200) {
+        match_season = xhttp.responseText;
+      }
+    };
+
+    xhttp.open("GET", "/match/title", true);
+    xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhttp.send();
   }
 };
 
@@ -214,10 +249,10 @@ var handlers = {
   setUpTeamSelectors() {
     let home_team_select = document.getElementsByName("home");
     let away_team_select = document.getElementsByName("away");
-    let home_team_name_element = document.getElementById("home_team_name");
-    let away_team_name_element = document.getElementById("away_team_name");
-    let home_team_icon = document.getElementById("home_icon");
-    let away_team_icon = document.getElementById("away_icon");
+    var home_team_name_element = document.getElementById("home_team_name");
+    var away_team_name_element = document.getElementById("away_team_name");
+    var home_team_icon = document.getElementById("home_icon");
+    var away_team_icon = document.getElementById("away_icon");
     // let simulate_button = document.getElementById("simulate_button");
 
     // Home team selectors
@@ -242,12 +277,30 @@ var handlers = {
     });
   },
   setUpEventListeners() {
+    // Just for the clear button
+    var home_team_name_element = document.getElementById("home_team_name");
+    var away_team_name_element = document.getElementById("away_team_name");
+    var home_team_icon = document.getElementById("home_icon");
+    var away_team_icon = document.getElementById("away_icon");
+    var home_match_details_element = document.getElementById(
+      "home_match_details"
+    );
+    var away_match_details_element = document.getElementById(
+      "away_match_details"
+    );
+    var match_details_labels_element = document.getElementById(
+      "match_details_labels"
+    );
+    var home_score = document.getElementById("home_score");
+    var away_score = document.getElementById("away_score");
+    var score_divider = document.getElementById("score_divider");
     // Select the league and teams
     var home_team_selection_form = document.forms.home_team_select_form;
     var away_team_selection_form = document.forms.away_team_select_form;
-    let league_detail = document.getElementById("league_detail");
+    var league_detail = document.getElementById("league_detail");
     let league_select = document.getElementsByName("league_select");
     let simulate_button = document.getElementById("simulate_button");
+    let clear_button = document.getElementById("clear_button");
 
     // Select league
     league_select.forEach((el, key) => {
@@ -324,6 +377,19 @@ var handlers = {
       new_match.details.League = selected_league_text;
       view.showResults(new_match);
     });
+    clear_button.addEventListener("click", ev => {
+      league_detail.innerHTML = "";
+      home_match_details_element.innerHTML = "";
+      away_match_details_element.innerHTML = "";
+      match_details_labels_element.innerHTML = "";
+      away_team_name_element.innerHTML = "";
+      away_team_icon.innerHTML = "";
+      home_team_name_element.innerHTML = "";
+      home_team_icon.innerHTML = "";
+      home_score.innerHTML = "";
+      away_score.innerHTML = "";
+      score_divider.innerHTML = "";
+    });
   }
 };
 
@@ -332,3 +398,4 @@ var handlers = {
  * Next: Add UI and add clubs directly.
  */
 handlers.setUpEventListeners();
+controller.getMatchTitle();
