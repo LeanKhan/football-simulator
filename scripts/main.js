@@ -197,7 +197,7 @@ var controller = {
       }
     };
 
-    xhttp.open("POST", "/new-match", true);
+    xhttp.open("POST", "/match/new", true);
     xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhttp.send(JSON.stringify({ match: match.details }));
   }
@@ -240,13 +240,6 @@ var handlers = {
         away_team_icon.innerHTML = `<img src="/img/${away_team_code}.png" height="150px" width="150px">`;
       });
     });
-    // // Simulate button
-    // simulate_button.addEventListener("click", ev => {
-    //   console.log("Simulate Button Clicked", ev);
-    //   var new_match = new Match(home_team, away_team);
-    //   new_match.details.League = selected_league_text;
-    //   view.showResults(new_match);
-    // });
   },
   setUpEventListeners() {
     // Select the league and teams
@@ -327,7 +320,6 @@ var handlers = {
       });
     });
     simulate_button.addEventListener("click", ev => {
-      console.log("Simulate Button Clicked", ev);
       var new_match = new Match(home_team, away_team);
       new_match.details.League = selected_league_text;
       view.showResults(new_match);
