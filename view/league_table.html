@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>League Table</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      media="screen"
+      href="/css/bootstrap.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      media="screen"
+      href="/css/league_table.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      media="screen"
+      href="/css/style.css"
+    />
+  </head>
+  <body>
+    <!-- League Table :) -->
+
+    <div class="container container-fluid">
+      <div class="row">
+        <div class="col-4 card">
+          <h3>Please select league</h3>
+          <select id="league_select">
+            <option value="3" name="league_select"
+              >Bellean Football League III</option
+            >
+            <option value="2" name="league_select">Epson League II</option>
+            <option value="1" name="league_select">Epson League I</option>
+          </select>
+        </div>
+        <div class="col-4 card">
+          <span id="league_logo"></span>
+        </div>
+      </div>
+    </div>
+
+    <script src="/league_table.js"></script>
+  </body>
+</html>
