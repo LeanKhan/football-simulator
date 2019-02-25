@@ -1,6 +1,17 @@
 const data_router = require("express").Router(),
   path = require("path"),
-  Club = require("../models/club");
+  Club = require("../models/club"),
+  url = require("url"),
+  querystring = require("querystring"),
+  Season = require("../models/season");
+
+//   Season
+
+var season = {
+  season_title: "",
+  season_code: "",
+  league_code: ""
+};
 
 data_router.get("/table", (req, res) => {
   res.sendFile(path.join(__dirname, "../view/league_table.html"));
@@ -38,4 +49,39 @@ data_router.post("/new/club", (req, res) => {
   });
 });
 
+data_router.get("/new/season", (req, res) => {
+  var params = querystring.parse(url.parse(req.url).query);
+  let season_stuff = {
+    SeasonTitle: params["season_title"],
+    SeasonCode: params["season_code"],
+    LeagueCode: params["league_code"]
+  };
+  season.season_title = params["season_title"];
+  season.season_code = params["season_code"];
+  season.league_code = params["league_code"];
+  let _season = new Season(season_stuff);
+  _season.save((err, season) => {
+    if (!err) {
+      //   res.send("Season Created Successfully");
+      res.sendFile(path.join(__dirname, "../view/fixtures.html"));
+    } else {
+      res.send("Error in creating season :( ", err);
+    }
+  });
+});
+
+data_router.post("/competition-details", (req, res) => {
+  res.send(season);
+});
+
+data_router.get("/clubs/:league",(req,res)=>{
+    let league_code = req.params.league;
+    Club.find({LeagueCode: league_code},(err,clubs)=>{
+        if(!err){
+            res.send(clubs);
+        }else{
+            res.send("Error in getting clubs")
+        }
+    });
+})
 module.exports = data_router;

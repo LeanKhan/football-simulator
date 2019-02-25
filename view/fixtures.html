@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Fixtures</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      media="screen"
+      href="/css/bootstrap.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      media="screen"
+      href="/css/style.css"
+    />
+  </head>
+  <body>
+    <!-- Fixtures -->
+    <div class="container container-fluid">
+      <div class="row alert text-white">
+        <h5>Fixtures for</h5>
+        <h5 id="competition_name"></h5>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <table class="table table-hover fixtures text-white">
+            <thead class="thead-light">
+              <th scope="col">HOME</th>
+              <th scope="col"></th>
+              <th scope="col"></th>
+              <th scope="col" class="text-right">AWAY</th>
+            </thead>
+            <tbody id="fixtures_list">
+              <tr>
+                <td>BFC</td>
+                <td>2</td>
+                <td>1</td>
+                <td class="text-right">DR</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-12">
+          <ul id="list"></ul>
+        </div>
+      </div>
+    </div>
+    <script src="/fixtures.js"></script>
+  </body>
+</html>

@@ -229,19 +229,19 @@ var controller = {
     xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhttp.send(JSON.stringify({ match: match.details }));
   },
-  getSeasonDetails() {
-    let xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = () => {
-      if (xhttp.readyState == 4 && xhttp.status == 200) {
-        season = JSON.parse(xhttp.response);
-        // console.log(JSON.parse(xhttp.response));
-      }
-    };
+  // getSeasonDetails() {
+  //   let xhttp = new XMLHttpRequest();
+  //   xhttp.onreadystatechange = () => {
+  //     if (xhttp.readyState == 4 && xhttp.status == 200) {
+  //       season = JSON.parse(xhttp.response);
+  //       // console.log(JSON.parse(xhttp.response));
+  //     }
+  //   };
 
-    xhttp.open("GET", "/match/title", true);
-    xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhttp.send();
-  }
+  //   xhttp.open("GET", "/match/title", true);
+  //   xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+  //   xhttp.send();
+  // }
 };
 
 var selected_league;

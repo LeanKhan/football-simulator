@@ -4,7 +4,7 @@ var controller = {
   newSeason() {
     let main_setup = document.getElementById("main_setup");
     main_setup.innerHTML = `<h3>Please select league</h3>
-        <form class="form-control" action="/match/setup" method="GET">
+        <form class="form-control" action="/data/new/season" method="GET">
             <select id="league_select" class="form-control select" name="league_code">
                     <option value="L3" name="league_select"
                       >Bellean Football League III</option
