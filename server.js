@@ -4,7 +4,8 @@ const express = require("express"),
   bodyparser = require("body-parser"),
   router = express.Router(),
   mongoose = require("mongoose"),
-  match_router = require("./controllers/matches");
+  match_router = require("./controllers/matches"),
+  data_router = require("./controllers/data");
 
 app.use(require("cors")());
 app.use(bodyparser.json());
@@ -34,6 +35,7 @@ mongoose.connection.once("open", () => {
 
 app.use("/", router);
 app.use("/match", match_router);
+app.use("/data",data_router);
 
 router.get("/", (req, res) => {
   // res.writeHead(200, { "Content-Type": "text/html" });
