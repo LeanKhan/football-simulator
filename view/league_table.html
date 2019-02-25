@@ -28,8 +28,8 @@
     <!-- League Table :) -->
 
     <div class="container container-fluid">
-      <div class="row">
-        <div class="col-4 card">
+      <div class="row alert-secondary alert mb-3">
+        <div class="col-4">
           <h3>Please select league</h3>
           <select id="league_select">
             <option value="3" name="league_select"
@@ -39,8 +39,27 @@
             <option value="1" name="league_select">Epson League I</option>
           </select>
         </div>
-        <div class="col-4 card">
+        <div class="col-4">
           <span id="league_logo"></span>
+        </div>
+      </div>
+      <!-- New Row -->
+      <div class="row">
+        <div class="col-md-12 border-success">
+          <table class="table table-dark table-hover">
+            <thead class="thead-light">
+              <th scope="col" class="py-3">Pos.</th>
+              <th scope="col" class="py-3">Club</th>
+              <th scope="col" class="py-3">Played</th>
+              <th scope="col" class="py-3">W</th>
+              <th scope="col" class="py-3">L</th>
+              <th scope="col" class="py-3">D</th>
+              <th scope="col" class="py-3">GF</th>
+              <th scope="col" class="py-3">GA</th>
+              <th scope="col" class="py-3">GD</th>
+              <th scope="col" class="py-3">Pts.</th>
+            </thead>
+          </table>
         </div>
       </div>
     </div>

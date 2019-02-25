@@ -27,8 +27,10 @@ function Match(teamA, teamB) {
   };
   this.match_title = "";
   this.details = {
-    League: "",
-    Season: "",
+    SeasonString: "",
+    SeasonCode: "",
+    LeagueString: "",
+    LeagueCode: "",
     Home: teamA.name,
     Away: teamB.name,
     HomeTeamScore: "",
@@ -91,7 +93,8 @@ Match.prototype = {
   },
   report() {
     if (this.teamA.goals == this.teamB.goals) {
-      this.details.Winner = false;
+      this.details.Winner = null;
+      this.details.Loser = null;
       this.details.Draw = true;
     } else if (this.teamA.goals > this.teamB.goals) {
       this.details.Winner = this.teamA.name;
@@ -103,7 +106,8 @@ Match.prototype = {
 
     this.details.HomeTeam = this.teamA.name;
     this.details.AwayTeam = this.teamB.name;
-    this.details.Season = match_season;
+    this.details.SeasonString = season.season_title;
+    this.details.SeasonCode = season.season_code;
     this.details.Played = true;
     this.details.HomeTeamScore = this.teamA.goals;
     this.details.AwayTeamScore = this.teamB.goals;
@@ -209,7 +213,8 @@ var view = {
     controller.sendToServer(match);
   }
 };
-var match_season;
+// Object containign season.season_text and season.season_code
+var season;
 var controller = {
   sendToServer(match) {
     let xhttp = new XMLHttpRequest();
@@ -224,11 +229,12 @@ var controller = {
     xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhttp.send(JSON.stringify({ match: match.details }));
   },
-  getMatchTitle() {
+  getSeasonDetails() {
     let xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = () => {
       if (xhttp.readyState == 4 && xhttp.status == 200) {
-        match_season = xhttp.responseText;
+        season = JSON.parse(xhttp.response);
+        // console.log(JSON.parse(xhttp.response));
       }
     };
 
@@ -240,8 +246,11 @@ var controller = {
 
 var selected_league;
 var selected_league_text;
-var home_team;
-var away_team;
+var selected_league_code;
+var home_team_object;
+var away_team_object;
+var home_team_code;
+var away_team_code;
 
 // Select the home form
 
@@ -259,8 +268,8 @@ var handlers = {
     home_team_select.forEach((el, key) => {
       el.addEventListener("click", ev => {
         let home_team_name = Model[selected_league][ev.target.value].name;
-        let home_team_code = ev.target.value;
-        home_team = Model[selected_league][ev.target.value];
+        home_team_code = ev.target.value;
+        home_team_object = Model[selected_league][ev.target.value];
         home_team_name_element.innerHTML = `${home_team_name}`;
         home_team_icon.innerHTML = `<img src="/img/${home_team_code}.png" height="150px" width="150px">`;
       });
@@ -269,8 +278,8 @@ var handlers = {
     away_team_select.forEach((el, key) => {
       el.addEventListener("click", ev => {
         let away_team_name = Model[selected_league][ev.target.value].name;
-        let away_team_code = ev.target.value;
-        away_team = Model[selected_league][ev.target.value];
+        away_team_code = ev.target.value;
+        away_team_object = Model[selected_league][ev.target.value];
         away_team_name_element.innerHTML = `${away_team_name}`;
         away_team_icon.innerHTML = `<img src="/img/${away_team_code}.png" height="150px" width="150px">`;
       });
@@ -312,6 +321,7 @@ var handlers = {
         switch (key) {
           case 0:
             selected_league = "league_3";
+            selected_league_code = "L3";
             home_team_selection_form.innerHTML = `<input type=\"radio\" value=\"DR\" name=\"home\">Dagada Rangers F.C
           <br>
           <input type=\"radio\" value=\"RB\" name=\"home\">Rainbow Boys F.C
@@ -331,6 +341,7 @@ var handlers = {
             break;
           case 1:
             selected_league = "league_2";
+            selected_league_code = "L2";
             home_team_selection_form.innerHTML = ` <input type=\"radio\" value=\"BWH\" name=\"home\">Brickwall Hadad S.C
             <br>
             <input type=\"radio\" value=\"NSM\" name=\"home\">New Simeone Mirrors
@@ -348,6 +359,7 @@ var handlers = {
             break;
           case 2:
             selected_league = "league_1";
+            selected_league_code = "L1";
             home_team_selection_form.innerHTML = `<input type=\"radio\" value=\"BFC\" name=\"home\">Binatone F.C
             <br>
             <input type=\"radio\" value=\"GU\" name=\"home\">Guttersburg United A.F.C
@@ -373,8 +385,14 @@ var handlers = {
       });
     });
     simulate_button.addEventListener("click", ev => {
-      var new_match = new Match(home_team, away_team);
-      new_match.details.League = selected_league_text;
+      var new_match = new Match(home_team_object, away_team_object);
+      new_match.details.LeagueString = selected_league_text;
+      new_match.details.LeagueCode = selected_league_code;
+
+      new_match.details.SeasonString = season.season_title;
+      new_match.details.SeasonCode = season.season_code;
+      console.log(season.season_title);
+
       view.showResults(new_match);
     });
     clear_button.addEventListener("click", ev => {
@@ -398,4 +416,4 @@ var handlers = {
  * Next: Add UI and add clubs directly.
  */
 handlers.setUpEventListeners();
-controller.getMatchTitle();
+controller.getSeasonDetails();

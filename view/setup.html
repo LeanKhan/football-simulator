@@ -1,35 +1,71 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>Setup Match</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link
-    rel="stylesheet"
-    type="text/css"
-    media="screen"
-    href="/css/bootstrap.css"
-  />
-    <link rel="stylesheet" type="text/css" media="screen" href="/style.css">
+      rel="stylesheet"
+      type="text/css"
+      media="screen"
+      href="/css/bootstrap.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      media="screen"
+      href="/css/style.css"
+    />
     <!-- <script src="main.js"></script> -->
-</head>
-<body>
+  </head>
+  <body>
     <div class="container container-fluid">
-        <div class="row">
-            <div class="offset-3 col-6 card shadow-sm border-primary">
-                    <h3>Setup Game</h3>
+      <div class="row alert alert-secondary">
+        <button class="btn btn-primary" onclick="controller.newSeason()">
+          New Season
+        </button>
+        <button class="btn btn-primary" onclick="controller.newClub()">New Club</button>
+      </div>
+      <div class="row">
+        <div class="col-md-6 border-primary" id="main_setup">
+          <!-- For League Matches -->
+
+          <!-- <h3>Please select league</h3>
                     <form class="form-control" action="/match/setup" method="GET">
+                        <select id="league_select" class="form-control select">
+                                <option value="3" name="league_select"
+                                  >Bellean Football League III</option
+                                >
+                                <option value="2" name="league_select">Epson League II</option>
+                                <option value="1" name="league_select">Epson League I</option>
+                              </select>
                             <label for="match_title">Match/Season Title</label>
-                            <input name="match_title" type="match_title" placeholder="Enter the match title or season">
-                            <input type="submit" class="btn btn-primary-outline">Setup!</input>
+                            <input name="season_title" class="form-control" type="text" placeholder="Season Title e.g '17-24-Feb-19'">
+                            <input name="season_code" class="form-control" type="text" placeholder="Season code e.g 'S021'">
+                            <input type="submit" class="btn btn-primary-outline">New Season</input>
+                    </form> -->
+          <!-- Or to make a new Club -->
+                    <form class="form-control" action="/data/new/club" method="POST">
+                        <select id="league_select" class="form-control select">
+                                <option value="3" name="league_select"
+                                  >Bellean Football League III</option
+                                >
+                                <option value="2" name="league_select">Epson League II</option>
+                                <option value="1" name="league_select">Epson League I</option>
+                              </select>
+                            <label for="match_title">Match/Season Title</label>
+                            <input name="club_name" class="form-control" type="text" placeholder="Club name e.g 'Binatone F.C'">
+                            <input name="club_code" class="form-control" type="text" placeholder="Club code e.g 'BFC'">
+                            <input name="club_attacking_class" class="form-control" type="number" min="1" max="12" placeholder="Attacking Class">
+                            <input name="club_defensive_class" class="form_control" type="number" min="1" max="12" placeholder="Defensive Class">
+                            <input type="submit" class="btn btn-primary-outline">New Club</input>
                     </form>
-                   
-            </div>
         </div>
+      </div>
     </div>
 
     <!-- Script! -->
     <script src="setup.js"></script>
-</body>
+  </body>
 </html>

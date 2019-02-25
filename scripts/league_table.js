@@ -1,3 +1,6 @@
+// League Tables
+var selected_league = "";
+
 var handlers = {
   setUpEventListeners: () => {
     let league_selection_elements = document.getElementsByName("league_select");
@@ -8,7 +11,15 @@ var handlers = {
         league_logo_element.innerHTML = `<img src="/img/league${
           ev.target.value
         }_logo.png" height="72px">`;
+        console.log("Key", ev.target.value);
+        selected_league = ev.target.innerText;
+        // switch(key){
+        //   case 0:
+
+        // }
       });
     });
   }
 };
+
+handlers.setUpEventListeners();

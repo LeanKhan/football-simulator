@@ -5,11 +5,15 @@ const match_router = require("express").Router(),
   Match = require("../models/match");
 // mongoose = require("mongoose");
 
-var match_title;
+var season = {
+  season_title: "",
+  season_code: ""
+};
 
 match_router.get("/setup", (req, res) => {
   var params = querystring.parse(url.parse(req.url).query);
-  match_title = params["match_title"];
+  season.season_title = params["season_title"];
+  season.season_code = params["season_code"];
   // res.write(`This is the match title ${params["match_title"]}`);
   res.redirect("./play");
 
@@ -21,7 +25,7 @@ match_router.get("/play", (req, res) => {
 });
 
 match_router.get("/title", (req, res) => {
-  res.send(match_title);
+  res.send(season);
 });
 
 match_router.post("/new", (req, res) => {
