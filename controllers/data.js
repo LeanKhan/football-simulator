@@ -8,9 +8,10 @@ const data_router = require("express").Router(),
 //   Season
 
 var season = {
-  season_title: "",
-  season_code: "",
-  league_code: ""
+  SeasonTitle: "",
+  SeasonCode: "",
+  LeagueCode: "",
+  SeasonLongCode: ""
 };
 
 data_router.get("/table", (req, res) => {
@@ -52,16 +53,11 @@ data_router.post("/new/club", (req, res) => {
 // Endpoint to create new season
 data_router.get("/new/season", (req, res) => {
   var params = querystring.parse(url.parse(req.url).query);
-  let season_stuff = {
-    SeasonTitle: params["season_title"],
-    SeasonCode: params["season_code"],
-    LeagueCode: params["league_code"],
-    SeasonLongCode: params["league_code"] + params["season_code"]
-  };
-  season.season_title = params["season_title"];
-  season.season_code = params["season_code"];
-  season.league_code = params["league_code"];
-  let _season = new Season(season_stuff);
+  season.SeasonTitle = params["season_title"];
+  season.SeasonCode = params["season_code"];
+  season.LeagueCode = params["league_code"];
+  season.SeasonLongCode = params["league_code"] + ":" + params["season_code"];
+  let _season = new Season(season);
   _season.save((err, season) => {
     if (!err) {
       //   res.send("Season Created Successfully");
@@ -90,12 +86,12 @@ data_router.get("/clubs/:league", (req, res) => {
 
 // Endpoint to save the fixtures of a season
 data_router.post("/seasons/:season/fixtures", (req, res) => {
-  let season_code = req.params.season;
+  let season_long_code = req.params.season;
   let fixtures = req.body;
   // console.log("Fixtures", req.body);
   // res.send("Fixtures seen :)");
   Season.findOneAndUpdate(
-    { SeasonCode: season_code },
+    { SeasonLongCode: season_long_code },
     { Fixtures: fixtures },
     (err, doc) => {
       if (!err) {
@@ -107,4 +103,20 @@ data_router.post("/seasons/:season/fixtures", (req, res) => {
     }
   );
 });
+
+// Get Season Fixtures
+
+data_router.get("/seasons/:season/fixtures", (req, res) => {
+  let season_long_code = req.params.season;
+  Season.find({ SeasonLongCode: season_long_code }, (err, season) => {
+    if (!err) {
+      res.send(season.Fixtures);
+      // console.log(season.Fixtures);
+    } else {
+      res.send("Error in getting season fixtures", err);
+      console.log("Error in getting season fixtures ", err);
+    }
+  });
+});
+
 module.exports = data_router;

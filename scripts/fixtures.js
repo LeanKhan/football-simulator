@@ -14,9 +14,9 @@ var model = {
       if (xhttp.readyState == 4 && xhttp.status == 200) {
         season = JSON.parse(xhttp.response);
         console.log(xhttp.response);
-        league_code = season.league_code;
+        league_code = season.LeagueCode;
 
-        competition_name.innerText = season.league_code + season.season_code;
+        competition_name.innerText = season.SeasonLongCode;
         clubs = controller.getClubs(league_code);
       }
     };
@@ -25,39 +25,31 @@ var model = {
     xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhttp.send();
   },
-  goToPlay(match_code) {
-    // let xhttp = new XMLHttpRequest();
-    // // document.open(`/match/play/${match_code}`);
-
-    // xhttp.open("GET", `/match/play/${match_code}`);
-    // xhttp.setRequestHeader(
-    //   "Content-Type",
-    //   "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
-    // );
-    // xhttp.setRequestHeader(
-    //   "Accept",
-    //   "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
-    // );
-    // xhttp.send();
-    document.open("/match/play/LSO34");
-  },
   makeFixtures() {
-    let season_long_code = season;
     let fixture_list = document.getElementById("list");
+    // Weeks 1 - 3
     fixtures.push(new Match(clubs[1], clubs[2]).details);
     fixtures.push(new Match(clubs[0], clubs[3]).details);
     fixtures.push(new Match(clubs[2], clubs[0]).details);
     fixtures.push(new Match(clubs[3], clubs[1]).details);
     fixtures.push(new Match(clubs[1], clubs[0]).details);
     fixtures.push(new Match(clubs[2], clubs[3]).details);
+    // Weeks 4 - 6
+    fixtures.push(new Match(clubs[2], clubs[1]).details);
+    fixtures.push(new Match(clubs[3], clubs[0]).details);
+    fixtures.push(new Match(clubs[0], clubs[2]).details);
+    fixtures.push(new Match(clubs[1], clubs[3]).details);
+    fixtures.push(new Match(clubs[0], clubs[1]).details);
+    fixtures.push(new Match(clubs[3], clubs[2]).details);
 
     fixtures.forEach((fixture, i) => {
       let list_item = document.createElement("li");
       let link = document.createElement("a");
 
-      fixture.MatchCode = fixture.LeagueCode + fixture.SeasonCode + "M" + i;
+      fixture.MatchCode =
+        season.LeagueCode + ":" + season.SeasonCode + ":" + "M" + i;
       list_item.setAttribute("id", fixture.MatchCode);
-      link.setAttribute("href", `/match/play/${fixture.MatchCode}`);
+      link.setAttribute("href", `/match/play/${fixture.MatchCode}/${i}`);
       link.innerHTML = `${fixture.Home} vs ${fixture.Away}`;
       list_item.appendChild(link);
       fixture_list.appendChild(list_item);
@@ -72,7 +64,7 @@ var model = {
       }
     };
 
-    xhttp.open("POST", `/data/seasons/${season.season_code}/fixtures`, true);
+    xhttp.open("POST", `/data/seasons/${season.SeasonLongCode}/fixtures`, true);
     xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhttp.send(JSON.stringify(fixtures));
   }
@@ -96,6 +88,8 @@ function Match(teamA, teamB) {
     LeagueCode: season.league_code,
     Home: teamA.Name,
     Away: teamB.Name,
+    HomeClubCode: teamA.ClubCode,
+    AwayClubCode: teamB.ClubCode,
     HomeTeamScore: "",
     AwayTeamScore: "",
     Winner: "",

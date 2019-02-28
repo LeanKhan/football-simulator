@@ -3,6 +3,9 @@
 var home_match_details = "";
 var away_match_details = "";
 var match_details_labels = "";
+var fixtures = [];
+var match;
+var SeasonLongCode;
 
 function Team(name, attacking_class, defensive_class) {
   this.name = name;
@@ -202,7 +205,7 @@ var view = {
   }
 };
 // Object containing season.season_text and season.season_code
-var season;
+
 var controller = {
   sendToServer(match) {
     let xhttp = new XMLHttpRequest();
@@ -216,20 +219,37 @@ var controller = {
     xhttp.open("POST", "/match/new", true);
     xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhttp.send(JSON.stringify({ match: match.details }));
-  }
-  // getSeasonDetails() {
-  //   let xhttp = new XMLHttpRequest();
-  //   xhttp.onreadystatechange = () => {
-  //     if (xhttp.readyState == 4 && xhttp.status == 200) {
-  //       season = JSON.parse(xhttp.response);
-  //       // console.log(JSON.parse(xhttp.response));
-  //     }
-  //   };
+  },
+  getFixtureDetails() {
+    let xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = () => {
+      if (xhttp.readyState == 4 && xhttp.status == 200) {
+        match = JSON.parse(xhttp.response);
+        SeasonLongCode =
+          match.match_code.split(":")[0] + match.match_code.split(":")[1];
+        console.log(JSON.parse(xhttp.response));
+        controller.getFixtures();
+      }
+    };
 
-  //   xhttp.open("GET", "/match/title", true);
-  //   xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-  //   xhttp.send();
-  // }
+    xhttp.open("GET", "/match/get/matchcode", true);
+    xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhttp.send();
+  },
+  getFixtures() {
+    let xhttp = new XMLHttpRequest();
+
+    xhttp.onreadystatechange = () => {
+      if (xhttp.readyState == 4 && xhttp.status == 200) {
+        fixtures = JSON.parse(xhttp.response);
+        console.log("Fixtures", fixtures);
+      }
+    };
+
+    xhttp.open("GET", `/data/seasons/${SeasonLongCode}/fixtures`, true);
+    xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhttp.send();
+  }
 };
 
 var selected_league;
@@ -404,4 +424,4 @@ var handlers = {
  * Next: Add UI and add clubs directly.
  */
 handlers.setUpEventListeners();
-// controller.getSeasonDetails();
+controller.getFixtureDetails();
