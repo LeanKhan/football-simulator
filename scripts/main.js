@@ -4,8 +4,19 @@ var home_match_details = "";
 var away_match_details = "";
 var match_details_labels = "";
 var fixtures = [];
+var selected_fixture;
 var match;
 var SeasonLongCode;
+
+// -------- \\
+
+var selected_league;
+var selected_league_text;
+var selected_league_code;
+var home_team_object;
+var away_team_object;
+var home_team_code;
+var away_team_code;
 
 function Team(name, attacking_class, defensive_class) {
   this.name = name;
@@ -202,6 +213,19 @@ var view = {
     away_match_details_element.innerHTML = away_match_details;
 
     controller.sendToServer(match);
+  },
+  showTeams() {
+    var home_team_name_element = document.getElementById("home_team_name");
+    var away_team_name_element = document.getElementById("away_team_name");
+    var home_team_icon = document.getElementById("home_icon");
+    var away_team_icon = document.getElementById("away_icon");
+    let simulate_button = document.getElementById("simulate_button");
+
+    home_team_name_element.innerText = selected_fixture.Home;
+    away_team_name_element.innerText = selected_fixture.Away;
+
+    home_team_icon.innerHTML = `<img src="../assets/img/${home_team_code}.png" height="150px" width="150px">`;
+    away_team_icon.innerHTML = `<img src="../assets/img/${away_team_code}.png" height="150px" width="150px">`;
   }
 };
 // Object containing season.season_text and season.season_code
@@ -226,8 +250,8 @@ var controller = {
       if (xhttp.readyState == 4 && xhttp.status == 200) {
         match = JSON.parse(xhttp.response);
         SeasonLongCode =
-          match.match_code.split(":")[0] + match.match_code.split(":")[1];
-        console.log(JSON.parse(xhttp.response));
+          match.match_code.split(":")[0] + ":" + match.match_code.split(":")[1];
+        // console.log(JSON.parse(xhttp.response));
         controller.getFixtures();
       }
     };
@@ -242,7 +266,10 @@ var controller = {
     xhttp.onreadystatechange = () => {
       if (xhttp.readyState == 4 && xhttp.status == 200) {
         fixtures = JSON.parse(xhttp.response);
-        console.log("Fixtures", fixtures);
+        selected_fixture = fixtures[match.match_number];
+        home_team_code = selected_fixture.HomeClubCode;
+        away_team_code = selected_fixture.AwayClubCode;
+        view.showTeams();
       }
     };
 
@@ -251,14 +278,6 @@ var controller = {
     xhttp.send();
   }
 };
-
-var selected_league;
-var selected_league_text;
-var selected_league_code;
-var home_team_object;
-var away_team_object;
-var home_team_code;
-var away_team_code;
 
 // Select the home form
 

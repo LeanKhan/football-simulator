@@ -108,10 +108,9 @@ data_router.post("/seasons/:season/fixtures", (req, res) => {
 
 data_router.get("/seasons/:season/fixtures", (req, res) => {
   let season_long_code = req.params.season;
-  Season.find({ SeasonLongCode: season_long_code }, (err, season) => {
+  Season.findOne({ SeasonLongCode: season_long_code }, (err, season) => {
     if (!err) {
-      res.send(season.Fixtures);
-      // console.log(season.Fixtures);
+      res.send(JSON.stringify(season.Fixtures));
     } else {
       res.send("Error in getting season fixtures", err);
       console.log("Error in getting season fixtures ", err);
