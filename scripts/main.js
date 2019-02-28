@@ -7,7 +7,7 @@ var fixtures = [];
 var selected_fixture;
 var match;
 var SeasonLongCode;
-
+var new_match;
 // -------- \\
 
 var selected_league;
@@ -30,14 +30,14 @@ Team.prototype = {
 
 function Match(teamA, teamB) {
   this.teamA = {
-    name: teamA.Name,
-    attacking_class: teamA.AttackingClass,
-    defensive_class: teamA.DefensiveClass
+    name: teamA.name,
+    attacking_class: teamA.attacking_class,
+    defensive_class: teamA.defensive_class
   };
   this.teamB = {
-    name: teamB.Name,
-    attacking_class: teamB.AttackingClass,
-    defensive_class: teamB.DefensiveClass
+    name: teamB.name,
+    attacking_class: teamB.attacking_class,
+    defensive_class: teamB.defensive_class
   };
   this.details = {
     LeagueString: "",
@@ -107,9 +107,6 @@ Match.prototype = {
       this.details.Winner = this.teamB.name;
       this.details.Loser = this.teamA.name;
     }
-
-    this.details.HomeTeam = this.teamA.name;
-    this.details.AwayTeam = this.teamB.name;
     this.details.Played = true;
     this.details.HomeTeamScore = this.teamA.goals;
     this.details.AwayTeamScore = this.teamB.goals;
@@ -161,32 +158,6 @@ Match.prototype = {
   }
 };
 
-// /* Bellean League III */
-// const DR = new Team("Dagada Rangers F.C", 5, 5);
-// const RB = new Team("Rainbow Boys F.C", 6, 5);
-// const SPR = new Team("Southport Rangers A.C", 5, 4);
-// const IB = new Team("Ivania Boys Club", 7, 6);
-
-// /* National League II */
-// const BWH = new Team("Brickwall Hadad S.C", 8, 6);
-// const NSM = new Team("New Simeone Mirrors F.C", 8, 8);
-// const ZD = new Team("Zander Drangons A.C", 7, 6);
-// const RP = new Team("Royal Philamentia F.C", 9, 7);
-
-// /* Epson League I */
-// const BFC = new Team("Binatone F.C", 11, 10);
-// const GU = new Team("Guttersburg United A.F.C", 10, 9);
-// const LU = new Team("Lasena United F.C", 8, 11);
-// const LRU = new Team("Lonen Raid 01 United F.C", 9, 10);
-// const RT = new Team("Rising Thunders A.C", 11, 9);
-// const K94 = new Team("Khashiru 94 A.C", 9, 8);
-
-// var Model = {
-//   league_3: { DR: DR, RB: RB, SPR: SPR, IB: IB },
-//   league_2: { BWH: BWH, NSM: NSM, ZD: ZD, RP: RP },
-//   league_1: { BFC: BFC, GU: GU, LU: LU, LRU: LRU, RT: RT, K94: K94 }
-// };
-
 var view = {
   // Show teams
   showResults(match) {
@@ -212,25 +183,46 @@ var view = {
     home_match_details_element.innerHTML = home_match_details;
     away_match_details_element.innerHTML = away_match_details;
 
-    controller.sendToServer(match);
+    // controller.sendToServer(match);
   },
   showTeams() {
     var home_team_name_element = document.getElementById("home_team_name");
     var away_team_name_element = document.getElementById("away_team_name");
     var home_team_icon = document.getElementById("home_icon");
     var away_team_icon = document.getElementById("away_icon");
+    var league_detail = document.getElementById("league_detail");
+
     let simulate_button = document.getElementById("simulate_button");
 
     home_team_name_element.innerText = selected_fixture.Home;
     away_team_name_element.innerText = selected_fixture.Away;
 
-    home_team_icon.innerHTML = `<img src="../assets/img/${home_team_code}.png" height="150px" width="150px">`;
-    away_team_icon.innerHTML = `<img src="../assets/img/${away_team_code}.png" height="150px" width="150px">`;
+    home_team_icon.innerHTML = `<img src="/img/${home_team_code}.png" height="150px" width="150px">`;
+    away_team_icon.innerHTML = `<img src="/img/${away_team_code}.png" height="150px" width="150px">`;
+
+    // League Logo
+    league_detail.innerHTML = `<img src="/img/${
+      SeasonLongCode.split(":")[0]
+    }.png" height="72px">`;
   }
 };
 // Object containing season.season_text and season.season_code
 
 var controller = {
+  // getTeams(){
+  //   let xhttp = new XMLHttpRequest();
+
+  //   xhttp.onreadystatechange = ()=>{
+  //     if(xhttp.readyState == 4 && xhttp.status == 400){
+
+  //     }
+  //   }
+
+  //   xhttp.open("GET", "/match/new", true);
+  //   xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+  //   xhttp.send(JSON.stringify({ match: match.details }));
+
+  // },
   sendToServer(match) {
     let xhttp = new XMLHttpRequest();
 
@@ -282,36 +274,6 @@ var controller = {
 // Select the home form
 
 var handlers = {
-  // setUpTeamSelectors() {
-  //   let home_team_select = document.getElementsByName("home");
-  //   let away_team_select = document.getElementsByName("away");
-  //   var home_team_name_element = document.getElementById("home_team_name");
-  //   var away_team_name_element = document.getElementById("away_team_name");
-  //   var home_team_icon = document.getElementById("home_icon");
-  //   var away_team_icon = document.getElementById("away_icon");
-  //   // let simulate_button = document.getElementById("simulate_button");
-
-  //   // Home team selectors
-  //   home_team_select.forEach((el, key) => {
-  //     el.addEventListener("click", ev => {
-  //       let home_team_name = Model[selected_league][ev.target.value].name;
-  //       home_team_code = ev.target.value;
-  //       home_team_object = Model[selected_league][ev.target.value];
-  //       home_team_name_element.innerHTML = `${home_team_name}`;
-  //       home_team_icon.innerHTML = `<img src="/img/${home_team_code}.png" height="150px" width="150px">`;
-  //     });
-  //   });
-  //   // Away Team Selectors
-  //   away_team_select.forEach((el, key) => {
-  //     el.addEventListener("click", ev => {
-  //       let away_team_name = Model[selected_league][ev.target.value].name;
-  //       away_team_code = ev.target.value;
-  //       away_team_object = Model[selected_league][ev.target.value];
-  //       away_team_name_element.innerHTML = `${away_team_name}`;
-  //       away_team_icon.innerHTML = `<img src="/img/${away_team_code}.png" height="150px" width="150px">`;
-  //     });
-  //   });
-  // },
   setUpEventListeners() {
     // Just for the clear button
     var home_team_name_element = document.getElementById("home_team_name");
@@ -338,87 +300,18 @@ var handlers = {
     let simulate_button = document.getElementById("simulate_button");
     let clear_button = document.getElementById("clear_button");
 
-    // Select league
-    // league_select.forEach((el, key) => {
-    //   el.addEventListener("click", function(ev) {
-    //     league_detail.innerHTML = `<img src="/img/league${
-    //       ev.target.value
-    //     }_logo.png" height="72px">`;
-    //     selected_league_text = ev.target.innerText;
-    //     switch (key) {
-    //       case 0:
-    //         selected_league = "league_3";
-    //         selected_league_code = "L3";
-    //         home_team_selection_form.innerHTML = `<input type=\"radio\" value=\"DR\" name=\"home\">Dagada Rangers F.C
-    //       <br>
-    //       <input type=\"radio\" value=\"RB\" name=\"home\">Rainbow Boys F.C
-    //       <br>
-    //       <input type=\"radio\" value=\"SPR\" name=\"home\">Southport Rangers
-    //       A.C <br>
-    //       <input type=\"radio\" value=\"IB\" name=\"home\">Ivania Boys Club
-    //       <br>`;
-    //         away_team_selection_form.innerHTML = `<input type=\"radio\" value=\"DR\" name=\"away\">Dagada Rangers F.C
-    //       <br>
-    //       <input type=\"radio\" value=\"RB\" name=\"away\">Rainbow Boys F.C
-    //       <br>
-    //       <input type=\"radio\" value=\"SPR\" name=\"away\">Southport Rangers
-    //       A.C <br>
-    //       <input type=\"radio\" value=\"IB\" name=\"away\">Ivania Boys Club
-    //       <br>`;
-    //         break;
-    //       case 1:
-    //         selected_league = "league_2";
-    //         selected_league_code = "L2";
-    //         home_team_selection_form.innerHTML = ` <input type=\"radio\" value=\"BWH\" name=\"home\">Brickwall Hadad S.C
-    //         <br>
-    //         <input type=\"radio\" value=\"NSM\" name=\"home\">New Simeone Mirrors
-    //         F.C <br>
-    //         <input type=\"radio\" value=\"ZD\" name=\"home\">Zander Dragons <br>
-    //         <input type=\"radio\" value=\"RP\" name=\"home\">Royal Philamentia
-    //         <br>`;
-    //         away_team_selection_form.innerHTML = ` <input type=\"radio\" value=\"BWH\" name=\"away\">Brickwall Hadad S.C
-    //         <br>
-    //         <input type=\"radio\" value=\"NSM\" name=\"away\">New Simeone Mirrors
-    //         F.C <br>
-    //         <input type=\"radio\" value=\"ZD\" name=\"away\">Zander Dragons <br>
-    //         <input type=\"radio\" value=\"RP\" name=\"away\">Royal Philamentia
-    //         <br>`;
-    //         break;
-    //       case 2:
-    //         selected_league = "league_1";
-    //         selected_league_code = "L1";
-    //         home_team_selection_form.innerHTML = `<input type=\"radio\" value=\"BFC\" name=\"home\">Binatone F.C
-    //         <br>
-    //         <input type=\"radio\" value=\"GU\" name=\"home\">Guttersburg United A.F.C
-    //         <br>
-    //         <input type=\"radio\" value=\"LU\" name=\"home\">Lasena United S.C<br>
-    //         <input type=\"radio\" value=\"LRU\" name=\"home\">Lonen Raid 01 United F.C
-    //         <br>
-    //         <input type=\"radio\" value=\"RT\" name=\"home\">Rising Thunders A.C<br>
-    //         <input type=\"radio\" value=\"K94\" name=\"home\">Khashiru 94 A.C`;
-    //         away_team_selection_form.innerHTML = `<input type=\"radio\" value=\"BFC\" name=\"away\">Binatone F.C
-    //         <br>
-    //         <input type=\"radio\" value=\"GU\" name=\"away\">Guttersburg United A.F.C
-    //         <br>
-    //         <input type=\"radio\" value=\"LU\" name=\"away\">Lasena United S.C<br>
-    //         <input type=\"radio\" value=\"LRU\" name=\"away\">Lonen Raid 01 United F.C
-    //         <br>
-    //         <input type=\"radio\" value=\"RT\" name=\"away\">Rising Thunders A.C<br>
-    //         <input type=\"radio\" value=\"K94\" name=\"away\">Khashiru 94 A.C`;
-    //         break;
-    //       default:
-    //         break;
-    //     }
-    //   });
-    // });
     simulate_button.addEventListener("click", ev => {
-      var new_match = new Match(home_team_object, away_team_object);
-      new_match.details.LeagueString = selected_league_text;
-      new_match.details.LeagueCode = selected_league_code;
-
-      new_match.details.SeasonString = season.season_title;
-      new_match.details.SeasonCode = season.season_code;
-      console.log(season.season_title);
+      home_team_object = new Team(
+        selected_fixture.Home,
+        selected_fixture.HomeTeamAC,
+        selected_fixture.HomeTeamDC
+      );
+      away_team_object = new Team(
+        selected_fixture.Away,
+        selected_fixture.AwayTeamAC,
+        selected_fixture.AwayTeamDC
+      );
+      new_match = new Match(home_team_object, away_team_object);
 
       view.showResults(new_match);
     });
