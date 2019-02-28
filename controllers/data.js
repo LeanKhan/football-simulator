@@ -49,12 +49,14 @@ data_router.post("/new/club", (req, res) => {
   });
 });
 
+// Endpoint to create new season
 data_router.get("/new/season", (req, res) => {
   var params = querystring.parse(url.parse(req.url).query);
   let season_stuff = {
     SeasonTitle: params["season_title"],
     SeasonCode: params["season_code"],
-    LeagueCode: params["league_code"]
+    LeagueCode: params["league_code"],
+    SeasonLongCode: params["league_code"] + params["season_code"]
   };
   season.season_title = params["season_title"];
   season.season_code = params["season_code"];
@@ -74,14 +76,35 @@ data_router.post("/competition-details", (req, res) => {
   res.send(season);
 });
 
-data_router.get("/clubs/:league",(req,res)=>{
-    let league_code = req.params.league;
-    Club.find({LeagueCode: league_code},(err,clubs)=>{
-        if(!err){
-            res.send(clubs);
-        }else{
-            res.send("Error in getting clubs")
-        }
-    });
-})
+// Endpoitny to get all clubs in a particular league
+data_router.get("/clubs/:league", (req, res) => {
+  let league_code = req.params.league;
+  Club.find({ LeagueCode: league_code }, (err, clubs) => {
+    if (!err) {
+      res.send(clubs);
+    } else {
+      res.send("Error in getting clubs");
+    }
+  });
+});
+
+// Endpoint to save the fixtures of a season
+data_router.post("/seasons/:season/fixtures", (req, res) => {
+  let season_code = req.params.season;
+  let fixtures = req.body;
+  // console.log("Fixtures", req.body);
+  // res.send("Fixtures seen :)");
+  Season.findOneAndUpdate(
+    { SeasonCode: season_code },
+    { Fixtures: fixtures },
+    (err, doc) => {
+      if (!err) {
+        res.send("Fixtures saved successfully");
+      } else {
+        res.send("Error in saving fixtures", err);
+        console.error("Error in saving fixtures", err);
+      }
+    }
+  );
+});
 module.exports = data_router;

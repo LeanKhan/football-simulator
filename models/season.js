@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
 var SeasonSchema = new Schema({
+  SeasonLongCode: String,
   SeasonTitle: {
     type: String,
     required: true

@@ -3,6 +3,10 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const MatchSchema = new Schema({
+  MatchCode: {
+    type: String,
+    required: true
+  },
   SeasonString: String,
   SeasonCode: String,
   LeagueString: {
