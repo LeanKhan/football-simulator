@@ -161,7 +161,8 @@ Match.prototype = {
 
 var view = {
   // Show teams
-  showResults(match) {
+  displayResults(match) {
+    let simulate_button = document.getElementById("simulate_button");
     var home_match_details_element = document.getElementById(
       "home_match_details"
     );
@@ -174,15 +175,46 @@ var view = {
     var home_score = document.getElementById("home_score");
     var away_score = document.getElementById("away_score");
     var score_divider = document.getElementById("score_divider");
+    if (selected_fixture.Played) {
+      simulate_button.setAttribute("class", "btn btn-danger");
+      simulate_button.innerHTML = "Replay";
+
+      home_score.innerHTML = `<b>${match.HomeTeamScore}</b>`;
+      away_score.innerHTML = `<b>${match.AwayTeamScore}</b>`;
+      score_divider.innerHTML = "<span>-</span>";
+    } else {
+      home_score.innerHTML = `<b>${match.teamA.goals}</b>`;
+      away_score.innerHTML = `<b>${match.teamB.goals}</b>`;
+      score_divider.innerHTML = "<span>-</span>";
+      match_details_labels_element.innerHTML = match_details_labels;
+      home_match_details_element.innerHTML = home_match_details;
+      away_match_details_element.innerHTML = away_match_details;
+    }
+  },
+  showResults(match) {
+    // var home_match_details_element = document.getElementById(
+    //   "home_match_details"
+    // );
+    // var away_match_details_element = document.getElementById(
+    //   "away_match_details"
+    // );
+    // var match_details_labels_element = document.getElementById(
+    //   "match_details_labels"
+    // );
+    // var home_score = document.getElementById("home_score");
+    // var away_score = document.getElementById("away_score");
+    // var score_divider = document.getElementById("score_divider");
 
     match.simulate();
 
-    home_score.innerHTML = `<b>${match.teamA.goals}</b>`;
-    away_score.innerHTML = `<b>${match.teamB.goals}</b>`;
-    score_divider.innerHTML = "<span>-</span>";
-    match_details_labels_element.innerHTML = match_details_labels;
-    home_match_details_element.innerHTML = home_match_details;
-    away_match_details_element.innerHTML = away_match_details;
+    view.displayResults(match);
+
+    // home_score.innerHTML = `<b>${match.teamA.goals}</b>`;
+    // away_score.innerHTML = `<b>${match.teamB.goals}</b>`;
+    // score_divider.innerHTML = "<span>-</span>";
+    // match_details_labels_element.innerHTML = match_details_labels;
+    // home_match_details_element.innerHTML = home_match_details;
+    // away_match_details_element.innerHTML = away_match_details;
 
     controller.sendToServer(match);
   },
@@ -192,8 +224,6 @@ var view = {
     var home_team_icon = document.getElementById("home_icon");
     var away_team_icon = document.getElementById("away_icon");
     var league_detail = document.getElementById("league_detail");
-
-    let simulate_button = document.getElementById("simulate_button");
 
     home_team_name_element.innerText = selected_fixture.Home;
     away_team_name_element.innerText = selected_fixture.Away;
@@ -205,6 +235,9 @@ var view = {
     league_detail.innerHTML = `<img src="/img/${
       SeasonLongCode.split(":")[0]
     }.png" height="72px">`;
+    if (selected_fixture.Played) {
+      view.displayResults(selected_fixture);
+    }
   }
 };
 // Object containing season.season_text and season.season_code
@@ -286,27 +319,47 @@ var handlers = {
     var away_score = document.getElementById("away_score");
     var score_divider = document.getElementById("score_divider");
     // Select the league and teams
-    var home_team_selection_form = document.forms.home_team_select_form;
-    var away_team_selection_form = document.forms.away_team_select_form;
+
     var league_detail = document.getElementById("league_detail");
-    let league_select = document.getElementsByName("league_select");
+
     let simulate_button = document.getElementById("simulate_button");
     let clear_button = document.getElementById("clear_button");
 
     simulate_button.addEventListener("click", ev => {
-      home_team_object = new Team(
-        selected_fixture.Home,
-        selected_fixture.HomeTeamAC,
-        selected_fixture.HomeTeamDC
-      );
-      away_team_object = new Team(
-        selected_fixture.Away,
-        selected_fixture.AwayTeamAC,
-        selected_fixture.AwayTeamDC
-      );
-      new_match = new Match(home_team_object, away_team_object);
+      if (selected_fixture.Played) {
+        let c = confirm(`Are you sure you want to replay this match?\n
+        ${selected_fixture.Home} vs ${selected_fixture.Away}`);
+        if (c) {
+          selected_fixture.Played = false;
+          home_team_object = new Team(
+            selected_fixture.Home,
+            selected_fixture.HomeTeamAC,
+            selected_fixture.HomeTeamDC
+          );
+          away_team_object = new Team(
+            selected_fixture.Away,
+            selected_fixture.AwayTeamAC,
+            selected_fixture.AwayTeamDC
+          );
+          new_match = new Match(home_team_object, away_team_object);
+          selected_fixture.Played = false;
+          view.showResults(new_match);
+        }
+      } else {
+        home_team_object = new Team(
+          selected_fixture.Home,
+          selected_fixture.HomeTeamAC,
+          selected_fixture.HomeTeamDC
+        );
+        away_team_object = new Team(
+          selected_fixture.Away,
+          selected_fixture.AwayTeamAC,
+          selected_fixture.AwayTeamDC
+        );
+        new_match = new Match(home_team_object, away_team_object);
 
-      view.showResults(new_match);
+        view.showResults(new_match);
+      }
     });
     clear_button.addEventListener("click", ev => {
       league_detail.innerHTML = "";
