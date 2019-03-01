@@ -18,6 +18,9 @@ var SeasonSchema = new Schema({
   },
   Fixtures: {
     type: Array
+  },
+  Standings: {
+    type: Array
   }
 });
 

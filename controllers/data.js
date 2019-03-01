@@ -14,7 +14,7 @@ var season = {
   SeasonLongCode: ""
 };
 
-// Endpoint used to got to the tables view
+// Endpoint used to go to the tables view
 data_router.get("/table", (req, res) => {
   res.sendFile(path.join(__dirname, "../view/league_table.html"));
 });
@@ -130,6 +130,39 @@ data_router.get("/seasons/:season/fixtures", (req, res) => {
       console.log("Error in getting season fixtures ", err);
     }
   });
+});
+
+// Endpoint used to send all seasons of a particular league to the client
+
+data_router.get("/league/:league_code/seasons", (req, res) => {
+  let league_code = req.params.league_code;
+  Season.find({ LeagueCode: league_code }, (err, seasons) => {
+    if (!err) {
+      res.send(seasons);
+    } else {
+      res.send("ERROR!");
+      console.log("Error", err);
+    }
+  });
+});
+
+// Endpoint to save standings
+
+data_router.post("/seasons/:season/standings", (req, res) => {
+  let season_long_code = req.params.season;
+  let standings = req.body;
+  Season.findOneAndUpdate(
+    { SeasonLongCode: season_long_code },
+    { Standings: standings },
+    (err, doc) => {
+      if (!err) {
+        res.send("Standings saved successfully");
+      } else {
+        res.send("Error in saving standings", err);
+        console.error("Error in saving standings", err);
+      }
+    }
+  );
 });
 
 module.exports = data_router;

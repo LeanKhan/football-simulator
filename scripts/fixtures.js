@@ -47,83 +47,12 @@ var model = {
 
     view.displayFixtures(fixtures);
 
-    // fixtures.forEach((fixture, i) => {
-    //   let list_item = document.createElement("li");
-
-    //   let home_div = document.createElement("div");
-    //   let away_div = document.createElement("div");
-    //   let details_div = document.createElement("div");
-
-    //   let home_title = document.createElement("span");
-    //   let away_title = document.createElement("span");
-
-    //   let home_icon = document.createElement("img");
-    //   let away_icon = document.createElement("img");
-
-    //   let divider = document.createElement("div");
-    //   let link = document.createElement("a");
-
-    //   // Set MatchCode
-    //   fixture.MatchCode =
-    //     season.LeagueCode + ":" + season.SeasonCode + ":" + "M" + i;
-
-    //   list_item.setAttribute("id", fixture.MatchCode);
-    //   list_item.setAttribute("class", "mb-1");
-
-    //   link.setAttribute(
-    //     "class",
-    //     "list-group-item border-bottom-rounded d-flex justify-content-between"
-    //   );
-    //   divider.setAttribute("class", "card");
-    //   if (fixture.Played) {
-    //     divider.innerHTML = `<span class="text-secondary">View</span>`;
-    //   } else {
-    //     divider.innerHTML = `<span class="text-success">Play</span>`;
-    //   }
-
-    //   // Set club icons
-    //   home_icon.setAttribute("src", `/img/${fixture.HomeClubCode}.png`);
-    //   home_icon.setAttribute("height", "40px");
-    //   home_title.innerHTML = `<b>${fixture.Home}</b>`;
-
-    //   away_icon.setAttribute("src", `/img/${fixture.AwayClubCode}.png`);
-    //   away_icon.setAttribute("height", "40px");
-    //   away_title.innerHTML = `<b>${fixture.Away}</b>`;
-
-    //   // Append icons
-    //   home_div.appendChild(home_icon);
-    //   home_div.appendChild(home_title);
-
-    //   away_div.appendChild(away_icon);
-    //   away_div.appendChild(away_title);
-
-    //   // Append all items to link element
-    //   link.appendChild(home_div);
-    //   link.appendChild(divider);
-    //   link.appendChild(away_div);
-
-    //   // Set the link to the match
-    //   link.setAttribute("href", `/match/play/${fixture.MatchCode}/${i}`);
-
-    //   // Append link element to list item
-    //   list_item.appendChild(link);
-
-    //   // Set details in details_div element
-    //   details_div.innerHTML = `<p class="text-center m-0">Live at <span class="text-muted">${
-    //     fixture.Stadium
-    //   }</span></p>`;
-
-    //   list_item.appendChild(details_div);
-
-    //   // Append list item to list group
-    //   fixture_list.appendChild(list_item);
-    // });
-
     let xhttp = new XMLHttpRequest();
 
     xhttp.onreadystatechange = () => {
       if (xhttp.readyState == 4 && xhttp.status == 200) {
         console.log(xhttp.responseText);
+        model.makeStandings();
       }
     };
 
@@ -143,6 +72,39 @@ var model = {
     xhttp.open("GET", `/data/seasons/${season.SeasonLongCode}/fixtures`, true);
     xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhttp.send();
+  },
+  makeStandings() {
+    let standings = [];
+    clubs.forEach((club, i) => {
+      let standing = {};
+      standing.Team = club.Name;
+      standing.Points = 0;
+      standing.Played = 0;
+      standing.TeamCode = club.ClubCode;
+      standing.Wins = 0;
+      standing.Losses = 0;
+      standing.Draws = 0;
+      standing.GF = 0;
+      standing.GA = 0;
+      standing.GD = 0;
+
+      standings.push(standing);
+    });
+    let xhttp = new XMLHttpRequest();
+
+    xhttp.onreadystatechange = () => {
+      if (xhttp.readyState == 4 && xhttp.status == 200) {
+        console.log(xhttp.responseText);
+      }
+    };
+
+    xhttp.open(
+      "POST",
+      `/data/seasons/${season.SeasonLongCode}/standings`,
+      true
+    );
+    xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhttp.send(JSON.stringify(standings));
   }
 };
 function Match(teamA, teamB) {
