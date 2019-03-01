@@ -11,14 +11,14 @@ const MatchSchema = new Schema({
   SeasonCode: String,
   LeagueString: {
     type: String,
-    required: true
+    // required: true
   },
   LeagueCode: String,
-  HomeTeam: {
+  Home: {
     type: String,
     required: true
   },
-  AwayTeam: {
+  Away: {
     type: String,
     required: true
   },
@@ -58,7 +58,8 @@ const MatchSchema = new Schema({
     DefensiveClass: Number,
     AttackingClass: Number
   },
-  Time: Date
+  Time: Date,
+  Stadium: String
 });
 
 module.exports = Match = mongoose.model("Match", MatchSchema, "Matches");

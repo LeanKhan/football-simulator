@@ -183,7 +183,7 @@ var view = {
     home_match_details_element.innerHTML = home_match_details;
     away_match_details_element.innerHTML = away_match_details;
 
-    // controller.sendToServer(match);
+    controller.sendToServer(match);
   },
   showTeams() {
     var home_team_name_element = document.getElementById("home_team_name");
@@ -223,7 +223,7 @@ var controller = {
   //   xhttp.send(JSON.stringify({ match: match.details }));
 
   // },
-  sendToServer(match) {
+  sendToServer(match_object) {
     let xhttp = new XMLHttpRequest();
 
     xhttp.onreadystatechange = function() {
@@ -232,9 +232,15 @@ var controller = {
       }
     };
 
-    xhttp.open("POST", "/match/new", true);
+    xhttp.open(
+      "POST",
+      `/match/new?season=${SeasonLongCode}&match_number=${
+        match.match_number
+      }&match_code=${match.match_code}`,
+      true
+    );
     xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhttp.send(JSON.stringify({ match: match.details }));
+    xhttp.send(JSON.stringify({ match: match_object.details }));
   },
   getFixtureDetails() {
     let xhttp = new XMLHttpRequest();
