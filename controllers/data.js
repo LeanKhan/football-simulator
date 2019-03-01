@@ -73,7 +73,7 @@ data_router.get("/new/season", (req, res) => {
 
 data_router.get("/seasons/:season", (req, res) => {
   season.SeasonLongCode = req.params.season;
-  Season.find({ SeasonLongCode: season }, (err, season) => {
+  Season.find({ SeasonLongCode: season.SeasonLongCode }, (err, season) => {
     if (season) {
       res.sendFile(path.join(__dirname, "../view/fixtures.html"));
     } else {

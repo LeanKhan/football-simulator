@@ -192,30 +192,9 @@ var view = {
     }
   },
   showResults(match) {
-    // var home_match_details_element = document.getElementById(
-    //   "home_match_details"
-    // );
-    // var away_match_details_element = document.getElementById(
-    //   "away_match_details"
-    // );
-    // var match_details_labels_element = document.getElementById(
-    //   "match_details_labels"
-    // );
-    // var home_score = document.getElementById("home_score");
-    // var away_score = document.getElementById("away_score");
-    // var score_divider = document.getElementById("score_divider");
-
     match.simulate();
 
     view.displayResults(match);
-
-    // home_score.innerHTML = `<b>${match.teamA.goals}</b>`;
-    // away_score.innerHTML = `<b>${match.teamB.goals}</b>`;
-    // score_divider.innerHTML = "<span>-</span>";
-    // match_details_labels_element.innerHTML = match_details_labels;
-    // home_match_details_element.innerHTML = home_match_details;
-    // away_match_details_element.innerHTML = away_match_details;
-
     controller.sendToServer(match);
   },
   showTeams() {
@@ -263,14 +242,18 @@ var controller = {
     xhttp.send(JSON.stringify({ match: match_object.details }));
   },
   getFixtureDetails() {
+    let to_fixtures_link = document.getElementById("to_fixtures_link");
     let xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = () => {
       if (xhttp.readyState == 4 && xhttp.status == 200) {
         match = JSON.parse(xhttp.response);
         SeasonLongCode =
           match.match_code.split(":")[0] + ":" + match.match_code.split(":")[1];
-        // console.log(JSON.parse(xhttp.response));
         controller.getFixtures();
+        to_fixtures_link.setAttribute(
+          "href",
+          `/data/seasons/${SeasonLongCode}`
+        );
       }
     };
 

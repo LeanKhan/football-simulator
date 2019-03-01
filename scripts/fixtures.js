@@ -119,7 +119,6 @@ var model = {
     //   fixture_list.appendChild(list_item);
     // });
 
-    // console.log(fixtures);
     let xhttp = new XMLHttpRequest();
 
     xhttp.onreadystatechange = () => {
@@ -138,7 +137,6 @@ var model = {
     xhttp.onreadystatechange = () => {
       if (xhttp.readyState == 4 && xhttp.status == 200) {
         fixtures = JSON.parse(xhttp.response);
-        console.log(fixtures);
         view.displayFixtures(fixtures);
       }
     };
@@ -181,104 +179,6 @@ function Match(teamA, teamB) {
     Stadium: teamA.Stadium
   };
 }
-// Match.prototype = {
-//   constructor: Match,
-//   calculateForm() {
-//     this.teamA.attacking_form = Math.round(Math.random() * 11) + 1;
-//     this.teamA.defensive_form = Math.round(Math.random() * 11) + 1;
-//     this.teamB.attacking_form = Math.round(Math.random() * 11) + 1;
-//     this.teamB.defensive_form = Math.round(Math.random() * 11) + 1;
-//   },
-//   startMatch() {
-//     this.calculateForm();
-//     this.match_title = this.teamA.name + " vs " + this.teamB.name;
-//   },
-//   calculateChancesCreatedRate() {
-//     this.teamA.CCR =
-//       (this.teamA.attacking_class + this.teamA.attacking_form) /
-//       (this.teamB.defensive_class + this.teamB.defensive_form);
-//     //   ---------- //
-//     this.teamB.CCR =
-//       (this.teamB.attacking_class + this.teamB.attacking_form) /
-//       (this.teamA.defensive_class + this.teamA.defensive_form);
-//   },
-//   calculateChancesCreatedNumber() {
-//     this.teamA.CCN = Math.round(this.teamA.attacking_class * this.teamA.CCR);
-//     this.teamB.CCN = Math.round(this.teamB.attacking_class * this.teamB.CCR);
-//   },
-//   calculateGoalsScored() {
-//     this.teamA.probability_number = Math.round(Math.random() * 11) + 1;
-//     this.teamB.probability_number = Math.round(Math.random() * 11) + 1;
-//     //---//
-//     this.teamA.goals =
-//       ((this.teamA.probability_number - this.teamB.defensive_form) / 12) *
-//         this.teamA.CCN <
-//       1
-//         ? 0
-//         : Math.round(
-//             ((this.teamA.probability_number - this.teamB.defensive_form) / 12) *
-//               this.teamA.CCN
-//           );
-//     this.teamB.goals =
-//       ((this.teamB.probability_number - this.teamA.defensive_form) / 12) *
-//         this.teamB.CCN <
-//       1
-//         ? 0
-//         : Math.round(
-//             ((this.teamB.probability_number - this.teamA.defensive_form) / 12) *
-//               this.teamB.CCN
-//           );
-//   },
-//   report() {
-//     if (this.teamA.goals == this.teamB.goals) {
-//       this.details.Winner = null;
-//       this.details.Loser = null;
-//       this.details.Draw = true;
-//     } else if (this.teamA.goals > this.teamB.goals) {
-//       this.details.Winner = this.teamA.name;
-//       this.details.Loser = this.teamB.name;
-//     } else {
-//       this.details.Winner = this.teamB.name;
-//       this.details.Loser = this.teamA.name;
-//     }
-
-//     this.details.MatchCode = "";
-//     this.details.HomeTeam = this.teamA.name;
-//     this.details.AwayTeam = this.teamB.name;
-//     this.details.SeasonString = season.season_title;
-//     this.details.SeasonCode = season.season_code;
-//     this.details.Played = true;
-//     this.details.HomeTeamScore = this.teamA.goals;
-//     this.details.AwayTeamScore = this.teamB.goals;
-
-//     this.details.HomeTeamDetails = {
-//       ChancesCreatedRate: this.teamA.CCR,
-//       ChancesCreatedNumber: this.teamA.CCN,
-//       ProbabilityNumber: this.teamA.probability_number,
-//       DefensiveForm: this.teamA.defensive_form,
-//       AttackingForm: this.teamA.attacking_form,
-//       DefensiveClass: this.teamA.defensive_class,
-//       AttackingClass: this.teamA.attacking_class
-//     };
-
-//     this.details.AwayTeamDetails = {
-//       ChancesCreatedRate: this.teamB.CCR,
-//       ChancesCreatedNumber: this.teamB.CCN,
-//       ProbabilityNumber: this.teamB.probability_number,
-//       DefensiveForm: this.teamB.defensive_form,
-//       AttackingForm: this.teamB.attacking_form,
-//       DefensiveClass: this.teamB.defensive_class,
-//       AttackingClass: this.teamB.attacking_class
-//     };
-//   },
-//   simulate() {
-//     this.startMatch();
-//     this.calculateChancesCreatedRate();
-//     this.calculateChancesCreatedNumber();
-//     this.calculateGoalsScored();
-//     this.report();
-//   }
-// };
 
 var view = {
   displayFixtures(fixtures) {
