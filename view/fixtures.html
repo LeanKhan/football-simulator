@@ -28,29 +28,23 @@
       <div class="row">
         <div class="col-md-12">
           <button class="btn" onclick="model.makeFixtures()">
-            Display fixtures!
+            Make fixtures!
           </button>
-          <button class="btn btn-primary" onclick="model.goToPlay('L3S021M0')">Go to</button>
-          <table class="table table-hover fixtures text-white">
-            <thead class="thead-light">
-              <th scope="col">HOME</th>
-              <th scope="col"></th>
-              <th scope="col"></th>
-              <th scope="col" class="text-right">AWAY</th>
-            </thead>
-            <tbody id="fixtures_list">
-              <tr>
-                <td>BFC</td>
-                <td>2</td>
-                <td>1</td>
-                <td class="text-right">DR</td>
-              </tr>
-            </tbody>
-          </table>
+          <button class="btn" onclick="model.displayFixtures()">
+              Display fixtures!
+            </button>
         </div>
+
+        <!-- Fixtures list -->
         <div class="col-12">
-          <ul id="list"></ul>
+          <ul id="list" class="list"></ul>
         </div>
+
+        <!-- <ul>
+          <li>
+            <a class="d-flex"><span><img src=""></span><span>vs</span><span><img src=""></span></a>
+          </li>
+        </ul> -->
       </div>
     </div>
     <script src="/fixtures.js"></script>

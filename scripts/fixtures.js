@@ -21,41 +21,105 @@ var model = {
       }
     };
 
-    xhttp.open("POST", "/data/competition-details", true);
+    xhttp.open("GET", "/data/competition-details", true);
     xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhttp.send();
   },
   makeFixtures() {
-    let fixture_list = document.getElementById("list");
-    // Weeks 1 - 3
-    fixtures.push(new Match(clubs[1], clubs[2]).details);
-    fixtures.push(new Match(clubs[0], clubs[3]).details);
-    fixtures.push(new Match(clubs[2], clubs[0]).details);
-    fixtures.push(new Match(clubs[3], clubs[1]).details);
-    fixtures.push(new Match(clubs[1], clubs[0]).details);
-    fixtures.push(new Match(clubs[2], clubs[3]).details);
-    // Weeks 4 - 6
-    fixtures.push(new Match(clubs[2], clubs[1]).details);
-    fixtures.push(new Match(clubs[3], clubs[0]).details);
-    fixtures.push(new Match(clubs[0], clubs[2]).details);
-    fixtures.push(new Match(clubs[1], clubs[3]).details);
-    fixtures.push(new Match(clubs[0], clubs[1]).details);
-    fixtures.push(new Match(clubs[3], clubs[2]).details);
+    if (season.LeagueCode == "L1") {
+    } else {
+      // League 3 and 2 Fixtures
+      // Weeks 1 - 3
+      fixtures.push(new Match(clubs[1], clubs[2]).details);
+      fixtures.push(new Match(clubs[0], clubs[3]).details);
+      fixtures.push(new Match(clubs[2], clubs[0]).details);
+      fixtures.push(new Match(clubs[3], clubs[1]).details);
+      fixtures.push(new Match(clubs[1], clubs[0]).details);
+      fixtures.push(new Match(clubs[2], clubs[3]).details);
+      // Weeks 4 - 6
+      fixtures.push(new Match(clubs[2], clubs[1]).details);
+      fixtures.push(new Match(clubs[3], clubs[0]).details);
+      fixtures.push(new Match(clubs[0], clubs[2]).details);
+      fixtures.push(new Match(clubs[1], clubs[3]).details);
+      fixtures.push(new Match(clubs[0], clubs[1]).details);
+      fixtures.push(new Match(clubs[3], clubs[2]).details);
+    }
 
-    fixtures.forEach((fixture, i) => {
-      let list_item = document.createElement("li");
-      let link = document.createElement("a");
+    view.displayFixtures(fixtures);
 
-      fixture.MatchCode =
-        season.LeagueCode + ":" + season.SeasonCode + ":" + "M" + i;
-      list_item.setAttribute("id", fixture.MatchCode);
-      link.setAttribute("href", `/match/play/${fixture.MatchCode}/${i}`);
-      link.innerHTML = `${fixture.Home} vs ${fixture.Away}`;
-      list_item.appendChild(link);
-      fixture_list.appendChild(list_item);
-    });
+    // fixtures.forEach((fixture, i) => {
+    //   let list_item = document.createElement("li");
 
-    console.log(fixtures);
+    //   let home_div = document.createElement("div");
+    //   let away_div = document.createElement("div");
+    //   let details_div = document.createElement("div");
+
+    //   let home_title = document.createElement("span");
+    //   let away_title = document.createElement("span");
+
+    //   let home_icon = document.createElement("img");
+    //   let away_icon = document.createElement("img");
+
+    //   let divider = document.createElement("div");
+    //   let link = document.createElement("a");
+
+    //   // Set MatchCode
+    //   fixture.MatchCode =
+    //     season.LeagueCode + ":" + season.SeasonCode + ":" + "M" + i;
+
+    //   list_item.setAttribute("id", fixture.MatchCode);
+    //   list_item.setAttribute("class", "mb-1");
+
+    //   link.setAttribute(
+    //     "class",
+    //     "list-group-item border-bottom-rounded d-flex justify-content-between"
+    //   );
+    //   divider.setAttribute("class", "card");
+    //   if (fixture.Played) {
+    //     divider.innerHTML = `<span class="text-secondary">View</span>`;
+    //   } else {
+    //     divider.innerHTML = `<span class="text-success">Play</span>`;
+    //   }
+
+    //   // Set club icons
+    //   home_icon.setAttribute("src", `/img/${fixture.HomeClubCode}.png`);
+    //   home_icon.setAttribute("height", "40px");
+    //   home_title.innerHTML = `<b>${fixture.Home}</b>`;
+
+    //   away_icon.setAttribute("src", `/img/${fixture.AwayClubCode}.png`);
+    //   away_icon.setAttribute("height", "40px");
+    //   away_title.innerHTML = `<b>${fixture.Away}</b>`;
+
+    //   // Append icons
+    //   home_div.appendChild(home_icon);
+    //   home_div.appendChild(home_title);
+
+    //   away_div.appendChild(away_icon);
+    //   away_div.appendChild(away_title);
+
+    //   // Append all items to link element
+    //   link.appendChild(home_div);
+    //   link.appendChild(divider);
+    //   link.appendChild(away_div);
+
+    //   // Set the link to the match
+    //   link.setAttribute("href", `/match/play/${fixture.MatchCode}/${i}`);
+
+    //   // Append link element to list item
+    //   list_item.appendChild(link);
+
+    //   // Set details in details_div element
+    //   details_div.innerHTML = `<p class="text-center m-0">Live at <span class="text-muted">${
+    //     fixture.Stadium
+    //   }</span></p>`;
+
+    //   list_item.appendChild(details_div);
+
+    //   // Append list item to list group
+    //   fixture_list.appendChild(list_item);
+    // });
+
+    // console.log(fixtures);
     let xhttp = new XMLHttpRequest();
 
     xhttp.onreadystatechange = () => {
@@ -67,6 +131,20 @@ var model = {
     xhttp.open("POST", `/data/seasons/${season.SeasonLongCode}/fixtures`, true);
     xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhttp.send(JSON.stringify(fixtures));
+  },
+  displayFixtures() {
+    let xhttp = new XMLHttpRequest();
+
+    xhttp.onreadystatechange = () => {
+      if (xhttp.readyState == 4 && xhttp.status == 200) {
+        fixtures = JSON.parse(xhttp.response);
+        console.log(fixtures);
+        view.displayFixtures(fixtures);
+      }
+    };
+    xhttp.open("GET", `/data/seasons/${season.SeasonLongCode}/fixtures`, true);
+    xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhttp.send();
   }
 };
 function Match(teamA, teamB) {
@@ -103,114 +181,189 @@ function Match(teamA, teamB) {
     Stadium: teamA.Stadium
   };
 }
-Match.prototype = {
-  constructor: Match,
-  calculateForm() {
-    this.teamA.attacking_form = Math.round(Math.random() * 11) + 1;
-    this.teamA.defensive_form = Math.round(Math.random() * 11) + 1;
-    this.teamB.attacking_form = Math.round(Math.random() * 11) + 1;
-    this.teamB.defensive_form = Math.round(Math.random() * 11) + 1;
-  },
-  startMatch() {
-    this.calculateForm();
-    this.match_title = this.teamA.name + " vs " + this.teamB.name;
-  },
-  calculateChancesCreatedRate() {
-    this.teamA.CCR =
-      (this.teamA.attacking_class + this.teamA.attacking_form) /
-      (this.teamB.defensive_class + this.teamB.defensive_form);
-    //   ---------- //
-    this.teamB.CCR =
-      (this.teamB.attacking_class + this.teamB.attacking_form) /
-      (this.teamA.defensive_class + this.teamA.defensive_form);
-  },
-  calculateChancesCreatedNumber() {
-    this.teamA.CCN = Math.round(this.teamA.attacking_class * this.teamA.CCR);
-    this.teamB.CCN = Math.round(this.teamB.attacking_class * this.teamB.CCR);
-  },
-  calculateGoalsScored() {
-    this.teamA.probability_number = Math.round(Math.random() * 11) + 1;
-    this.teamB.probability_number = Math.round(Math.random() * 11) + 1;
-    //---//
-    this.teamA.goals =
-      ((this.teamA.probability_number - this.teamB.defensive_form) / 12) *
-        this.teamA.CCN <
-      1
-        ? 0
-        : Math.round(
-            ((this.teamA.probability_number - this.teamB.defensive_form) / 12) *
-              this.teamA.CCN
-          );
-    this.teamB.goals =
-      ((this.teamB.probability_number - this.teamA.defensive_form) / 12) *
-        this.teamB.CCN <
-      1
-        ? 0
-        : Math.round(
-            ((this.teamB.probability_number - this.teamA.defensive_form) / 12) *
-              this.teamB.CCN
-          );
-  },
-  report() {
-    if (this.teamA.goals == this.teamB.goals) {
-      this.details.Winner = null;
-      this.details.Loser = null;
-      this.details.Draw = true;
-    } else if (this.teamA.goals > this.teamB.goals) {
-      this.details.Winner = this.teamA.name;
-      this.details.Loser = this.teamB.name;
-    } else {
-      this.details.Winner = this.teamB.name;
-      this.details.Loser = this.teamA.name;
-    }
+// Match.prototype = {
+//   constructor: Match,
+//   calculateForm() {
+//     this.teamA.attacking_form = Math.round(Math.random() * 11) + 1;
+//     this.teamA.defensive_form = Math.round(Math.random() * 11) + 1;
+//     this.teamB.attacking_form = Math.round(Math.random() * 11) + 1;
+//     this.teamB.defensive_form = Math.round(Math.random() * 11) + 1;
+//   },
+//   startMatch() {
+//     this.calculateForm();
+//     this.match_title = this.teamA.name + " vs " + this.teamB.name;
+//   },
+//   calculateChancesCreatedRate() {
+//     this.teamA.CCR =
+//       (this.teamA.attacking_class + this.teamA.attacking_form) /
+//       (this.teamB.defensive_class + this.teamB.defensive_form);
+//     //   ---------- //
+//     this.teamB.CCR =
+//       (this.teamB.attacking_class + this.teamB.attacking_form) /
+//       (this.teamA.defensive_class + this.teamA.defensive_form);
+//   },
+//   calculateChancesCreatedNumber() {
+//     this.teamA.CCN = Math.round(this.teamA.attacking_class * this.teamA.CCR);
+//     this.teamB.CCN = Math.round(this.teamB.attacking_class * this.teamB.CCR);
+//   },
+//   calculateGoalsScored() {
+//     this.teamA.probability_number = Math.round(Math.random() * 11) + 1;
+//     this.teamB.probability_number = Math.round(Math.random() * 11) + 1;
+//     //---//
+//     this.teamA.goals =
+//       ((this.teamA.probability_number - this.teamB.defensive_form) / 12) *
+//         this.teamA.CCN <
+//       1
+//         ? 0
+//         : Math.round(
+//             ((this.teamA.probability_number - this.teamB.defensive_form) / 12) *
+//               this.teamA.CCN
+//           );
+//     this.teamB.goals =
+//       ((this.teamB.probability_number - this.teamA.defensive_form) / 12) *
+//         this.teamB.CCN <
+//       1
+//         ? 0
+//         : Math.round(
+//             ((this.teamB.probability_number - this.teamA.defensive_form) / 12) *
+//               this.teamB.CCN
+//           );
+//   },
+//   report() {
+//     if (this.teamA.goals == this.teamB.goals) {
+//       this.details.Winner = null;
+//       this.details.Loser = null;
+//       this.details.Draw = true;
+//     } else if (this.teamA.goals > this.teamB.goals) {
+//       this.details.Winner = this.teamA.name;
+//       this.details.Loser = this.teamB.name;
+//     } else {
+//       this.details.Winner = this.teamB.name;
+//       this.details.Loser = this.teamA.name;
+//     }
 
-    this.details.MatchCode = "";
-    this.details.HomeTeam = this.teamA.name;
-    this.details.AwayTeam = this.teamB.name;
-    this.details.SeasonString = season.season_title;
-    this.details.SeasonCode = season.season_code;
-    this.details.Played = true;
-    this.details.HomeTeamScore = this.teamA.goals;
-    this.details.AwayTeamScore = this.teamB.goals;
+//     this.details.MatchCode = "";
+//     this.details.HomeTeam = this.teamA.name;
+//     this.details.AwayTeam = this.teamB.name;
+//     this.details.SeasonString = season.season_title;
+//     this.details.SeasonCode = season.season_code;
+//     this.details.Played = true;
+//     this.details.HomeTeamScore = this.teamA.goals;
+//     this.details.AwayTeamScore = this.teamB.goals;
 
-    this.details.HomeTeamDetails = {
-      ChancesCreatedRate: this.teamA.CCR,
-      ChancesCreatedNumber: this.teamA.CCN,
-      ProbabilityNumber: this.teamA.probability_number,
-      DefensiveForm: this.teamA.defensive_form,
-      AttackingForm: this.teamA.attacking_form,
-      DefensiveClass: this.teamA.defensive_class,
-      AttackingClass: this.teamA.attacking_class
-    };
+//     this.details.HomeTeamDetails = {
+//       ChancesCreatedRate: this.teamA.CCR,
+//       ChancesCreatedNumber: this.teamA.CCN,
+//       ProbabilityNumber: this.teamA.probability_number,
+//       DefensiveForm: this.teamA.defensive_form,
+//       AttackingForm: this.teamA.attacking_form,
+//       DefensiveClass: this.teamA.defensive_class,
+//       AttackingClass: this.teamA.attacking_class
+//     };
 
-    this.details.AwayTeamDetails = {
-      ChancesCreatedRate: this.teamB.CCR,
-      ChancesCreatedNumber: this.teamB.CCN,
-      ProbabilityNumber: this.teamB.probability_number,
-      DefensiveForm: this.teamB.defensive_form,
-      AttackingForm: this.teamB.attacking_form,
-      DefensiveClass: this.teamB.defensive_class,
-      AttackingClass: this.teamB.attacking_class
-    };
-  },
-  simulate() {
-    this.startMatch();
-    this.calculateChancesCreatedRate();
-    this.calculateChancesCreatedNumber();
-    this.calculateGoalsScored();
-    this.report();
-  }
-};
+//     this.details.AwayTeamDetails = {
+//       ChancesCreatedRate: this.teamB.CCR,
+//       ChancesCreatedNumber: this.teamB.CCN,
+//       ProbabilityNumber: this.teamB.probability_number,
+//       DefensiveForm: this.teamB.defensive_form,
+//       AttackingForm: this.teamB.attacking_form,
+//       DefensiveClass: this.teamB.defensive_class,
+//       AttackingClass: this.teamB.attacking_class
+//     };
+//   },
+//   simulate() {
+//     this.startMatch();
+//     this.calculateChancesCreatedRate();
+//     this.calculateChancesCreatedNumber();
+//     this.calculateGoalsScored();
+//     this.report();
+//   }
+// };
 
 var view = {
-  displayFixtures() {
-    let xhttp = new XMLHttpRequest();
+  displayFixtures(fixtures) {
+    let fixture_list = document.getElementById("list");
+    fixture_list.innerHTML = "";
 
-    xhttp.open("POST", "/match/play");
+    fixture_list.setAttribute("class", "list-group");
+    fixtures.forEach((fixture, i) => {
+      let list_item = document.createElement("li");
+
+      let home_div = document.createElement("div");
+      let away_div = document.createElement("div");
+      let details_div = document.createElement("div");
+
+      let home_title = document.createElement("span");
+      let away_title = document.createElement("span");
+
+      let home_icon = document.createElement("img");
+      let away_icon = document.createElement("img");
+
+      let divider = document.createElement("div");
+      let link = document.createElement("a");
+
+      // Set MatchCode
+      fixture.MatchCode =
+        season.LeagueCode + ":" + season.SeasonCode + ":" + "M" + i;
+
+      list_item.setAttribute("id", fixture.MatchCode);
+      list_item.setAttribute("class", "mb-1");
+
+      link.setAttribute(
+        "class",
+        "list-group-item border-bottom-rounded d-flex justify-content-between h5 py-1 px-2"
+      );
+      divider.setAttribute("class", "h4");
+      if (fixture.Played) {
+        divider.innerHTML = `<span class="text-secondary">${
+          fixture.HomeTeamScore
+        } : ${fixture.AwayTeamScore}</span>`;
+      } else {
+        divider.innerHTML = `<span class="text-success">Play</span>`;
+      }
+
+      // Set club icons
+      home_icon.setAttribute("src", `/img/${fixture.HomeClubCode}.png`);
+      home_icon.setAttribute("height", "40px");
+      home_title.innerHTML = `<b>${fixture.Home}</b>`;
+
+      away_icon.setAttribute("src", `/img/${fixture.AwayClubCode}.png`);
+      away_icon.setAttribute("height", "40px");
+      away_title.innerHTML = `<b>${fixture.Away}</b>`;
+
+      // Append icons
+      home_div.appendChild(home_icon);
+      home_div.appendChild(home_title);
+
+      away_div.appendChild(away_icon);
+      away_div.appendChild(away_title);
+
+      // Append all items to link element
+      link.appendChild(home_div);
+      link.appendChild(divider);
+      link.appendChild(away_div);
+
+      // Set the link to the match
+      link.setAttribute("href", `/match/play/${fixture.MatchCode}/${i}`);
+
+      // Append link element to list item
+      list_item.appendChild(link);
+
+      // Set details in details_div element
+      details_div.innerHTML = `<p class="text-center m-0">Live at <span class="text-muted">${
+        fixture.Stadium
+      }</span></p>`;
+
+      list_item.appendChild(details_div);
+
+      // Append list item to list group
+      fixture_list.appendChild(list_item);
+    });
   }
 };
 
 var controller = {
+  // Get the list of the clubs in the selected league
   getClubs(league) {
     let xhttp = new XMLHttpRequest();
 

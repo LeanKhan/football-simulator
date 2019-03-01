@@ -108,6 +108,7 @@ Match.prototype = {
       this.details.Loser = this.teamA.name;
     }
     this.details.Played = true;
+    this.details.Time = new Date();
     this.details.HomeTeamScore = this.teamA.goals;
     this.details.AwayTeamScore = this.teamB.goals;
 
@@ -209,20 +210,6 @@ var view = {
 // Object containing season.season_text and season.season_code
 
 var controller = {
-  // getTeams(){
-  //   let xhttp = new XMLHttpRequest();
-
-  //   xhttp.onreadystatechange = ()=>{
-  //     if(xhttp.readyState == 4 && xhttp.status == 400){
-
-  //     }
-  //   }
-
-  //   xhttp.open("GET", "/match/new", true);
-  //   xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-  //   xhttp.send(JSON.stringify({ match: match.details }));
-
-  // },
   sendToServer(match_object) {
     let xhttp = new XMLHttpRequest();
 

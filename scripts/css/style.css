@@ -27,9 +27,6 @@ body {
 #away_score {
   font-size: 65px;
 }
-.team-select {
-  height: 300px;
-}
 
 #score_divider span {
   font-size: 60px;
@@ -47,4 +44,12 @@ body {
 }*/
 .fixtures {
   font-size: 16px;
+}
+
+.list {
+  list-style: none;
+}
+
+#list a:hover {
+  color: goldenrod;
 }

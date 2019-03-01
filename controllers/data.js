@@ -14,6 +14,7 @@ var season = {
   SeasonLongCode: ""
 };
 
+// Endpoint used to got to the tables view
 data_router.get("/table", (req, res) => {
   res.sendFile(path.join(__dirname, "../view/league_table.html"));
 });
@@ -30,6 +31,7 @@ data_router.post("/new/club", (req, res) => {
     Manager: req.body.manager_name,
     Stadium: req.body.stadium_name
   };
+  // Save the club object in the Club collection.
   let _club = new Club(club);
   _club.save((err, club) => {
     if (!err) {
@@ -60,7 +62,6 @@ data_router.get("/new/season", (req, res) => {
   let _season = new Season(season);
   _season.save((err, season) => {
     if (!err) {
-      //   res.send("Season Created Successfully");
       res.sendFile(path.join(__dirname, "../view/fixtures.html"));
     } else {
       res.send("Error in creating season :( ", err);
@@ -68,11 +69,25 @@ data_router.get("/new/season", (req, res) => {
   });
 });
 
-data_router.post("/competition-details", (req, res) => {
+// Endpoint used to access season
+
+data_router.get("/seasons/:season", (req, res) => {
+  season.SeasonLongCode = req.params.season;
+  Season.find({ SeasonLongCode: season }, (err, season) => {
+    if (season) {
+      res.sendFile(path.join(__dirname, "../view/fixtures.html"));
+    } else {
+      res.send(path.join(__dirname, "../view/404.html"));
+    }
+  });
+});
+
+// Endpoint used to send competition details to the client.
+data_router.get("/competition-details", (req, res) => {
   res.send(season);
 });
 
-// Endpoitny to get all clubs in a particular league
+// Endpoint to get all clubs in a particular league
 data_router.get("/clubs/:league", (req, res) => {
   let league_code = req.params.league;
   Club.find({ LeagueCode: league_code }, (err, clubs) => {
@@ -104,8 +119,7 @@ data_router.post("/seasons/:season/fixtures", (req, res) => {
   );
 });
 
-// Get Season Fixtures
-
+// Enpoint used to send all fixtures of a particular season to the client
 data_router.get("/seasons/:season/fixtures", (req, res) => {
   let season_long_code = req.params.season;
   Season.findOne({ SeasonLongCode: season_long_code }, (err, season) => {

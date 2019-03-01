@@ -26,46 +26,25 @@
         <span class="h2">Football Simulator</span>
         <span class="alert alert-success" id="notifications"></span>
         <span id="league_detail"></span>
-        <ul>
-          <li><a href="/data/table">Tables</a></li>
+        <ul class="list">
+          <li><a  href="/data/table">Tables</a></li>
           <li><a href="#">Teams</a></li>
+          <li><a  href="/">Back to fixtures</a>
+          </li>
         </ul>
       </div>
       <div class="row mx-1" class="pitch-bg" id="pitch-bg">
-        <div class="col-md-4 alert alert-secondary card team-select">
-          <!-- Select League -->
-          <select id="league_select" onclick="handlers.setUpTeamSelectors()">
-            <option value="3" name="league_select"
-              >Bellean Football League III</option
-            >
-            <option value="2" name="league_select">Epson League II</option>
-            <option value="1" name="league_select">Epson League I</option>
-          </select>
-          <!-- Select Home and Away Team -->
-          <table id="table">
-            <thead>
-              <th><b>Home</b></th>
-              <th><b>Away</b></th>
-            </thead>
-            <tbody>
-              <tr>
-                <td><form name="home_team_select_form"></form></td>
-                <!-- Away team selection -->
-                <td><form name="away_team_select_form"></form></td>
-              </tr>
-            </tbody>
-          </table>
-          <button class="btn btn-primary" id="simulate_button">Play!</button>
+        <div class="col-md-12 d-flex">
+          <button class="btn btn-primary mx-2" id="simulate_button">Play!</button>
           <button class="btn btn-secondary my-1" id="clear_button">Clear</button>
         </div>
 
-        <div class="col-md-8 results mt-2">
+        <div class="col-md-12 results mt-2">
           <!-- League Detail -->
           <div class="row text-center">
             <div class="col-5">
               <p class="h5" id="home_team_name"></p>
               <span id="home_icon"></span>
-              <!-- <span id="home_score" class="h1 m-2"></span> -->
             </div>
             <div class="col-2 d-flex justify-content-center align-items-center">
               <span id="home_score" class="m-2"></span>
@@ -84,13 +63,10 @@
             <div class="col" id="match_details_labels"></div>
             <div class="col text-center" id="away_match_details"></div>
           </div>
+
         </div>
       </div>
     </div>
     <script src="/main.js"></script>
-
-    <!-- PHP Part -->
-
-    <!-- -------- -->
   </body>
 </html>
