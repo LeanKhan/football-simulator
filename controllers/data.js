@@ -133,7 +133,6 @@ data_router.get("/seasons/:season/fixtures", (req, res) => {
 });
 
 // Endpoint used to send all seasons of a particular league to the client
-
 data_router.get("/league/:league_code/seasons", (req, res) => {
   let league_code = req.params.league_code;
   Season.find({ LeagueCode: league_code }, (err, seasons) => {
@@ -147,7 +146,6 @@ data_router.get("/league/:league_code/seasons", (req, res) => {
 });
 
 // Endpoint to save standings
-
 data_router.post("/seasons/:season/standings", (req, res) => {
   let season_long_code = req.params.season;
   let standings = req.body;

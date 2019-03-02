@@ -52,6 +52,7 @@ match_router.post("/new", (req, res) => {
         fixture.AwayTeamDetails = updated_match_details.AwayTeamDetails;
         fixture.Time = updated_match_details.Time;
         saveMatch(fixture);
+        updateStandings(fixture, season_code);
       } else {
         res.send("Error!");
         console.log("Error in updating fixture", err);
@@ -90,6 +91,8 @@ function updateMatch(fixture) {
     {
       HomeTeamScore: fixture.HomeTeamScore,
       AwayTeamScore: fixture.AwayTeamScore,
+      Winner: fixture.Winner,
+      Loser: fixture.Loser,
       HomeTeamDetails: fixture.HomeTeamDetails,
       AwayTeamDetails: fixture.AwayTeamDetails,
       Time: fixture.Time
@@ -102,6 +105,81 @@ function updateMatch(fixture) {
       }
     }
   );
+}
+
+// Function to update the League Standings
+function updateStandings(fixture, season_code) {
+  let standings;
+  Season.findOne({ SeasonLongCode: season_code }, (err, season_object) => {
+    let home_team_index = season_object.Standings.findIndex((team, i, arr) => {
+      return team.TeamCode == fixture.HomeClubCode;
+    });
+    let away_team_index = season_object.Standings.findIndex((team, i, arr) => {
+      return team.TeamCode == fixture.AwayClubCode;
+    });
+
+    let home_standings = season_object.Standings[home_team_index];
+    let away_standings = season_object.Standings[away_team_index];
+
+    // update Played
+    home_standings.Played++;
+    away_standings.Played++;
+
+    // update GF, GA, GD
+    home_standings.GF += fixture.HomeTeamScore;
+    home_standings.GA += fixture.AwayTeamScore;
+    home_standings.GD = home_standings.GF - home_standings.GA;
+
+    away_standings.GF += fixture.AwayTeamScore;
+    away_standings.GA += fixture.HomeTeamScore;
+    away_standings.GD = away_standings.GF - away_standings.GA;
+
+    // update points
+    if (fixture.Draw) {
+      home_standings.Points = home_standings.Points + 1;
+      home_standings.Draws = home_standings.Draws + 1;
+      away_standings.Points = away_standings.Points + 1;
+      away_standings.Draws = away_standings.Draws + 1;
+    } else if (home_standings.Team == fixture.Winner) {
+      home_standings.Wins = home_standings.Wins + 1;
+      home_standings.Points = home_standings.Points + 3;
+      away_standings.Losses = away_standings.Losses + 1;
+    } else {
+      away_standings.Wins = away_standings.Wins + 1;
+      away_standings.Points = away_standings.Points + 3;
+      home_standings.Losses = home_standings.Losses + 1;
+    }
+
+    // Find and update Home teams standings and Away team standings
+    Season.update(
+      {
+        SeasonLongCode: season_code,
+        "Standings.TeamCode": {
+          $in: [fixture.HomeClubCode]
+        }
+      },
+      {
+        $set: { "Standings.$": home_standings }
+      },
+      (err, raw) => {
+        // console.log("From update Standings", raw);
+      }
+    );
+    Season.update(
+      {
+        SeasonLongCode: season_code,
+        "Standings.TeamCode": {
+          $in: [fixture.AwayClubCode]
+        }
+      },
+      {
+        $set: { "Standings.$": away_standings }
+      },
+      (err, raw) => {
+        // console.log("From update Standings", raw);
+      }
+    );
+  });
 }
 
 // Endpoint used to save the match details before a match is played.
