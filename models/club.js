@@ -21,7 +21,10 @@ var ClubSchema = new Schema({
   },
   Manager: String,
   Stadium: String,
-  LeagueCode: String
+  LeagueCode: String,
+  Players: {
+    type: Array
+  }
 });
 
 module.exports = Club = mongoose.model("Club", ClubSchema, "Clubs");
