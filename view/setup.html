@@ -15,103 +15,83 @@
       rel="stylesheet"
       type="text/css"
       media="screen"
-      href="/css/style.css"
+      href="/css/fresh.css"
     />
     <!-- <script src="main.js"></script> -->
   </head>
   <body>
     <div class="container container-fluid">
-      <div class="row alert alert-secondary">
-        <button class="btn btn-primary" onclick="controller.newSeason()">
-          New Season
-        </button>
-        <button class="btn btn-primary" onclick="controller.newClub()">
-          New Club
-        </button>
-        <button class="btn btn-warning">
-          New Player
-        </button>
+      <div class="row">
+        <div class="col-12 d-flex">
+          <img
+            src="/img/logo.png"
+            height="43px"
+            class="align-self-center"
+          /><span class="display-4">Football Simulator</span>
+        </div>
+        <div class="col-12 mx-auto">
+          <div class="">
+            <button
+              class="btn my-button bg-purps m-3"
+              onclick="controller.newSeason()"
+            >
+              New Season
+            </button>
+            <button
+              class="btn my-button bg-purps m-3"
+              onclick="controller.newClub()"
+            >
+              New Club
+            </button>
+            <button class="btn my-button bg-purps m-3">
+              New Player
+            </button>
+          </div>
+        </div>
       </div>
       <div class="row">
         <div class="col-md-6 border-primary" id="main_setup"></div>
       </div>
+      <div class="test">
+        <form >
+          <table>
+            <tr>
+              <td><input type="radio" name="club_code" class="custom-radio" value="DR"><img src="/img/DR.png" height="50px">Dagada Rangers F.C</td>
+              <td><input type="radio" name="club_code" class="custom-radio" value="SPR"><img src="/img/SPR.png" height="50px">Southport Rangers F.C</td>
+              <td><input type="radio" name="club_code" class="custom-radio" value="RP"><img src="/img/RP.png" height="50px">Royal Philamentia S.C</td>
+              <td><input type="radio" name="club_code" class="custom-radio" value="RB"><img src="/img/RB.png" height="50px">Rainbow Boys A.C</td>
+              <td><input type="radio" name="club_code" class="custom-radio" value="RT"><img src="/img/RT.png" height="50px">Rising Thunders A.C</td>
+            </tr>
+              <tr>
+                  <td><input type="radio" name="club_code" class="custom-radio" value="K94"><img src="/img/K94.png" height="50px">Khashiru 94 A.C</td>
+                  <td><input type="radio" name="club_code" class="custom-radio" value="BWH"><img src="/img/BWH.png" height="50px">Brickwall Hadad S.C</td>
+                    <td><input type="radio" name="club_code" class="custom-radio" value="IB"><img src="/img/IB.png" height="50px">Ivania Boys A.C</td>
+                    <td><input type="radio" name="club_code" class="custom-radio" value="BFC"><img src="/img/BFC.png" height="50px">Binatone F.C</td>
+                    <td><input type="radio" name="club_code" class="custom-radio" value="ZD"><img src="/img/ZD.png" height="50px">Zander Dragons A.C</td>
+              </tr>
+             <tr>
+                <td><input type="radio" name="club_code" class="custom-radio" value="NSM"><img src="/img/NSM.png" height="50px">New Simeone Mirrors F.C</td>
+                <td><input type="radio" name="club_code" class="custom-radio" value="GU"><img src="/img/GU.png" height="50px">Guttersburg United S.C</td>
+                <td><input type="radio" name="club_code" class="custom-radio" value="LRU"><img src="/img/LRU.png" height="50px">LonenRaid 01 United</td>
+                <td><input type="radio" name="club_code" class="custom-radio" value="LU"><img src="/img/LU.png" height="50px">Lasena United F.C</td>
+                <td><input type="radio" name="club_code" class="custom-radio" value="free"><img src="/img/generic_player_kit.png" height="50px">Free market</td>
+              </tr>
+          </table>
+          <select class="form-control select" name="position">
+            <option disabled><em>Players Position</em></option>
+            <option value="GK" name="position">Goal Keeper</option>
+            <option value="DEF" name="position">Defender</option>
+            <option value="MID" name="position">Midfielder</option>
+            <option value="ATT" name="position">Attacker</option>
+          </select>
+          <input type="string" class="form-control my-1" name="name" placeholder="Player's Name">
+          <input type="number" class="form-control mb-1" name="age" placeholder="Age">
+          <input type="number" class="form-control mb-1" name="shirt_number" placeholder="Shirt number">
+          <input type="number" class="form-control mb-1" name="attacking_class" placeholder="Attacking Class">
+          <input type="number" class="form-control mb-1" name="defensive_class" placeholder="Defensive Class">
+        </form>
+      </div>
     </div>
-
-    <DIV>
-      <!-- // Select league
-    // league_select.forEach((el, key) => {
-    //   el.addEventListener("click", function(ev) {
-    //     league_detail.innerHTML = `<img src="/img/league${
-    //       ev.target.value
-    //     }_logo.png" height="72px">`;
-    //     selected_league_text = ev.target.innerText;
-    //     switch (key) {
-    //       case 0:
-    //         selected_league = "league_3";
-    //         selected_league_code = "L3";
-    //         home_team_selection_form.innerHTML = `<input type=\"radio\" value=\"DR\" name=\"home\">Dagada Rangers F.C
-    //       <br>
-    //       <input type=\"radio\" value=\"RB\" name=\"home\">Rainbow Boys F.C
-    //       <br>
-    //       <input type=\"radio\" value=\"SPR\" name=\"home\">Southport Rangers
-    //       A.C <br>
-    //       <input type=\"radio\" value=\"IB\" name=\"home\">Ivania Boys Club
-    //       <br>`;
-    //         away_team_selection_form.innerHTML = `<input type=\"radio\" value=\"DR\" name=\"away\">Dagada Rangers F.C
-    //       <br>
-    //       <input type=\"radio\" value=\"RB\" name=\"away\">Rainbow Boys F.C
-    //       <br>
-    //       <input type=\"radio\" value=\"SPR\" name=\"away\">Southport Rangers
-    //       A.C <br>
-    //       <input type=\"radio\" value=\"IB\" name=\"away\">Ivania Boys Club
-    //       <br>`;
-    //         break;
-    //       case 1:
-    //         selected_league = "league_2";
-    //         selected_league_code = "L2";
-    //         home_team_selection_form.innerHTML = ` <input type=\"radio\" value=\"BWH\" name=\"home\">Brickwall Hadad S.C
-    //         <br>
-    //         <input type=\"radio\" value=\"NSM\" name=\"home\">New Simeone Mirrors
-    //         F.C <br>
-    //         <input type=\"radio\" value=\"ZD\" name=\"home\">Zander Dragons <br>
-    //         <input type=\"radio\" value=\"RP\" name=\"home\">Royal Philamentia
-    //         <br>`;
-    //         away_team_selection_form.innerHTML = ` <input type=\"radio\" value=\"BWH\" name=\"away\">Brickwall Hadad S.C
-    //         <br>
-    //         <input type=\"radio\" value=\"NSM\" name=\"away\">New Simeone Mirrors
-    //         F.C <br>
-    //         <input type=\"radio\" value=\"ZD\" name=\"away\">Zander Dragons <br>
-    //         <input type=\"radio\" value=\"RP\" name=\"away\">Royal Philamentia
-    //         <br>`;
-    //         break;
-    //       case 2:
-    //         selected_league = "league_1";
-    //         selected_league_code = "L1";
-    //         home_team_selection_form.innerHTML = `<input type=\"radio\" value=\"BFC\" name=\"home\">Binatone F.C
-    //         <br>
-    //         <input type=\"radio\" value=\"GU\" name=\"home\">Guttersburg United A.F.C
-    //         <br>
-    //         <input type=\"radio\" value=\"LU\" name=\"home\">Lasena United S.C<br>
-    //         <input type=\"radio\" value=\"LRU\" name=\"home\">Lonen Raid 01 United F.C
-    //         <br>
-    //         <input type=\"radio\" value=\"RT\" name=\"home\">Rising Thunders A.C<br>
-    //         <input type=\"radio\" value=\"K94\" name=\"home\">Khashiru 94 A.C`;
-    //         away_team_selection_form.innerHTML = `<input type=\"radio\" value=\"BFC\" name=\"away\">Binatone F.C
-    //         <br>
-    //         <input type=\"radio\" value=\"GU\" name=\"away\">Guttersburg United A.F.C
-    //         <br>
-    //         <input type=\"radio\" value=\"LU\" name=\"away\">Lasena United S.C<br>
-    //         <input type=\"radio\" value=\"LRU\" name=\"away\">Lonen Raid 01 United F.C
-    //         <br>
-    //         <input type=\"radio\" value=\"RT\" name=\"away\">Rising Thunders A.C<br>
-    //         <input type=\"radio\" value=\"K94\" name=\"away\">Khashiru 94 A.C`;
-    //         break;
-    //       default:
-    //         break;
-    //     }
-    //   });
-    // }); -->
-    </DIV>
 
     <!-- Script! -->
     <script src="setup.js"></script>

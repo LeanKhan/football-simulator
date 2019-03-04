@@ -3,7 +3,8 @@ const data_router = require("express").Router(),
   Club = require("../models/club"),
   url = require("url"),
   querystring = require("querystring"),
-  Season = require("../models/season");
+  Season = require("../models/season"),
+  players_router = require("./players");
 
 //   Season
 
@@ -13,6 +14,8 @@ var season = {
   LeagueCode: "",
   SeasonLongCode: ""
 };
+
+data_router.use("/players/", players_router);
 
 // Endpoint used to go to the tables view
 data_router.get("/table", (req, res) => {

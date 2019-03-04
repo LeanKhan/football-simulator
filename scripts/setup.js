@@ -37,5 +37,8 @@ var controller = {
           <input name="stadium_name" class="form-control" type="text" placeholder="Stadium name e.g 'Central Park'">
           <input type="submit" class="btn btn-primary-outline">New Club</input>
   </form>`;
+  },
+  newPlayer(){
+    let main_setup
   }
 };

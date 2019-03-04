@@ -1,0 +1,26 @@
+/* Bluish Purple: #7535ED
+   Greyish White: #E3E1E4
+   Pinkish Peach: #C23361
+   Greenish Color: #00FF45
+*/
+
+body {
+  background-color: #e3e1e4;
+}
+.my-button {
+  color: white;
+  font-weight: 500;
+  font-size: 21px;
+  width: 250px;
+  height: 55px;
+}
+
+.bg-purps {
+  background-color: #7535ed;
+  border-color: #340f78 !important;
+}
+
+.btn:hover,
+.btn:focus {
+  box-shadow: 0 0 0 0.2rem rgb(75, 255, 39) !important;
+}
