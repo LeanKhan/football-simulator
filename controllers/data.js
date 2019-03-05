@@ -15,7 +15,7 @@ var season = {
   SeasonLongCode: ""
 };
 
-data_router.use("/players/", players_router);
+data_router.use("/players", players_router);
 
 // Endpoint used to go to the tables view
 data_router.get("/table", (req, res) => {

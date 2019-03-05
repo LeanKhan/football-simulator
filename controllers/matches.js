@@ -190,4 +190,8 @@ match_router.get("/play/:match_code/:match_number", (req, res) => {
   match.match_number = req.params.match_number;
 });
 
+match_router.get("/stats",(req,res)=>{
+  res.sendFile(path.join(__dirname,"../view/stats.html"));
+})
+
 module.exports = match_router;
