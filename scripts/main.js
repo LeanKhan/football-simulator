@@ -203,12 +203,16 @@ var view = {
     var home_team_icon = document.getElementById("home_icon");
     var away_team_icon = document.getElementById("away_icon");
     var league_detail = document.getElementById("league_detail");
+    let stats_link_element = document.getElementById("stats_link");
 
     home_team_name_element.innerText = selected_fixture.Home;
     away_team_name_element.innerText = selected_fixture.Away;
 
     home_team_icon.innerHTML = `<img src="/img/${home_team_code}.png" height="150px" width="150px">`;
     away_team_icon.innerHTML = `<img src="/img/${away_team_code}.png" height="150px" width="150px">`;
+
+    stats_link_element.innerHTML = `<a href="/match/${selected_fixture.MatchCode}/stats" class="btn btn-primary my-button">Stats</a>`
+
 
     // League Logo
     league_detail.innerHTML = `<img src="/img/${
