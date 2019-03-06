@@ -6,6 +6,7 @@ const mongoose = require("mongoose"),
 players_router.get("/new", (req, res) => {
   let rating;
   let value;
+  let pos_number;
 
   rating = player_functions.calculateRating(
     req.query.position,
@@ -14,6 +15,7 @@ players_router.get("/new", (req, res) => {
     req.query.gk_class
   );
   value = player_functions.calculateValue(req.query.age, rating);
+  pos_number = player_functions.setPositionNumber(req.query.position);
 
   let player = {
     ClubCode: req.query.club_code,
@@ -28,7 +30,8 @@ players_router.get("/new", (req, res) => {
     Rating: rating,
     GoalsScored: "",
     Assists: "",
-    CleanSheets: ""
+    CleanSheets: "",
+    PositionNumber: pos_number
   };
   club_code = player.ClubCode;
   Club.findOneAndUpdate(

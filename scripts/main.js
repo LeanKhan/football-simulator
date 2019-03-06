@@ -211,8 +211,9 @@ var view = {
     home_team_icon.innerHTML = `<img src="/img/${home_team_code}.png" height="150px" width="150px">`;
     away_team_icon.innerHTML = `<img src="/img/${away_team_code}.png" height="150px" width="150px">`;
 
-    stats_link_element.innerHTML = `<a href="/match/${selected_fixture.MatchCode}/stats" class="btn btn-primary my-button">Stats</a>`
-
+    stats_link_element.innerHTML = `<a href="/match/${
+      selected_fixture.MatchCode
+    }/${match.match_number}/stats" class="btn btn-primary my-button">Stats</a>`;
 
     // League Logo
     league_detail.innerHTML = `<img src="/img/${

@@ -131,7 +131,22 @@ function calculateRating(position, attacking_class, defensive_class, gk_class) {
   return rating;
 }
 
+function setPositionNumber(position){
+  let pos_number;
+  if(position == "GK"){
+    pos_number = 1;
+  }else if(position == "DEF"){
+    pos_number = 2;
+  }else if(position == "MID"){
+    pos_number = 3;
+  }else if(position == "ATT"){
+    pos_number = 4;
+  }
+  return pos_number;
+}
+
 module.exports = {
   calculateValue,
-  calculateRating
+  calculateRating,
+  setPositionNumber
 };

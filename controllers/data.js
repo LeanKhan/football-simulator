@@ -102,6 +102,19 @@ data_router.get("/clubs/:league", (req, res) => {
   });
 });
 
+data_router.get("/clubs/:home_club_code/:away_club_code", (req, res) => {
+  let home_club_code = req.params.home_club_code;
+  let away_club_code = req.params.away_club_code;
+  Club.find(
+    { ClubCode: { $in: [home_club_code, away_club_code] } },
+    (err, clubs) => {
+      if (!err) {
+        res.send(clubs);
+      }
+    }
+  );
+});
+
 // Endpoint to save the fixtures of a season
 data_router.post("/seasons/:season/fixtures", (req, res) => {
   let season_long_code = req.params.season;

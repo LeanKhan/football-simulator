@@ -190,15 +190,19 @@ match_router.get("/play/:match_code/:match_number", (req, res) => {
   match.match_number = req.params.match_number;
 });
 
-match_router.get("/:match_code/stats", (req, res) => {
+match_router.get("/:match_code/:match_number/stats", (req, res) => {
   res.sendFile(path.join(__dirname, "../view/stats.html"));
 });
 
-match_router.get("/get/:match_code/stats", (req, res) => {
+match_router.get("/get/:match_code/:match_number/stats", (req, res) => {
   let match_code = req.params.match_code;
-  Season.findOne({ "Fixtures.MatchCode": match_code }, (err, fixture) => {
-    res.send(fixture);
-    console.log(fixture);
+  let match_number = req.params.match_number;
+  Season.findOne({ "Fixtures.MatchCode": match_code }, (err, season) => {
+    if (!err) {
+      res.send(season.Fixtures[match_number]);
+    } else {
+      res.send("Error in getting fixture");
+    }
   });
 });
 
