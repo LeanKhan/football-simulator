@@ -6,7 +6,7 @@
 function calculateValue(age, rating) {
   let value;
 
-  if (age >= 18 && age < 20) {
+  if (age >= 17 && age < 20) {
     if (rating >= 60 && rating < 70) {
       value = 2000000;
     } else if (rating >= 70 && rating < 75) {

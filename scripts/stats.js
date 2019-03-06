@@ -51,15 +51,23 @@ var view = {
     // Regular formation:
     // 1-3-2-1
     let formation_table = document.getElementsByName("formation");
-    home_players.sort((a,b)=>{
+
+    // Sort players according to position
+    home_players.sort((a, b) => {
       return a.PositionNumber - b.PositionNumber;
     });
-    away_players.sort((a,b)=>{
+    away_players.sort((a, b) => {
       return a.PositionNumber - b.PositionNumber;
     });
-  
+
+    model.formations.p3_2_1.forEach((pos, i) => {
+      formation_table[pos].setAttribute("class", "bg-warning text-center");
+      formation_table[
+        pos
+      ].innerHTML = `<img src="/img/generic_player_kit.png" height="50px">`;
+      // formation_table[pos].innerText = away_players[i].ShirtNumber;
+    });
   }
 };
-
 
 model.getMatch();

@@ -20,7 +20,8 @@ players_router.get("/new", (req, res) => {
   let player = {
     ClubCode: req.query.club_code,
     Position: req.query.position,
-    Name: req.query.name,
+    FirstName: req.query.fname,
+    LastName: req.query.lname,
     Age: req.query.age,
     ShirtNumber: req.query.shirt_number,
     AttackingClass: req.query.attacking_class,

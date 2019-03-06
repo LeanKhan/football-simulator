@@ -30,6 +30,25 @@ body {
   width: 383px;
 }
 #formation_table td {
-  width: 54.7167px;
-  height: 60px;
+  width: 54.7167px !important;
+  height: 60px !important;
+  position: relative;
+}
+
+.top {
+  background-color: #101318;
+}
+
+#formation_table span {
+  font-size: 6px;
+}
+
+#formation_table .icon {
+  position: absolute;
+  top: 2px;
+  right: -9px;
+}
+
+#formation_table .ball {
+  height: 20px;
 }

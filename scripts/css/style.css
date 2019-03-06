@@ -1,8 +1,11 @@
-/* Sports Blue #05F0FF
-
+/* Bluish Purple: #7535ED
+   Greyish White: #E3E1E4
+   Pinkish Peach: #C23361
+   Greenish Color: #00FF45
+   Blueish Black: #101318;
 */
 
-body {
+.dark-bg {
   background-color: #101318 !important;
 }
 .results {
@@ -33,15 +36,6 @@ body {
   font-weight: bold;
   /* line-height: 10px; */
 }
-
-.pitch-bg {
-  background-image: url("file:///C:/done/football/assets/img/pitch1.jpg");
-  height: 600px;
-}
-/*#pitch-bg {
-  background-image: url("file:///C:/done/football/assets/img/pitch1.jpg");
-  height: 600px;
-}*/
 .fixtures {
   font-size: 16px;
 }
