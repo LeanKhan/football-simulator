@@ -31,6 +31,7 @@
               
             </div> -->
         <!-- Side panel -->
+
         <div class="col-md-1" id="side_panel">
 
           <div>
@@ -49,7 +50,7 @@
 
         <!-- Main panel -->
         <div class="col-md-6 results" id="main_panel">
-          <div class="alert alert-success d-flex">
+          <div class="d-flex">
             <span id="league_detail"></span>
             <div class="ml-auto">
                 <button class="btn btn-primary mx-2" id="simulate_button">Play!</button>
@@ -76,16 +77,40 @@
 
           <!-- Match details -->
           <div class="row mt-2" id="match_details">
-            <div class="col text-center" id="home_match_details"></div>
-            <div class="col" id="match_details_labels"></div>
-            <div class="col text-center" id="away_match_details"></div>
+            <div class="col" id="match_details_labels">
+              <span class="text-muted" id="ccr_label"></span>
+              <div class="progress shadow">
+                <div class="progress-bar" role="progressbar" id="home_ccr" aria-valuemin="0" aria-valuemax="100"></div>
+                <div class="progress-bar" role="progressbar" id="away_ccr" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+              <span class="text-muted" id="ccn_label"></span>
+              <div class="progress shadow">
+                <div class="progress-bar" role="progressbar" id="home_ccn" aria-valuemin="0" aria-valuemax="100"></div>
+                <div class="progress-bar" role="progressbar" id="away_ccn" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+              <span class="text-muted" id="pn_label"></span>
+              <div class="progress shadow">
+                <div class="progress-bar" role="progressbar" id="home_pn" aria-valuemin="0" aria-valuemax="100"></div>
+                <div class="progress-bar" role="progressbar" id="away_pn" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+              <span class="text-muted" id="af_label"></span>
+              <div class="progress shadow">
+                <div class="progress-bar" role="progressbar" id="home_af" aria-valuemin="0" aria-valuemax="100"></div>
+                <div class="progress-bar" role="progressbar" id="away_af" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+              <span class="text-muted" id="df_label"></span>
+              <div class="progress shadow">
+                <div class="progress-bar" role="progressbar" id="home_df" aria-valuemin="0" aria-valuemax="100"></div>
+                <div class="progress-bar" role="progressbar" id="away_df" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>    
+            </div>
             
           </div>
 
         </div>
         <!-- Stats panel -->
         <div class="col-md-5" id="stats">
-          <div class="alert m-0 p-1 bg-light">Teams Formations</div>
+          <div class="m-0 p-1" id="marquee"></div>
             <div class="d-flex">
                 <div class="pitch">
                     <table id="formation_table">
@@ -183,21 +208,28 @@
                       </tbody>
                     </table>
                   </div>
-                  <div class="squads">
-                    <div class="row card">
-                        <h4>Team A Stats</h4>
-                        <ul class="list-group-flush">
-                          <li>This guy</li>
-                          <li>This guy</li>
-                          <li>This guy</li>
+                  <div class="squads px-1">
+                    <div id="home_squad">
+                        <select class="select custom-select">
+                          <option>
+                            Pops
+                          </option>
+                        </select>
+                        <h5 id="home_squad_name">Club Name</h5>
+                        <div>
+                          <span id="home_squad_icon"></span>
+                          <span id="home_kit_icon"></span>
+                          <p id="home_manager_name"></p>
+                        </div>
+                        <ul class="list-group" id="home_squad_list">
                         </ul>
                     </div>
-                    <div class="row card">
-                        <h4>Team A Stats</h4>
-                        <ul class="list-group-flush">
-                          <li>This guy</li>
-                          <li>This guy</li>
-                          <li>This guy</li>
+                    <div id="away_sqaud">
+                        
+                        <ul class="list-group" name="squad_list">
+                          <li class="list-group-item">This guy</li>
+                          <li class="list-group-item">This guy</li>
+                          <li class="list-group-item">This guy</li>
                         </ul>
                     </div>
                   </div>

@@ -54,6 +54,11 @@ body {
   border-radius: 12px;
 }
 
+#match_details_labels {
+  margin-left: 3.5rem !important;
+  margin-right: 3.5rem !important;
+}
+
 #formation_table .icon {
   position: absolute;
   top: 2px;
@@ -64,6 +69,45 @@ body {
   height: 20px;
 }
 
-.squads .row {
+#home_squad,
+#away_squad {
+  color: #7535ed;
   height: 300px;
+}
+
+.progress {
+  height: auto !important;
+}
+
+.progress-bar {
+  /* font-weight: bold !important; */
+  line-height: normal !important;
+  color: white !important;
+  font-size: medium !important;
+}
+
+.home-progress-bar {
+  background-color: #7535ed !important;
+}
+.away-progress-bar {
+  background-color: #c23361 !important;
+}
+
+.good_form {
+  border-top: solid 3px #00ff45;
+}
+.average_form {
+  border-top: solid 3px #ffc107;
+}
+.poor_form {
+  border-top: solid 3px #dc3545;
+}
+
+#home_squad_name {
+  text-align: center;
+}
+
+#home_squad_list {
+  list-style-type: none;
+  font-size: x-small;
 }

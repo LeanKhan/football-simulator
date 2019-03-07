@@ -163,36 +163,169 @@ var view = {
   // Show teams
   displayResults(match) {
     let simulate_button = document.getElementById("simulate_button");
-    var home_match_details_element = document.getElementById(
-      "home_match_details"
+    // Get elements
+    let ccr_label = document.getElementById("ccr_label"),
+      ccn_label = document.getElementById("ccn_label"),
+      pn_label = document.getElementById("pn_label"),
+      af_label = document.getElementById("af_label"),
+      df_label = document.getElementById("df_label"),
+      home_ccr = document.getElementById("home_ccr"),
+      away_ccr = document.getElementById("away_ccr"),
+      home_ccn = document.getElementById("home_ccn"),
+      home_pn = document.getElementById("home_pn"),
+      away_pn = document.getElementById("away_pn"),
+      home_af = document.getElementById("away_af"),
+      away_af = document.getElementById("home_af"),
+      home_df = document.getElementById("home_df"),
+      away_df = document.getElementById("away_df");
+
+    ccr_label.setAttribute("class", "text-muted");
+    ccn_label.setAttribute("class", "text-muted");
+    pn_label.setAttribute("class", "text-muted");
+    af_label.setAttribute("class", "text-muted");
+    df_label.setAttribute("class", "text-muted");
+
+    ccr_label.innerText = "Chances Created Rate";
+    ccn_label.innerText = "Chances Created Number";
+    pn_label.innerText = "Probability Number";
+    af_label.innerText = "Attacking Form";
+    df_label.innerText = "Defensive Form";
+
+    // CCR Values
+    home_ccr_value = Math.round(
+      (match.HomeTeamDetails.ChancesCreatedRate /
+        (match.HomeTeamDetails.ChancesCreatedRate +
+          match.AwayTeamDetails.ChancesCreatedRate)) *
+        100
     );
-    var away_match_details_element = document.getElementById(
-      "away_match_details"
+    away_ccr_value = Math.round(
+      (match.AwayTeamDetails.ChancesCreatedRate /
+        (match.HomeTeamDetails.ChancesCreatedRate +
+          match.AwayTeamDetails.ChancesCreatedRate)) *
+        100
     );
+
+    // CCN Values
+    home_ccn_value = Math.round(
+      (match.HomeTeamDetails.ChancesCreatedNumber /
+        (match.HomeTeamDetails.ChancesCreatedNumber +
+          match.AwayTeamDetails.ChancesCreatedNumber)) *
+        100
+    );
+    away_ccn_value = Math.round(
+      (match.AwayTeamDetails.ChancesCreatedNumber /
+        (match.HomeTeamDetails.ChancesCreatedNumber +
+          match.AwayTeamDetails.ChancesCreatedNumber)) *
+        100
+    );
+
+    // Probability Number Values
+    home_pn_value = Math.round(
+      (match.HomeTeamDetails.ProbabilityNumber /
+        (match.HomeTeamDetails.ProbabilityNumber +
+          match.AwayTeamDetails.ProbabilityNumber)) *
+        100
+    );
+    away_pn_value = Math.round(
+      (match.AwayTeamDetails.ProbabilityNumber /
+        (match.HomeTeamDetails.ProbabilityNumber +
+          match.AwayTeamDetails.ProbabilityNumber)) *
+        100
+    );
+
+    // Attacking Form Values
+    home_af_value = Math.round(
+      (match.HomeTeamDetails.AttackingForm /
+        (match.HomeTeamDetails.AttackingForm +
+          match.AwayTeamDetails.AttackingForm)) *
+        100
+    );
+    away_af_value = Math.round(
+      (match.AwayTeamDetails.AttackingForm /
+        (match.HomeTeamDetails.AttackingForm +
+          match.AwayTeamDetails.AttackingForm)) *
+        100
+    );
+
+    // Defensive Form Values
+    home_df_value = Math.round(
+      (match.HomeTeamDetails.DefensiveForm /
+        (match.HomeTeamDetails.DefensiveForm +
+          match.AwayTeamDetails.DefensiveForm)) *
+        100
+    );
+    away_df_value = Math.round(
+      (match.AwayTeamDetails.DefensiveForm /
+        (match.HomeTeamDetails.DefensiveForm +
+          match.AwayTeamDetails.DefensiveForm)) *
+        100
+    );
+
     var match_details_labels_element = document.getElementById(
       "match_details_labels"
     );
     var home_score = document.getElementById("home_score");
     var away_score = document.getElementById("away_score");
     var score_divider = document.getElementById("score_divider");
-    if (selected_fixture.Played) {
-      simulate_button.setAttribute("class", "btn btn-danger");
-      simulate_button.innerHTML = "Replay";
 
-      home_score.innerHTML = `<b>${match.HomeTeamScore}</b>`;
-      away_score.innerHTML = `<b>${match.AwayTeamScore}</b>`;
-      score_divider.innerHTML = "<span>-</span>";
-      // match_details_labels_element.innerHTML = match_details_labels;
-      // home_match_details_element.innerHTML = home_match_details;
-      // away_match_details_element.innerHTML = away_match_details;
-    } else {
-      home_score.innerHTML = `<b>${match.teamA.goals}</b>`;
-      away_score.innerHTML = `<b>${match.teamB.goals}</b>`;
-      score_divider.innerHTML = "<span>-</span>";
-      match_details_labels_element.innerHTML = match_details_labels;
-      home_match_details_element.innerHTML = home_match_details;
-      away_match_details_element.innerHTML = away_match_details;
-    }
+    // if (selected_fixture.Played) {
+    simulate_button.setAttribute("class", "btn btn-danger");
+    simulate_button.innerHTML = "Replay";
+
+    home_score.innerHTML = `<b>${match.HomeTeamScore}</b>`;
+    away_score.innerHTML = `<b>${match.AwayTeamScore}</b>`;
+    score_divider.innerHTML = "<span>-</span>";
+
+    // Oya na!
+    // Chances Created Rate
+    home_ccr.setAttribute("class", "progress-bar home-progress-bar");
+    home_ccr.setAttribute("style", `width: ${home_ccr_value}%`);
+    home_ccr.innerText = match.HomeTeamDetails.ChancesCreatedRate;
+
+    away_ccr.setAttribute("class", "progress-bar away-progress-bar");
+    away_ccr.setAttribute("style", `width: ${away_ccr_value}%`);
+    away_ccr.innerText = match.AwayTeamDetails.ChancesCreatedRate;
+
+    // Chances Created Number
+    home_ccn.setAttribute("class", "progress-bar home-progress-bar");
+    home_ccn.setAttribute("style", `width: ${home_ccn_value}%`);
+    home_ccn.innerText = match.HomeTeamDetails.ChancesCreatedNumber;
+
+    away_ccn.setAttribute("class", "progress-bar away-progress-bar");
+    away_ccn.setAttribute("style", `width: ${away_ccn_value}%`);
+    away_ccn.innerText = match.AwayTeamDetails.ChancesCreatedNumber;
+
+    // Probability Number
+    home_pn.setAttribute("class", "progress-bar home-progress-bar");
+    home_pn.setAttribute("style", `width: ${home_pn_value}%`);
+    home_pn.innerText = match.HomeTeamDetails.ProbabilityNumber;
+
+    away_pn.setAttribute("class", "progress-bar away-progress-bar");
+    away_pn.setAttribute("style", `width: ${away_pn_value}%`);
+    away_pn.innerText = match.AwayTeamDetails.ProbabilityNumber;
+
+    // Attacking Form
+    home_af.setAttribute("class", "progress-bar home-progress-bar");
+    home_af.setAttribute("style", `width: ${home_af_value}%`);
+    home_af.innerText = match.HomeTeamDetails.AttackingForm;
+
+    away_af.setAttribute("class", "progress-bar away-progress-bar");
+    away_af.setAttribute("style", `width: ${away_af_value}%`);
+    away_af.innerText = match.AwayTeamDetails.AttackingForm;
+
+    // Defensive Form
+    home_df.setAttribute("class", "progress-bar home-progress-bar");
+    home_df.setAttribute("style", `width: ${home_df_value}%`);
+    home_df.innerText = match.HomeTeamDetails.DefensiveForm;
+
+    away_df.setAttribute("class", "progress-bar away-progress-bar");
+    away_df.setAttribute("style", `width: ${away_df_value}%`);
+    away_df.innerText = match.AwayTeamDetails.DefensiveForm;
+    // } else {
+    //   home_score.innerHTML = `<b>${match.teamA.goals}</b>`;
+    //   away_score.innerHTML = `<b>${match.teamB.goals}</b>`;
+    //   score_divider.innerHTML = "<span>-</span>";
+    // }
   },
   showResults(match) {
     match.simulate();
@@ -206,10 +339,11 @@ var view = {
     controller.sendToServer(match);
   },
   showTeams() {
-    var home_team_name_element = document.getElementById("home_team_name");
-    var away_team_name_element = document.getElementById("away_team_name");
-    var home_team_icon = document.getElementById("home_icon");
-    var away_team_icon = document.getElementById("away_icon");
+    var home_team_name_element = document.getElementById("home_team_name"),
+      away_team_name_element = document.getElementById("away_team_name"),
+      home_team_icon = document.getElementById("home_icon"),
+      away_team_icon = document.getElementById("away_icon");
+
     var league_detail = document.getElementById("league_detail");
 
     home_team_name_element.innerText = selected_fixture.Home;
@@ -567,6 +701,35 @@ var stats_view = {
         formation_table[pos].appendChild(ball);
         console.log(away_players_match[i].Name);
       }
+    });
+    stats_view.displaySquadInfo();
+  },
+  displaySquadInfo() {
+    let home_squad_name = document.getElementById("home_squad_name"),
+      away_squad_name = document.getElementById("away_squad_name"),
+      home_squad_icon = document.getElementById("home_squad_icon"),
+      home_kit_icon = document.getElementById("home_kit_icon"),
+      home_manager_name = document.getElementById("home_manager_name"),
+      home_squad_list = document.getElementById("home_squad_list");
+
+    home_squad_icon.innerHTML = `<img src="/img/${home_team_code}.png" height="40px">`;
+    home_squad_name.innerText = home_team_code;
+    home_kit_icon.innerHTML = `<img src="/img/generic_player_kit.png" height="40px">`;
+    home_manager_name.innerText = clubs[0].Manager;
+
+    home_players_match.forEach((player, i) => {
+      let player_el = document.createElement("li");
+      player_el.innerHTML = `<b>${player.Name}</b> ${player.Position} ${
+        player.ShirtNumber
+      }`;
+      if (player.Points > 3) {
+        player_el.setAttribute("class", "good_form");
+      } else if (player.Points > 1 && player.Points < 3) {
+        player_el.setAttribute("class", "average_form");
+      } else if (player.Points <= 1) {
+        player_el.setAttribute("class", "poor_form");
+      }
+      home_squad_list.appendChild(player_el);
     });
   }
 };
