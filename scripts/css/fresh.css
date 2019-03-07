@@ -40,7 +40,18 @@ body {
 }
 
 #formation_table span {
-  font-size: 6px;
+  font-size: 9px;
+  color: white;
+  position: absolute;
+  top: 38px;
+  right: 20px;
+  background-color: #1013183e;
+  font-weight: bold;
+  padding: 0.2rem;
+
+  border: 1px solid darkgreen;
+
+  border-radius: 12px;
 }
 
 #formation_table .icon {
@@ -51,4 +62,8 @@ body {
 
 #formation_table .ball {
   height: 20px;
+}
+
+.squads .row {
+  height: 300px;
 }

@@ -196,6 +196,8 @@ var view = {
 
     view.displayResults(match);
     controller.sendToServer(match);
+
+    stats_view.displayFormation(home_players, away_players, fixture.details);
   },
   showTeams() {
     var home_team_name_element = document.getElementById("home_team_name");
@@ -228,7 +230,7 @@ var controller = {
 
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
-        document.getElementById("notifications").innerText = xhttp.responseText;
+        console.log(xhttp.responseText);
       }
     };
 
@@ -366,6 +368,8 @@ let fixture;
 let clubs;
 let home_players;
 let away_players;
+let home_players_match;
+let away_players_match;
 let home = {
   gk: [],
   def: [],
@@ -408,7 +412,8 @@ var stats_model = {
         setPlayers(home, home_players);
         away_players = clubs[1].Players;
         setPlayers(away, away_players);
-        stats_view.displayFormation(home_players, away_players);
+        sortPlayers();
+        stats_view.displayFormation();
       }
     };
 
@@ -424,61 +429,133 @@ var stats_model = {
     home_321: [3, 15, 17, 19, 23, 25, 31],
     away_321: [66, 50, 52, 54, 44, 46, 38]
   },
-  distributeStats(home_goals, players) {
-    for (let index = 1; index <= home_goals; index++) {
+  distributeStats(goals, squad_obj, squad_match_obj, TeamDetails) {
+    // console.log(fixture.HomeTeamDetails);
+
+    // Distribute Goals Scored
+    for (let index = 1; index <= goals; index++) {
       let chance = Math.ceil(Math.random() * 12);
-      if (chance >= 8) {
-        who = Math.ceil(Math.random() * home.att.length) - 1;
-        ++home.att[who]["GoalsScored"];
-      } else if (chance >= 4 && chance <= 7) {
-        who = Math.ceil(Math.random() * home.mid.length) - 1;
-        ++home.mid[who]["GoalsScored"];
+      if (chance >= 7) {
+        who = Math.ceil(Math.random() * squad_obj.att.length) - 1;
+        squad_obj.att[who]["GoalsScored"]++;
+        squad_obj.att[who]["Points"]++;
+      } else if (chance >= 4 && chance <= 8) {
+        who = Math.ceil(Math.random() * squad_obj.mid.length) - 1;
+        squad_obj.mid[who]["GoalsScored"]++;
+        squad_obj.mid[who]["Points"]++;
       } else if (chance >= 2 && chance <= 3) {
-        who = Math.ceil(Math.random() * home.def.length) - 1;
-        ++home.def[who]["GoalsScored"];
+        who = Math.ceil(Math.random() * squad_obj.def.length) - 1;
+        squad_obj.def[who]["GoalsScored"]++;
+        squad_obj.def[who]["Points"]++;
       } else if (chance < 2) {
-        ++home.gk[0]["GoalsScored"];
+        squad_obj.gk[0]["GoalsScored"]++;
+        squad_obj.gk[0]["Points"]++;
       }
     }
+    // Distribute Assists
+    for (let index = 1; index <= goals; index++) {
+      let chance = Math.ceil(Math.random() * 12);
+      if (chance >= 7) {
+        who = Math.ceil(Math.random() * squad_obj.mid.length) - 1;
+        squad_obj.mid[who]["Assists"]++;
+        squad_obj.mid[who]["Points"]++;
+      } else if (chance >= 3 && chance <= 8) {
+        who = Math.ceil(Math.random() * squad_obj.att.length) - 1;
+        squad_obj.att[who]["Assists"]++;
+        squad_obj.att[who]["Points"]++;
+      } else if (chance >= 1 && chance < 3) {
+        who = Math.ceil(Math.random() * squad_obj.def.length) - 1;
+        squad_obj.def[who]["Assists"]++;
+        squad_obj.def[who]["Points"]++;
+      }
+    }
+    // Distribute Attacking form
+    squad_obj.att.forEach((player, i) => {
+      player.Points += TeamDetails.AttackingForm / 7;
+    });
+    squad_obj.mid.forEach((player, i) => {
+      player.Points += TeamDetails.AttackingForm / 7 / 2;
+      player.Points += TeamDetails.DefensiveForm / 7 / 2;
+    });
+    // Distribute Defensive Form
+    squad_obj.def.forEach((player, i) => {
+      player.Points += TeamDetails.DefensiveForm / 7;
+    });
+    squad_obj.gk.forEach((player, i) => {
+      player.Points += TeamDetails.DefensiveForm / 7;
+    });
+
+    return squad_obj.gk.concat(squad_obj.def, squad_obj.mid, squad_obj.att);
+    // home_players = home.gk.concat(home.def,home.mid,home.att);
   }
 };
 
 var stats_view = {
-  displayFormation(home, away) {
+  displayFormation() {
     // Regular formation:
     // 1-3-2-1
-    stats_model.distributeStats(selected_fixture.HomeTeamScore, home_players);
+    home_players_match = stats_model.distributeStats(
+      selected_fixture.HomeTeamScore,
+      home,
+      home_players_match,
+      selected_fixture.HomeTeamDetails
+    );
+    away_players_match = stats_model.distributeStats(
+      selected_fixture.AwayTeamScore,
+      away,
+      away_players_match,
+      selected_fixture.AwayTeamDetails
+    );
     let formation_table = document.getElementsByName("formation");
 
     // Sort players according to position
-    home_players.sort((a, b) => {
-      return a.PositionNumber - b.PositionNumber;
-    });
-    away_players.sort((a, b) => {
-      return a.PositionNumber - b.PositionNumber;
-    });
 
     stats_model.formations.home_321.forEach((pos, i) => {
       let name = document.createElement("span");
-      let ball = document.createElement("img");
-      ball.setAttribute("src", "/img/ball.png");
-      ball.setAttribute("class", "ball icon");
-      formation_table[pos].setAttribute("class", "bg-warning text-center");
+
+      formation_table[pos].setAttribute("class", "text-center");
       formation_table[pos].setAttribute("id", "home-" + i);
-      // name.innerText = home_players[i].Name;
+      name.innerText = home_players[i].Name.split(" ")[
+        home_players[i].Name.split(" ")["length"] - 1
+      ];
+
       formation_table[
         pos
       ].innerHTML = `<img src="/img/generic_player_kit.png" height="50px">`;
-      formation_table[pos].appendChild(ball);
+      // formation_table[pos].appendChild(ball);
+      formation_table[pos].appendChild(name);
       // formation_table[pos].innerText = away_players[i].ShirtNumber;
+      if (home_players[i].GoalsScored > 0) {
+        var ball = document.createElement("img");
+        ball.setAttribute("src", "/img/ball.png");
+        ball.setAttribute("class", "ball icon");
+        formation_table[pos].appendChild(ball);
+        console.log(home_players[i].Name);
+      }
     });
 
     stats_model.formations.away_321.forEach((pos, i) => {
-      formation_table[pos].setAttribute("class", "bg-warning text-center");
+      let name = document.createElement("span");
+
+      formation_table[pos].setAttribute("class", "text-center");
+      formation_table[pos].setAttribute("id", "home-" + i);
+      name.innerText = away_players[i].Name.split(" ")[
+        away_players[i].Name.split(" ")["length"] - 1
+      ];
+
       formation_table[
         pos
       ].innerHTML = `<img src="/img/generic_player_kit.png" height="50px">`;
+      // formation_table[pos].appendChild(ball);
+      formation_table[pos].appendChild(name);
       // formation_table[pos].innerText = away_players[i].ShirtNumber;
+      if (away_players[i].GoalsScored > 0) {
+        var ball = document.createElement("img");
+        ball.setAttribute("src", "/img/ball.png");
+        ball.setAttribute("class", "ball icon");
+        formation_table[pos].appendChild(ball);
+        console.log(away_players[i].Name);
+      }
     });
   }
 };
@@ -486,14 +563,27 @@ var stats_view = {
 function setPlayers(obj, array) {
   array.forEach((pl, i) => {
     if (pl.PositionNumber == 1) {
+      pl.Points = 0;
       obj.gk.push(pl);
     } else if (pl.PositionNumber == 2) {
+      pl.Points = 0;
       obj.def.push(pl);
     } else if (pl.PositionNumber == 3) {
+      pl.Points = 0;
       obj.mid.push(pl);
     } else if (pl.PositionNumber == 4) {
+      pl.Points = 0;
       obj.att.push(pl);
     }
+  });
+}
+
+function sortPlayers() {
+  home_players.sort((a, b) => {
+    return a.PositionNumber - b.PositionNumber;
+  });
+  away_players.sort((a, b) => {
+    return a.PositionNumber - b.PositionNumber;
   });
 }
 
