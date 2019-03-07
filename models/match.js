@@ -10,7 +10,7 @@ const MatchSchema = new Schema({
   SeasonString: String,
   SeasonCode: String,
   LeagueString: {
-    type: String,
+    type: String
     // required: true
   },
   LeagueCode: String,
@@ -58,6 +58,8 @@ const MatchSchema = new Schema({
     DefensiveClass: Number,
     AttackingClass: Number
   },
+  HomeSquadStats: [],
+  AwaySquadStats: [],
   Time: Date,
   Stadium: String
 });

@@ -182,6 +182,9 @@ var view = {
       home_score.innerHTML = `<b>${match.HomeTeamScore}</b>`;
       away_score.innerHTML = `<b>${match.AwayTeamScore}</b>`;
       score_divider.innerHTML = "<span>-</span>";
+      // match_details_labels_element.innerHTML = match_details_labels;
+      // home_match_details_element.innerHTML = home_match_details;
+      // away_match_details_element.innerHTML = away_match_details;
     } else {
       home_score.innerHTML = `<b>${match.teamA.goals}</b>`;
       away_score.innerHTML = `<b>${match.teamB.goals}</b>`;
@@ -195,9 +198,12 @@ var view = {
     match.simulate();
 
     view.displayResults(match);
-    controller.sendToServer(match);
 
-    stats_view.displayFormation(home_players, away_players, fixture.details);
+    makeStats(match.details);
+
+    stats_view.displayFormation(home_players, away_players, match.details);
+
+    controller.sendToServer(match);
   },
   showTeams() {
     var home_team_name_element = document.getElementById("home_team_name");
@@ -226,6 +232,9 @@ var view = {
 
 var controller = {
   sendToServer(match_object) {
+    match_object.details.HomeSquadStats = home_players_match;
+    match_object.details.AwaySquadStats = away_players_match;
+    console.log("In send to server");
     let xhttp = new XMLHttpRequest();
 
     xhttp.onreadystatechange = function() {
@@ -270,9 +279,19 @@ var controller = {
     xhttp.onreadystatechange = () => {
       if (xhttp.readyState == 4 && xhttp.status == 200) {
         fixtures = JSON.parse(xhttp.response);
+
+        // Set SelectedFixture
         selected_fixture = fixtures[match.match_number];
+
+        if (selected_fixture.Played) {
+          // Set Squad stats
+          home_players_match = selected_fixture.HomeSquadStats;
+          away_players_match = selected_fixture.AwaySquadStats;
+        }
+
         home_team_code = selected_fixture.HomeClubCode;
         away_team_code = selected_fixture.AwayClubCode;
+
         view.showTeams();
       }
     };
@@ -429,7 +448,7 @@ var stats_model = {
     home_321: [3, 15, 17, 19, 23, 25, 31],
     away_321: [66, 50, 52, 54, 44, 46, 38]
   },
-  distributeStats(goals, squad_obj, squad_match_obj, TeamDetails) {
+  distributeStats(goals, squad_obj, TeamDetails) {
     // console.log(fixture.HomeTeamDetails);
 
     // Distribute Goals Scored
@@ -494,18 +513,10 @@ var stats_view = {
   displayFormation() {
     // Regular formation:
     // 1-3-2-1
-    home_players_match = stats_model.distributeStats(
-      selected_fixture.HomeTeamScore,
-      home,
-      home_players_match,
-      selected_fixture.HomeTeamDetails
-    );
-    away_players_match = stats_model.distributeStats(
-      selected_fixture.AwayTeamScore,
-      away,
-      away_players_match,
-      selected_fixture.AwayTeamDetails
-    );
+    if (!selected_fixture.Played) {
+      home_players_match = home_players;
+      away_players_match = away_players;
+    }
     let formation_table = document.getElementsByName("formation");
 
     // Sort players according to position
@@ -515,8 +526,8 @@ var stats_view = {
 
       formation_table[pos].setAttribute("class", "text-center");
       formation_table[pos].setAttribute("id", "home-" + i);
-      name.innerText = home_players[i].Name.split(" ")[
-        home_players[i].Name.split(" ")["length"] - 1
+      name.innerText = home_players_match[i].Name.split(" ")[
+        home_players_match[i].Name.split(" ")["length"] - 1
       ];
 
       formation_table[
@@ -525,12 +536,12 @@ var stats_view = {
       // formation_table[pos].appendChild(ball);
       formation_table[pos].appendChild(name);
       // formation_table[pos].innerText = away_players[i].ShirtNumber;
-      if (home_players[i].GoalsScored > 0) {
+      if (home_players_match[i].GoalsScored > 0) {
         var ball = document.createElement("img");
         ball.setAttribute("src", "/img/ball.png");
         ball.setAttribute("class", "ball icon");
         formation_table[pos].appendChild(ball);
-        console.log(home_players[i].Name);
+        console.log(home_players_match[i].Name);
       }
     });
 
@@ -539,8 +550,8 @@ var stats_view = {
 
       formation_table[pos].setAttribute("class", "text-center");
       formation_table[pos].setAttribute("id", "home-" + i);
-      name.innerText = away_players[i].Name.split(" ")[
-        away_players[i].Name.split(" ")["length"] - 1
+      name.innerText = away_players_match[i].Name.split(" ")[
+        away_players_match[i].Name.split(" ")["length"] - 1
       ];
 
       formation_table[
@@ -549,12 +560,12 @@ var stats_view = {
       // formation_table[pos].appendChild(ball);
       formation_table[pos].appendChild(name);
       // formation_table[pos].innerText = away_players[i].ShirtNumber;
-      if (away_players[i].GoalsScored > 0) {
+      if (away_players_match[i].GoalsScored > 0) {
         var ball = document.createElement("img");
         ball.setAttribute("src", "/img/ball.png");
         ball.setAttribute("class", "ball icon");
         formation_table[pos].appendChild(ball);
-        console.log(away_players[i].Name);
+        console.log(away_players_match[i].Name);
       }
     });
   }
@@ -585,6 +596,19 @@ function sortPlayers() {
   away_players.sort((a, b) => {
     return a.PositionNumber - b.PositionNumber;
   });
+}
+
+function makeStats(match) {
+  home_players_match = stats_model.distributeStats(
+    match.HomeTeamScore,
+    home,
+    match.HomeTeamDetails
+  );
+  away_players_match = stats_model.distributeStats(
+    match.AwayTeamScore,
+    away,
+    match.AwayTeamDetails
+  );
 }
 
 // 10-02-19 11pm

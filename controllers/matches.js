@@ -33,6 +33,8 @@ match_router.post("/new", (req, res) => {
         ["Fixtures.$.Draw"]: updated_match_details.Draw,
         ["Fixtures.$.HomeTeamDetails"]: updated_match_details.HomeTeamDetails,
         ["Fixtures.$.AwayTeamDetails"]: updated_match_details.AwayTeamDetails,
+        ["Fixtures.$.HomeSquadStats"]: updated_match_details.HomeSquadStats,
+        ["Fixtures.$.AwaySquadStats"]: updated_match_details.AwaySquadStats,
         ["Fixtures.$.Time"]: updated_match_details.Time
       }
     },
@@ -50,6 +52,8 @@ match_router.post("/new", (req, res) => {
         fixture.Draw = updated_match_details.Draw;
         fixture.HomeTeamDetails = updated_match_details.HomeTeamDetails;
         fixture.AwayTeamDetails = updated_match_details.AwayTeamDetails;
+        fixture.HomeSquadStats = updated_match_details.HomeSquadStats;
+        fixture.AwaySquadStats = updated_match_details.AwaySquadStats;
         fixture.Time = updated_match_details.Time;
         saveMatch(fixture);
         updateStandings(fixture, season_code);
