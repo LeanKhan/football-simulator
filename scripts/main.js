@@ -280,11 +280,11 @@ var view = {
     // Chances Created Rate
     home_ccr.setAttribute("class", "progress-bar home-progress-bar");
     home_ccr.setAttribute("style", `width: ${home_ccr_value}%`);
-    home_ccr.innerText = match.HomeTeamDetails.ChancesCreatedRate;
+    home_ccr.innerText = match.HomeTeamDetails.ChancesCreatedRate.toFixed(3);
 
     away_ccr.setAttribute("class", "progress-bar away-progress-bar");
     away_ccr.setAttribute("style", `width: ${away_ccr_value}%`);
-    away_ccr.innerText = match.AwayTeamDetails.ChancesCreatedRate;
+    away_ccr.innerText = match.AwayTeamDetails.ChancesCreatedRate.toFixed(3);
 
     // Chances Created Number
     home_ccn.setAttribute("class", "progress-bar home-progress-bar");
@@ -330,11 +330,11 @@ var view = {
   showResults(match) {
     match.simulate();
 
-    view.displayResults(match);
+    view.displayResults(match.details);
 
     makeStats(match.details);
 
-    stats_view.displayFormation(home_players, away_players, match.details);
+    stats_view.displayFormations();
 
     controller.sendToServer(match);
   },
@@ -351,6 +351,8 @@ var view = {
 
     home_team_icon.innerHTML = `<img src="/img/${home_team_code}.png" height="150px" width="150px">`;
     away_team_icon.innerHTML = `<img src="/img/${away_team_code}.png" height="150px" width="150px">`;
+
+    // stats_view.displaySquadInfo();
 
     // League Logo
     league_detail.innerHTML = `<img src="/img/${
@@ -445,6 +447,7 @@ var handlers = {
     var away_team_name_element = document.getElementById("away_team_name");
     var home_team_icon = document.getElementById("home_icon");
     var away_team_icon = document.getElementById("away_icon");
+
     var home_match_details_element = document.getElementById(
       "home_match_details"
     );
@@ -458,6 +461,8 @@ var handlers = {
     var away_score = document.getElementById("away_score");
     var score_divider = document.getElementById("score_divider");
     // Select the league and teams
+
+    // Formation selection
 
     var league_detail = document.getElementById("league_detail");
 
@@ -513,6 +518,42 @@ var handlers = {
       away_score.innerHTML = "";
       score_divider.innerHTML = "";
     });
+  },
+  formationSelectListeners() {
+    var home_formation_select_elements = document.getElementsByName(
+      "home_formation"
+    );
+    var away_formation_select_elements = document.getElementsByName(
+      "away_formation"
+    );
+
+    home_formation_select_elements.forEach((el, key) => {
+      el.addEventListener("click", ev => {
+        console.log("Home formation", el);
+        stats_model.formations.home_previous =
+          stats_model.formations.home_current;
+        stats_model.formations.home_current = ev.target.value;
+        stats_view.displaySquadFormation(
+          stats_model.formations.home_current,
+          stats_model.formations.home_previous,
+          home_players_match
+        );
+      });
+    });
+
+    away_formation_select_elements.forEach((el, key) => {
+      el.addEventListener("click", ev => {
+        console.log("Away formation", el);
+        stats_model.formations.away_previous =
+          stats_model.formations.away_current;
+        stats_model.formations.away_current = ev.target.value;
+        stats_view.displaySquadFormation(
+          stats_model.formations.away_current,
+          stats_model.formations.away_previous,
+          away_players_match
+        );
+      });
+    });
   }
 };
 
@@ -566,7 +607,8 @@ var stats_model = {
         away_players = clubs[1].Players;
         setPlayers(away, away_players);
         sortPlayers();
-        stats_view.displayFormation();
+        stats_view.displayFormations();
+        stats_view.displaySquadInfo();
       }
     };
 
@@ -579,8 +621,17 @@ var stats_model = {
     xhttp.send();
   },
   formations: {
+    home_current: "home_321",
+    away_current: "away_321",
+    home_previous: "home_321",
+    away_previous: "away_321",
     home_321: [3, 15, 17, 19, 23, 25, 31],
-    away_321: [66, 50, 52, 54, 44, 46, 38]
+    away_321: [66, 50, 52, 54, 44, 46, 38],
+    home_321_back: [3, 8, 10, 12, 16, 18, 24],
+    away_321_back: [66, 57, 59, 61, 51, 53, 45],
+    home_321_wide: [3, 8, 10, 12, 15, 19, 17],
+    away_321_wide: [66, 57, 59, 61, 43, 47, 38],
+    away_2121_wide: [66, 58, 52, 60, 43, 47, 38]
   },
   distributeStats(goals, squad_obj, TeamDetails) {
     // console.log(fixture.HomeTeamDetails);
@@ -644,24 +695,48 @@ var stats_model = {
 };
 
 var stats_view = {
-  displayFormation() {
-    // Regular formation:
-    // 1-3-2-1
+  displayFormations() {
+    stats_view.displaySquadFormation(
+      stats_model.formations.home_current,
+      stats_model.formations.home_previous,
+      home_players_match
+    );
+    stats_view.displaySquadFormation(
+      stats_model.formations.away_current,
+      stats_model.formations.away_previous,
+      away_players_match
+    );
+  },
+  displaySquadFormation(current, previous, players) {
     if (!selected_fixture.Played) {
       home_players_match = home_players;
       away_players_match = away_players;
     }
     let formation_table = document.getElementsByName("formation");
 
+    console.log("previous", previous);
+    console.log("current", current);
+
     // Sort players according to position
 
-    stats_model.formations.home_321.forEach((pos, i) => {
+    stats_model.formations[previous].forEach((pos, i) => {
+      formation_table[pos].innerHTML = "";
+      formation_table[pos].setAttribute("class", "");
+      formation_table[pos].setAttribute("id", "");
+    });
+
+    stats_model.formations[current].forEach((pos, i) => {
+      let points = [];
       let name = document.createElement("span");
+
+      points.push(players[i].Points);
+      points.sort();
 
       formation_table[pos].setAttribute("class", "text-center");
       formation_table[pos].setAttribute("id", "home-" + i);
-      name.innerText = home_players_match[i].Name.split(" ")[
-        home_players_match[i].Name.split(" ")["length"] - 1
+
+      name.innerText = players[i].Name.split(" ")[
+        players[i].Name.split(" ")["length"] - 1
       ];
 
       formation_table[
@@ -670,52 +745,38 @@ var stats_view = {
       // formation_table[pos].appendChild(ball);
       formation_table[pos].appendChild(name);
       // formation_table[pos].innerText = away_players[i].ShirtNumber;
-      if (home_players_match[i].GoalsScored > 0) {
+      if (players[i].GoalsScored > 0) {
         var ball = document.createElement("img");
         ball.setAttribute("src", "/img/ball.png");
         ball.setAttribute("class", "ball icon");
         formation_table[pos].appendChild(ball);
-        console.log(home_players_match[i].Name);
+        console.log(players[i].Name);
       }
     });
-
-    stats_model.formations.away_321.forEach((pos, i) => {
-      let name = document.createElement("span");
-
-      formation_table[pos].setAttribute("class", "text-center");
-      formation_table[pos].setAttribute("id", "home-" + i);
-      name.innerText = away_players_match[i].Name.split(" ")[
-        away_players_match[i].Name.split(" ")["length"] - 1
-      ];
-
-      formation_table[
-        pos
-      ].innerHTML = `<img src="/img/generic_player_kit.png" height="50px">`;
-      // formation_table[pos].appendChild(ball);
-      formation_table[pos].appendChild(name);
-      // formation_table[pos].innerText = away_players[i].ShirtNumber;
-      if (away_players_match[i].GoalsScored > 0) {
-        var ball = document.createElement("img");
-        ball.setAttribute("src", "/img/ball.png");
-        ball.setAttribute("class", "ball icon");
-        formation_table[pos].appendChild(ball);
-        console.log(away_players_match[i].Name);
-      }
-    });
-    stats_view.displaySquadInfo();
   },
   displaySquadInfo() {
     let home_squad_name = document.getElementById("home_squad_name"),
-      away_squad_name = document.getElementById("away_squad_name"),
       home_squad_icon = document.getElementById("home_squad_icon"),
       home_kit_icon = document.getElementById("home_kit_icon"),
       home_manager_name = document.getElementById("home_manager_name"),
-      home_squad_list = document.getElementById("home_squad_list");
+      home_squad_list = document.getElementById("home_squad_list"),
+      away_squad_name = document.getElementById("away_squad_name"),
+      away_squad_icon = document.getElementById("away_squad_icon"),
+      away_kit_icon = document.getElementById("away_kit_icon"),
+      away_manager_name = document.getElementById("away_manager_name"),
+      away_squad_list = document.getElementById("away_squad_list");
 
+    // Home squad stuff
     home_squad_icon.innerHTML = `<img src="/img/${home_team_code}.png" height="40px">`;
     home_squad_name.innerText = home_team_code;
     home_kit_icon.innerHTML = `<img src="/img/generic_player_kit.png" height="40px">`;
     home_manager_name.innerText = clubs[0].Manager;
+
+    // Away squad stuff
+    away_squad_icon.innerHTML = `<img src="/img/${away_team_code}.png" height="40px">`;
+    away_squad_name.innerText = away_team_code;
+    away_kit_icon.innerHTML = `<img src="/img/generic_player_kit.png" height="40px">`;
+    away_manager_name.innerText = clubs[1].Manager;
 
     home_players_match.forEach((player, i) => {
       let player_el = document.createElement("li");
@@ -730,6 +791,22 @@ var stats_view = {
         player_el.setAttribute("class", "poor_form");
       }
       home_squad_list.appendChild(player_el);
+    });
+
+    // Show Away squad performance
+    away_players_match.forEach((player, i) => {
+      let player_el = document.createElement("li");
+      player_el.innerHTML = `<b>${player.Name}</b> ${player.Position} ${
+        player.ShirtNumber
+      }`;
+      if (player.Points > 3) {
+        player_el.setAttribute("class", "good_form");
+      } else if (player.Points > 1 && player.Points < 3) {
+        player_el.setAttribute("class", "average_form");
+      } else if (player.Points <= 1) {
+        player_el.setAttribute("class", "poor_form");
+      }
+      away_squad_list.appendChild(player_el);
     });
   }
 };
@@ -779,4 +856,5 @@ function makeStats(match) {
  * Next: Add UI and add clubs directly.
  */
 handlers.setUpEventListeners();
+handlers.formationSelectListeners();
 controller.getFixtureDetails();

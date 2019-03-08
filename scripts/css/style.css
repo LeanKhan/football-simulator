@@ -51,3 +51,11 @@
 .squads {
   width: 149px;
 }
+
+#main_panel {
+  height: 700px;
+  overflow-y: auto;
+}
+#match_overview  {
+  height: 200px;
+}

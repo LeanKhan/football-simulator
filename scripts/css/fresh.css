@@ -110,4 +110,16 @@ body {
 #home_squad_list {
   list-style-type: none;
   font-size: x-small;
+  color: #101318 !important;
+}
+#away_squad_list {
+  list-style-type: none;
+  font-size: x-small;
+  color: #101318 !important;
+}
+.header {
+  width: 100%;
+  height: 30px;
+  background-color: #101318;
+  color: white !important;
 }

@@ -12,7 +12,12 @@ var model = {
     let competition_name = document.getElementById("competition_name");
     xhttp.onreadystatechange = () => {
       if (xhttp.readyState == 4 && xhttp.status == 200) {
-        season = JSON.parse(xhttp.response);
+        if (!xhttp.response) {
+          season = JSON.parse(sessionStorage.getItem("season"));
+        } else {
+          season = JSON.parse(xhttp.response);
+          sessionStorage.setItem("season", xhttp.response);
+        }
         console.log(xhttp.response);
         league_code = season.LeagueCode;
 
@@ -28,45 +33,45 @@ var model = {
   makeFixtures() {
     if (season.LeagueCode == "L1") {
       // Week 1
-      fixtures.push(new Match(clubs[0],clubs[1]).details);
-      fixtures.push(new Match(clubs[2],clubs[3]).details);
-      fixtures.push(new Match(clubs[4],clubs[5]).details);
+      fixtures.push(new Match(clubs[0], clubs[1]).details);
+      fixtures.push(new Match(clubs[2], clubs[3]).details);
+      fixtures.push(new Match(clubs[4], clubs[5]).details);
       // Week 2
-      fixtures.push(new Match(clubs[5],clubs[1]).details);
-      fixtures.push(new Match(clubs[0],clubs[3]).details);
-      fixtures.push(new Match(clubs[2],clubs[4]).details);
+      fixtures.push(new Match(clubs[5], clubs[1]).details);
+      fixtures.push(new Match(clubs[0], clubs[3]).details);
+      fixtures.push(new Match(clubs[2], clubs[4]).details);
       // Week 3
-      fixtures.push(new Match(clubs[1],clubs[3]).details);
-      fixtures.push(new Match(clubs[4],clubs[0]).details);
-      fixtures.push(new Match(clubs[5],clubs[2]).details);
+      fixtures.push(new Match(clubs[1], clubs[3]).details);
+      fixtures.push(new Match(clubs[4], clubs[0]).details);
+      fixtures.push(new Match(clubs[5], clubs[2]).details);
       // Week 4
-      fixtures.push(new Match(clubs[3],clubs[4]).details);
-      fixtures.push(new Match(clubs[1],clubs[2]).details);
-      fixtures.push(new Match(clubs[0],clubs[5]).details);
+      fixtures.push(new Match(clubs[3], clubs[4]).details);
+      fixtures.push(new Match(clubs[1], clubs[2]).details);
+      fixtures.push(new Match(clubs[0], clubs[5]).details);
       // Week 5
-      fixtures.push(new Match(clubs[2],clubs[0]).details);
-      fixtures.push(new Match(clubs[4],clubs[1]).details);
-      fixtures.push(new Match(clubs[3],clubs[5]).details);
+      fixtures.push(new Match(clubs[2], clubs[0]).details);
+      fixtures.push(new Match(clubs[4], clubs[1]).details);
+      fixtures.push(new Match(clubs[3], clubs[5]).details);
       // Week 6
-      fixtures.push(new Match(clubs[1],clubs[0]).details);
-      fixtures.push(new Match(clubs[3],clubs[2]).details);
-      fixtures.push(new Match(clubs[5],clubs[4]).details);
+      fixtures.push(new Match(clubs[1], clubs[0]).details);
+      fixtures.push(new Match(clubs[3], clubs[2]).details);
+      fixtures.push(new Match(clubs[5], clubs[4]).details);
       // Week 7
-      fixtures.push(new Match(clubs[1],clubs[5]).details);
-      fixtures.push(new Match(clubs[3],clubs[0]).details);
-      fixtures.push(new Match(clubs[4],clubs[2]).details);
+      fixtures.push(new Match(clubs[1], clubs[5]).details);
+      fixtures.push(new Match(clubs[3], clubs[0]).details);
+      fixtures.push(new Match(clubs[4], clubs[2]).details);
       // Week 8
-      fixtures.push(new Match(clubs[3],clubs[1]).details);
-      fixtures.push(new Match(clubs[0],clubs[4]).details);
-      fixtures.push(new Match(clubs[2],clubs[5]).details);
+      fixtures.push(new Match(clubs[3], clubs[1]).details);
+      fixtures.push(new Match(clubs[0], clubs[4]).details);
+      fixtures.push(new Match(clubs[2], clubs[5]).details);
       // Week 9
-      fixtures.push(new Match(clubs[4],clubs[3]).details);
-      fixtures.push(new Match(clubs[2],clubs[1]).details);
-      fixtures.push(new Match(clubs[5],clubs[0]).details);
+      fixtures.push(new Match(clubs[4], clubs[3]).details);
+      fixtures.push(new Match(clubs[2], clubs[1]).details);
+      fixtures.push(new Match(clubs[5], clubs[0]).details);
       // Week 10
-      fixtures.push(new Match(clubs[0],clubs[2]).details);
-      fixtures.push(new Match(clubs[1],clubs[4]).details);
-      fixtures.push(new Match(clubs[5],clubs[3]).details);
+      fixtures.push(new Match(clubs[0], clubs[2]).details);
+      fixtures.push(new Match(clubs[1], clubs[4]).details);
+      fixtures.push(new Match(clubs[5], clubs[3]).details);
     } else {
       // League 3 and 2 Fixtures
       // Weeks 1 - 3

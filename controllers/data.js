@@ -62,6 +62,7 @@ data_router.get("/new/season", (req, res) => {
   season.SeasonCode = params["season_code"];
   season.LeagueCode = params["league_code"];
   season.SeasonLongCode = params["league_code"] + ":" + params["season_code"];
+  // sessionStorage.setItem("season", JSON.stringify(season));
   let _season = new Season(season);
   _season.save((err, season) => {
     if (!err) {

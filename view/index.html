@@ -107,6 +107,14 @@
             
           </div>
 
+          <!-- Other info! -->
+          <div class="row mt-5" id="match_overview">
+            <div class="col-12">
+                <div class="header shadow"></div>
+                <div class="dark-bg">Hi!</div>
+            </div>
+          </div>
+
         </div>
         <!-- Stats panel -->
         <div class="col-md-5" id="stats">
@@ -209,13 +217,20 @@
                     </table>
                   </div>
                   <div class="squads px-1">
+                    <!-- Home Squad Section -->
                     <div id="home_squad">
                         <select class="select custom-select">
-                          <option>
-                            Pops
-                          </option>
+                          <option name="home_formation" value="home_321">
+                          <em>3-2-1</em>
+                        </option>
+                        <option name="home_formation" value="home_321_back">
+                          <em>3-2-1 Back</em>
+                        </option>
+                        <option name="home_formation" value="home_321_wide">
+                          <em>3-2-1 Wide</em>
+                        </option>
                         </select>
-                        <h5 id="home_squad_name">Club Name</h5>
+                        <h5 id="home_squad_name"></h5>
                         <div>
                           <span id="home_squad_icon"></span>
                           <span id="home_kit_icon"></span>
@@ -224,15 +239,32 @@
                         <ul class="list-group" id="home_squad_list">
                         </ul>
                     </div>
-                    <div id="away_sqaud">
-                        
-                        <ul class="list-group" name="squad_list">
-                          <li class="list-group-item">This guy</li>
-                          <li class="list-group-item">This guy</li>
-                          <li class="list-group-item">This guy</li>
-                        </ul>
-                    </div>
+                    <!-- Away Squad Section -->
+                    <div id="away_squad">
+                      <select class="select custom-select">
+                        <option name="away_formation" value="away_321">
+                          <em>3-2-1</em>
+                        </option>
+                        <option name="away_formation" value="away_321_back">
+                          <em>3-2-1 Back</em>
+                        </option>
+                        <option name="away_formation" value="away_321_wide">
+                          <em>3-2-1 Wide</em>
+                        </option>
+                        <option name="away_formation" value="away_2121_wide">
+                          <em>2-1-2-1 Wide</em>
+                        </option>
+                      </select>
+                      <h5 id="away_squad_name"></h5>
+                      <div>
+                        <span id="away_squad_icon"></span>
+                        <span id="away_kit_icon"></span>
+                        <p id="away_manager_name"></p>
+                      </div>
+                      <ul class="list-group" id="away_squad_list">
+                      </ul>
                   </div>
+                </div>
             </div>
         </div>
       </div>
