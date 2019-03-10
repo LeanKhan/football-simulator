@@ -12,7 +12,8 @@ var model = {
     let competition_name = document.getElementById("competition_name");
     xhttp.onreadystatechange = () => {
       if (xhttp.readyState == 4 && xhttp.status == 200) {
-        if (!xhttp.response) {
+        let res = xhttp.response;
+        if (res.LeagueCode == "") {
           season = JSON.parse(sessionStorage.getItem("season"));
         } else {
           season = JSON.parse(xhttp.response);
@@ -210,8 +211,7 @@ var view = {
       let link = document.createElement("a");
 
       // Set MatchCode
-      fixture.MatchCode =
-        season.LeagueCode + ":" + season.SeasonCode + ":" + "M" + i;
+      fixture.MatchCode = season.SeasonLongCode + ":" + "M" + i;
 
       list_item.setAttribute("id", fixture.MatchCode);
       list_item.setAttribute("class", "mb-1");
@@ -280,7 +280,11 @@ var controller = {
       }
     };
 
-    xhttp.open("GET", `/data/clubs/${league}`, true);
+    xhttp.open(
+      "GET",
+      `/data/clubs/${season.SeasonLongCode.split(":")[0]}`,
+      true
+    );
     xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhttp.send();
   }

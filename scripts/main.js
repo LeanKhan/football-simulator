@@ -2,7 +2,7 @@
 
 var home_match_details = "";
 var away_match_details = "";
-var match_details_labels = "";
+
 var fixtures = [];
 var selected_fixture;
 var match;
@@ -143,12 +143,6 @@ Match.prototype = {
     <b>${this.teamB.probability_number}</b><br>
     <b>${this.teamB.attacking_form}</b><br>
     <b>${this.teamB.defensive_form}</b><br>`;
-
-    match_details_labels = `Chances Created Rate<br>
-    Chances Created Number<br>
-    Probability Number<br>
-    Attacking Form<br>
-    Defensive Form<br>`;
   },
   simulate() {
     this.startMatch();
@@ -261,9 +255,6 @@ var view = {
         100
     );
 
-    var match_details_labels_element = document.getElementById(
-      "match_details_labels"
-    );
     var home_score = document.getElementById("home_score");
     var away_score = document.getElementById("away_score");
     var score_divider = document.getElementById("score_divider");
@@ -328,6 +319,7 @@ var view = {
     // }
   },
   showResults(match) {
+    debugger;
     match.simulate();
 
     view.displayResults(match.details);
@@ -335,6 +327,8 @@ var view = {
     makeStats(match.details);
 
     stats_view.displayFormations();
+
+    stats_view.displaySquadInfo();
 
     controller.sendToServer(match);
   },
@@ -368,8 +362,8 @@ var view = {
 
 var controller = {
   sendToServer(match_object) {
-    match_object.details.HomeSquadStats = home_players_match;
-    match_object.details.AwaySquadStats = away_players_match;
+    match_object.details.HomeSquadStats = home_players;
+    match_object.details.AwaySquadStats = away_players;
     console.log("In send to server");
     let xhttp = new XMLHttpRequest();
 
@@ -414,15 +408,17 @@ var controller = {
 
     xhttp.onreadystatechange = () => {
       if (xhttp.readyState == 4 && xhttp.status == 200) {
+        // debugger;
         fixtures = JSON.parse(xhttp.response);
+        console.log("From getFixtures 2", fixtures);
 
         // Set SelectedFixture
         selected_fixture = fixtures[match.match_number];
 
         if (selected_fixture.Played) {
           // Set Squad stats
-          home_players_match = selected_fixture.HomeSquadStats;
-          away_players_match = selected_fixture.AwaySquadStats;
+          home_players = selected_fixture.HomeSquadStats;
+          away_players = selected_fixture.AwaySquadStats;
         }
 
         home_team_code = selected_fixture.HomeClubCode;
@@ -454,9 +450,7 @@ var handlers = {
     var away_match_details_element = document.getElementById(
       "away_match_details"
     );
-    var match_details_labels_element = document.getElementById(
-      "match_details_labels"
-    );
+
     var home_score = document.getElementById("home_score");
     var away_score = document.getElementById("away_score");
     var score_divider = document.getElementById("score_divider");
@@ -529,28 +523,28 @@ var handlers = {
 
     home_formation_select_elements.forEach((el, key) => {
       el.addEventListener("click", ev => {
-        console.log("Home formation", el);
         stats_model.formations.home_previous =
           stats_model.formations.home_current;
         stats_model.formations.home_current = ev.target.value;
         stats_view.displaySquadFormation(
           stats_model.formations.home_current,
           stats_model.formations.home_previous,
-          home_players_match
+          home_players,
+          "home"
         );
       });
     });
 
     away_formation_select_elements.forEach((el, key) => {
       el.addEventListener("click", ev => {
-        console.log("Away formation", el);
         stats_model.formations.away_previous =
           stats_model.formations.away_current;
         stats_model.formations.away_current = ev.target.value;
         stats_view.displaySquadFormation(
           stats_model.formations.away_current,
           stats_model.formations.away_previous,
-          away_players_match
+          away_players,
+          "away"
         );
       });
     });
@@ -562,8 +556,8 @@ let fixture;
 let clubs;
 let home_players;
 let away_players;
-let home_players_match;
-let away_players_match;
+// let home_players;
+// let away_players;
 let home = {
   gk: [],
   def: [],
@@ -602,10 +596,15 @@ var stats_model = {
     xhttp.onreadystatechange = () => {
       if (xhttp.readyState == 4 && xhttp.status == 200) {
         clubs = JSON.parse(xhttp.response);
-        home_players = clubs[0].Players;
-        setPlayers(home, home_players);
-        away_players = clubs[1].Players;
+       
+
+        if (!fixture.Played) {
+          home_players = clubs[0].Players;
+          away_players = clubs[1].Players;
+          setPlayers(home, home_players);
         setPlayers(away, away_players);
+        }
+        
         sortPlayers();
         stats_view.displayFormations();
         stats_view.displaySquadInfo();
@@ -633,6 +632,7 @@ var stats_model = {
     away_321_wide: [66, 57, 59, 61, 43, 47, 38],
     away_2121_wide: [66, 58, 52, 60, 43, 47, 38]
   },
+  points: [],
   distributeStats(goals, squad_obj, TeamDetails) {
     // console.log(fixture.HomeTeamDetails);
 
@@ -699,24 +699,26 @@ var stats_view = {
     stats_view.displaySquadFormation(
       stats_model.formations.home_current,
       stats_model.formations.home_previous,
-      home_players_match
+      home_players,
+      "home"
     );
     stats_view.displaySquadFormation(
       stats_model.formations.away_current,
       stats_model.formations.away_previous,
-      away_players_match
+      away_players,
+      "away"
     );
+    stats_model.points.sort((a, b) => {
+      return b.points - a.points;
+    });
+    stats_view.displayMOTM();
   },
-  displaySquadFormation(current, previous, players) {
-    if (!selected_fixture.Played) {
-      home_players_match = home_players;
-      away_players_match = away_players;
-    }
+  displaySquadFormation(current, previous, players, side) {
+    // if (!selected_fixture.Played) {
+    //   home_players = home_players;
+    //   away_players = away_players;
+    // }
     let formation_table = document.getElementsByName("formation");
-
-    console.log("previous", previous);
-    console.log("current", current);
-
     // Sort players according to position
 
     stats_model.formations[previous].forEach((pos, i) => {
@@ -726,19 +728,16 @@ var stats_view = {
     });
 
     stats_model.formations[current].forEach((pos, i) => {
-      let points = [];
       let name = document.createElement("span");
 
-      points.push(players[i].Points);
-      points.sort();
+      if(stats_model.points.length < 14){ // Only add new points if all the players' points have been added
+        stats_model.points.push({ points: players[i].Points, id: side+ "-" + i });
+      }
 
       formation_table[pos].setAttribute("class", "text-center");
-      formation_table[pos].setAttribute("id", "home-" + i);
+      formation_table[pos].setAttribute("id", side + "-" + i);
 
-      name.innerText = players[i].Name.split(" ")[
-        players[i].Name.split(" ")["length"] - 1
-      ];
-
+      name.innerText = players[i].LastName;
       formation_table[
         pos
       ].innerHTML = `<img src="/img/generic_player_kit.png" height="50px">`;
@@ -750,7 +749,7 @@ var stats_view = {
         ball.setAttribute("src", "/img/ball.png");
         ball.setAttribute("class", "ball icon");
         formation_table[pos].appendChild(ball);
-        console.log(players[i].Name);
+        console.log(players[i].LastName);
       }
     });
   },
@@ -771,16 +770,18 @@ var stats_view = {
     home_squad_name.innerText = home_team_code;
     home_kit_icon.innerHTML = `<img src="/img/generic_player_kit.png" height="40px">`;
     home_manager_name.innerText = clubs[0].Manager;
+    home_squad_list.innerHTML = "";
 
     // Away squad stuff
     away_squad_icon.innerHTML = `<img src="/img/${away_team_code}.png" height="40px">`;
     away_squad_name.innerText = away_team_code;
     away_kit_icon.innerHTML = `<img src="/img/generic_player_kit.png" height="40px">`;
     away_manager_name.innerText = clubs[1].Manager;
+    away_squad_list.innerHTML = "";
 
-    home_players_match.forEach((player, i) => {
+    home_players.forEach((player, i) => {
       let player_el = document.createElement("li");
-      player_el.innerHTML = `<b>${player.Name}</b> ${player.Position} ${
+      player_el.innerHTML = `<b>${player.LastName}</b> ${player.Position} ${
         player.ShirtNumber
       }`;
       if (player.Points > 3) {
@@ -794,9 +795,9 @@ var stats_view = {
     });
 
     // Show Away squad performance
-    away_players_match.forEach((player, i) => {
+    away_players.forEach((player, i) => {
       let player_el = document.createElement("li");
-      player_el.innerHTML = `<b>${player.Name}</b> ${player.Position} ${
+      player_el.innerHTML = `<b>${player.LastName}</b> ${player.Position} ${
         player.ShirtNumber
       }`;
       if (player.Points > 3) {
@@ -808,6 +809,10 @@ var stats_view = {
       }
       away_squad_list.appendChild(player_el);
     });
+  },
+  displayMOTM(){
+    let motm_element = document.getElementById(stats_model.points[0].id);
+    console.log(motm_element)
   }
 };
 
@@ -839,12 +844,12 @@ function sortPlayers() {
 }
 
 function makeStats(match) {
-  home_players_match = stats_model.distributeStats(
+  home_players = stats_model.distributeStats(
     match.HomeTeamScore,
     home,
     match.HomeTeamDetails
   );
-  away_players_match = stats_model.distributeStats(
+  away_players = stats_model.distributeStats(
     match.AwayTeamScore,
     away,
     match.AwayTeamDetails
