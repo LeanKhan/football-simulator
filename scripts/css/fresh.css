@@ -20,10 +20,20 @@ body {
   border-color: #340f78 !important;
 }
 
+.dark-bg {
+  background-color: #101318 !important;
+}
+
 .btn:hover,
 .btn:focus {
   box-shadow: 0 0 0 0.2rem rgb(75, 255, 39) !important;
 }
+
+.btn .btn-purps:hover,
+.btn .btn-purps:focus {
+  box-shadow: 0 0 0 0.2rem rgb(194, 51, 97) !important;
+}
+
 .pitch {
   background: url("/img/pitch-2.png");
   height: 600px;
@@ -35,11 +45,29 @@ body {
   position: relative;
 }
 
+#list {
+  list-style: none !important;
+}
+
+#list a {
+  color: aliceblue !important;
+}
+
+.list-group-item {
+  border-radius: 0.25rem !important;
+}
+
+#list a:hover,
+#list a:focus {
+  box-shadow: 0 0 0 0.2rem rgb(194, 51, 97) !important;
+}
+
 .top {
   background-color: #101318;
 }
 
 #formation_table span {
+  width: inherit;
   font-size: 9px;
   color: white;
   position: absolute;
@@ -54,6 +82,15 @@ body {
   border-radius: 12px;
 }
 
+#formation_table .shirt_number {
+  top: 14px;
+  left: 1px;
+  background: none;
+  border: none;
+  font-size: 10px;
+  color: black;
+}
+
 #match_details_labels {
   margin-left: 3.5rem !important;
   margin-right: 3.5rem !important;
@@ -61,7 +98,7 @@ body {
 
 #formation_table .icon {
   position: absolute;
-  top: 2px;
+  top: 4px;
   right: -9px;
 }
 
@@ -122,4 +159,10 @@ body {
   height: 30px;
   background-color: #101318;
   color: white !important;
+}
+
+.motm_icon {
+  position: absolute;
+  top: 4px;
+  left: -13px;
 }

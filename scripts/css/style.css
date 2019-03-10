@@ -40,14 +40,6 @@
   font-size: 16px;
 }
 
-.list {
-  list-style: none !important;
-}
-
-#list a:hover {
-  color: goldenrod;
-}
-
 .squads {
   width: 149px;
 }
@@ -56,6 +48,6 @@
   height: 700px;
   overflow-y: auto;
 }
-#match_overview  {
+#match_overview {
   height: 200px;
 }

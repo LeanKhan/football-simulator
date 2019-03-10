@@ -218,7 +218,7 @@ var view = {
 
       link.setAttribute(
         "class",
-        "list-group-item border-bottom-rounded d-flex justify-content-between h5 py-1 px-2"
+        "list-group-item dark-bg d-flex justify-content-between h5 py-1 px-2"
       );
       divider.setAttribute("class", "h4");
       if (fixture.Played) {

@@ -12,39 +12,45 @@
       href="/css/bootstrap.css"
     />
     <link
-      rel="stylesheet"
-      type="text/css"
-      media="screen"
-      href="/css/style.css"
-    />
+    rel="stylesheet"
+    type="text/css"
+    media="screen"
+    href="/css/fresh.css"
+  />
   </head>
   <body>
     <!-- Fixtures -->
     <div class="container container-fluid">
-      <div class="row alert text-white">
-        <h5>Fixtures for</h5>
-        <h5 id="competition_name"></h5>
-      </div>
       <div class="row">
-        <div class="col-md-12">
-          <button class="btn" onclick="model.makeFixtures()">
-            Make fixtures!
-          </button>
-          <button class="btn" onclick="model.displayFixtures()">
-              Display fixtures!
-            </button>
+        <div class="col-12 d-flex">
+          <img
+            src="/img/logo.png"
+            height="43px"
+            class="align-self-center"
+          /><span class="display-4"><h5 id="competition_name"></h5></span>
         </div>
-
+        <div class="col-12 mx-auto">
+          <div class="">
+            <button
+              class="btn btn-purps my-button bg-purps m-3"
+              onclick="model.makeFixtures()"
+            >
+              Make Fixtures
+            </button>
+            <button
+              class="btn btn-purps my-button bg-purps m-3"
+              onclick="model.displayFixtures()"
+            >
+              Display Fixtures
+            </button>
+          </div>
+        </div>
+      </div>
         <!-- Fixtures list -->
         <div class="col-12">
           <ul id="list" class="list"></ul>
         </div>
 
-        <!-- <ul>
-          <li>
-            <a class="d-flex"><span><img src=""></span><span>vs</span><span><img src=""></span></a>
-          </li>
-        </ul> -->
       </div>
     </div>
     <script src="/fixtures.js"></script>

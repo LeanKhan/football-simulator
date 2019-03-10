@@ -319,7 +319,6 @@ var view = {
     // }
   },
   showResults(match) {
-    debugger;
     match.simulate();
 
     view.displayResults(match.details);
@@ -410,7 +409,6 @@ var controller = {
       if (xhttp.readyState == 4 && xhttp.status == 200) {
         // debugger;
         fixtures = JSON.parse(xhttp.response);
-        console.log("From getFixtures 2", fixtures);
 
         // Set SelectedFixture
         selected_fixture = fixtures[match.match_number];
@@ -481,6 +479,8 @@ var handlers = {
           );
           new_match = new Match(home_team_object, away_team_object);
           selected_fixture.Played = false;
+          initialPoints(home_players);
+          initialPoints(away_players);
           view.showResults(new_match);
         }
       } else {
@@ -532,6 +532,7 @@ var handlers = {
           home_players,
           "home"
         );
+        stats_view.displayMOTM();
       });
     });
 
@@ -546,6 +547,7 @@ var handlers = {
           away_players,
           "away"
         );
+        stats_view.displayMOTM();
       });
     });
   }
@@ -556,8 +558,6 @@ let fixture;
 let clubs;
 let home_players;
 let away_players;
-// let home_players;
-// let away_players;
 let home = {
   gk: [],
   def: [],
@@ -596,15 +596,17 @@ var stats_model = {
     xhttp.onreadystatechange = () => {
       if (xhttp.readyState == 4 && xhttp.status == 200) {
         clubs = JSON.parse(xhttp.response);
-       
 
         if (!fixture.Played) {
           home_players = clubs[0].Players;
           away_players = clubs[1].Players;
-          setPlayers(home, home_players);
-        setPlayers(away, away_players);
+          initialPoints(home_players);
+          initialPoints(away_players);
         }
-        
+
+        setPlayers(home, home_players);
+        setPlayers(away, away_players);
+
         sortPlayers();
         stats_view.displayFormations();
         stats_view.displaySquadInfo();
@@ -633,6 +635,7 @@ var stats_model = {
     away_2121_wide: [66, 58, 52, 60, 43, 47, 38]
   },
   points: [],
+  events: [],
   distributeStats(goals, squad_obj, TeamDetails) {
     // console.log(fixture.HomeTeamDetails);
 
@@ -643,17 +646,37 @@ var stats_model = {
         who = Math.ceil(Math.random() * squad_obj.att.length) - 1;
         squad_obj.att[who]["GoalsScored"]++;
         squad_obj.att[who]["Points"]++;
+        this.events.push({
+          subject: squad_obj.att[who]["LastName"],
+          event: "Goal",
+          code: 1
+        });
       } else if (chance >= 4 && chance <= 8) {
         who = Math.ceil(Math.random() * squad_obj.mid.length) - 1;
         squad_obj.mid[who]["GoalsScored"]++;
         squad_obj.mid[who]["Points"]++;
-      } else if (chance >= 2 && chance <= 3) {
+        this.events.push({
+          subject: squad_obj.mid[who]["LastName"],
+          event: "Goal",
+          code: 1
+        });
+      } else if (chance == 2 || chance == 3) {
         who = Math.ceil(Math.random() * squad_obj.def.length) - 1;
         squad_obj.def[who]["GoalsScored"]++;
         squad_obj.def[who]["Points"]++;
+        this.events.push({
+          subject: squad_obj.def[who]["LastName"],
+          event: "Goal",
+          code: 1
+        });
       } else if (chance < 2) {
         squad_obj.gk[0]["GoalsScored"]++;
         squad_obj.gk[0]["Points"]++;
+        this.events.push({
+          subject: squad_obj.gk[0]["LastName"],
+          event: "Goal",
+          code: 1
+        });
       }
     }
     // Distribute Assists
@@ -671,6 +694,56 @@ var stats_model = {
         who = Math.ceil(Math.random() * squad_obj.def.length) - 1;
         squad_obj.def[who]["Assists"]++;
         squad_obj.def[who]["Points"]++;
+      }
+    }
+    // Distribute Saves and Shots
+    for (let index = 1; index <= Math.ceil(Math.random() * 3); index++) {
+      who = Math.ceil(Math.random() * squad_obj.att.length) - 1;
+      this.events.push({
+        subject: squad_obj.gk[0]["LastName"],
+        event: "Save",
+        code: 3
+      });
+      this.events.push({
+        subject: squad_obj.att[who]["LastName"],
+        event: "Shot",
+        code: 4
+      });
+    }
+    // Distribute Yellow Cards
+    for (let index = 1; index <= Math.ceil(Math.random() * 7); index++) {
+      let chance = Math.ceil(Math.random() * 12);
+      if (chance >= 9) {
+        who = Math.ceil(Math.random() * squad_obj.def.length) - 1;
+        this.events.push({
+          subject: squad_obj.def[0]["LastName"],
+          event: "Yellow Card",
+          code: 2
+        });
+        squad_obj.def[who]["Points"] -= 0.2;
+      } else if (chance == 7 || chance == 8) {
+        who = Math.ceil(Math.random() * squad_obj.mid.length) - 1;
+        this.events.push({
+          subject: squad_obj.mid[0]["LastName"],
+          event: "Yellow Card",
+          code: 2
+        });
+        squad_obj.mid[who]["Points"] -= 0.2;
+      } else if (chance == 6) {
+        who = Math.ceil(Math.random() * squad_obj.att.length) - 1;
+        this.events.push({
+          subject: squad_obj.att[0]["LastName"],
+          event: "Yellow Card",
+          code: 2
+        });
+        squad_obj.att[who]["Points"] -= 0.2;
+      } else if (chance == 5) {
+        this.events.push({
+          subject: squad_obj.gk[0]["LastName"],
+          event: "Yellow Card",
+          code: 2
+        });
+        squad_obj.gk[0]["Points"] -= 0.2;
       }
     }
     // Distribute Attacking form
@@ -692,6 +765,11 @@ var stats_model = {
     return squad_obj.gk.concat(squad_obj.def, squad_obj.mid, squad_obj.att);
     // home_players = home.gk.concat(home.def,home.mid,home.att);
   }
+  // calculateSquadClass(squad, type) {
+  //   return squad.reduce((sum, player) => {
+  //     return sum + parseInt(player[type]);
+  //   }, 0);
+  // }
 };
 
 var stats_view = {
@@ -714,10 +792,6 @@ var stats_view = {
     stats_view.displayMOTM();
   },
   displaySquadFormation(current, previous, players, side) {
-    // if (!selected_fixture.Played) {
-    //   home_players = home_players;
-    //   away_players = away_players;
-    // }
     let formation_table = document.getElementsByName("formation");
     // Sort players according to position
 
@@ -729,20 +803,30 @@ var stats_view = {
 
     stats_model.formations[current].forEach((pos, i) => {
       let name = document.createElement("span");
+      let shirt_number = document.createElement("span");
 
-      if(stats_model.points.length < 14){ // Only add new points if all the players' points have been added
-        stats_model.points.push({ points: players[i].Points, id: side+ "-" + i });
+      if (stats_model.points.length < 14) {
+        // Only add new points if all the players' points have been added
+        stats_model.points.push({
+          points: players[i].Points,
+          id: side + "-" + i
+        });
       }
 
       formation_table[pos].setAttribute("class", "text-center");
       formation_table[pos].setAttribute("id", side + "-" + i);
 
       name.innerText = players[i].LastName;
+      shirt_number.innerText = players[i].ShirtNumber;
+
       formation_table[
         pos
       ].innerHTML = `<img src="/img/generic_player_kit.png" height="50px">`;
+
+      shirt_number.setAttribute("class", "shirt_number");
       // formation_table[pos].appendChild(ball);
       formation_table[pos].appendChild(name);
+      formation_table[pos].appendChild(shirt_number);
       // formation_table[pos].innerText = away_players[i].ShirtNumber;
       if (players[i].GoalsScored > 0) {
         var ball = document.createElement("img");
@@ -784,7 +868,7 @@ var stats_view = {
       player_el.innerHTML = `<b>${player.LastName}</b> ${player.Position} ${
         player.ShirtNumber
       }`;
-      if (player.Points > 3) {
+      if (player.Points >= 3) {
         player_el.setAttribute("class", "good_form");
       } else if (player.Points > 1 && player.Points < 3) {
         player_el.setAttribute("class", "average_form");
@@ -810,28 +894,69 @@ var stats_view = {
       away_squad_list.appendChild(player_el);
     });
   },
-  displayMOTM(){
+  displayMOTM() {
     let motm_element = document.getElementById(stats_model.points[0].id);
-    console.log(motm_element)
+
+    let motm_icon = document.createElement("img");
+    motm_icon.setAttribute("src", "/img/motm.png");
+    motm_icon.setAttribute("class", "ball motm_icon");
+
+    motm_element.appendChild(motm_icon);
+  },
+  timeline: [],
+  timeEvents() {
+    let times = [
+      5,
+      10,
+      15,
+      20,
+      25,
+      30,
+      35,
+      40,
+      45,
+      50,
+      55,
+      60,
+      65,
+      70,
+      75,
+      80,
+      85,
+      90
+    ];
+    let test_event = stats_model.events;
+    test_event.forEach((event, i) => {
+      let w = Math.ceil(Math.random() * 18 - 1);
+      let when = times[w] - Math.ceil(Math.random() * 5);
+
+      console.log(`${event.subject} made a ${event.event} at ${when} minute!`);
+    });
   }
 };
 
 function setPlayers(obj, array) {
   array.forEach((pl, i) => {
     if (pl.PositionNumber == 1) {
-      pl.Points = 0;
       obj.gk.push(pl);
     } else if (pl.PositionNumber == 2) {
-      pl.Points = 0;
       obj.def.push(pl);
     } else if (pl.PositionNumber == 3) {
-      pl.Points = 0;
       obj.mid.push(pl);
     } else if (pl.PositionNumber == 4) {
-      pl.Points = 0;
       obj.att.push(pl);
     }
   });
+}
+
+function initialPoints(players) {
+  players.forEach((player, i) => {
+    player.Points = 0;
+    player.Assists = 0;
+    player.GoalsScored = 0;
+    player.CleanSheets = 0;
+  });
+  stats_model.points = [];
 }
 
 function sortPlayers() {
