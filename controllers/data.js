@@ -86,6 +86,11 @@ data_router.get("/seasons/:season", (req, res) => {
   });
 });
 
+// Endpoint used to go to Fixtures page
+data_router.get("/view/seasons", (req, res) => {
+  res.sendFile(path.join(__dirname, "../view/fixtures.html"));
+});
+
 // Endpoint used to send competition details to the client.
 data_router.get("/competition-details", (req, res) => {
   res.send(season);

@@ -6,6 +6,8 @@ var clubs = [];
 
 var fixtures = [];
 
+var seasons = [];
+
 var model = {
   getCompetionDetails() {
     let xhttp = new XMLHttpRequest();
@@ -91,7 +93,7 @@ var model = {
       fixtures.push(new Match(clubs[3], clubs[2]).details);
     }
 
-    view.displayFixtures(fixtures);
+    view.displayFixtures(fixtures, false);
 
     let xhttp = new XMLHttpRequest();
 
@@ -112,7 +114,7 @@ var model = {
     xhttp.onreadystatechange = () => {
       if (xhttp.readyState == 4 && xhttp.status == 200) {
         fixtures = JSON.parse(xhttp.response);
-        view.displayFixtures(fixtures);
+        view.displayFixtures(fixtures, true);
       }
     };
     xhttp.open("GET", `/data/seasons/${season.SeasonLongCode}/fixtures`, true);
@@ -189,7 +191,7 @@ function Match(teamA, teamB) {
 }
 
 var view = {
-  displayFixtures(fixtures) {
+  displayFixtures(fixtures, isOld) {
     let fixture_list = document.getElementById("list");
     fixture_list.innerHTML = "";
 
@@ -211,7 +213,9 @@ var view = {
       let link = document.createElement("a");
 
       // Set MatchCode
-      fixture.MatchCode = season.SeasonLongCode + ":" + "M" + i;
+      if (!isOld) {
+        fixture.MatchCode = season.SeasonLongCode + ":" + "M" + i;
+      }
 
       list_item.setAttribute("id", fixture.MatchCode);
       list_item.setAttribute("class", "mb-1");
@@ -266,6 +270,21 @@ var view = {
       // Append list item to list group
       fixture_list.appendChild(list_item);
     });
+  },
+  populateSeasonsSelect(seasons) {
+    let season_select = document.getElementById("season_select");
+    season_select.innerHTML = "";
+    seasons.forEach((season, i) => {
+      let option_element = document.createElement("option");
+      option_element.innerText = season.SeasonTitle;
+      option_element.setAttribute("value", season.SeasonLongCode);
+      option_element.setAttribute("name", "season_select");
+      option_element.addEventListener("click", ev => {
+        console.log(ev.target.value);
+        view.displayFixtures(season.Fixtures, true);
+      });
+      season_select.appendChild(option_element);
+    });
   }
 };
 
@@ -287,7 +306,34 @@ var controller = {
     );
     xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhttp.send();
+  },
+  getSeasonsByLeague(league_code) {
+    var xhttp = new XMLHttpRequest();
+
+    xhttp.onreadystatechange = () => {
+      if (xhttp.readyState == 4 && xhttp.status == 200) {
+        seasons = JSON.parse(xhttp.response);
+        view.populateSeasonsSelect(seasons);
+      }
+    };
+
+    xhttp.open("GET", `/data/league/${league_code}/seasons`, true);
+    xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhttp.send();
+  }
+};
+
+var handlers = {
+  setUpEventListeners() {
+    let league_select = document.getElementsByName("league_select");
+    league_select.forEach((el, key) => {
+      el.addEventListener("click", ev => {
+        controller.getSeasonsByLeague(ev.target.value);
+      });
+    });
   }
 };
 
 model.getCompetionDetails();
+
+handlers.setUpEventListeners();

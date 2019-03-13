@@ -481,6 +481,7 @@ var handlers = {
           selected_fixture.Played = false;
           initialPoints(home_players);
           initialPoints(away_players);
+          stats_model.points = [];
           view.showResults(new_match);
         }
       } else {
@@ -741,7 +742,7 @@ var stats_model = {
         this.events.push({
           subject: squad_obj.gk[0]["LastName"],
           event: "Yellow Card",
-          code: 2
+          code: 2,
         });
         squad_obj.gk[0]["Points"] -= 0.2;
       }
@@ -925,12 +926,14 @@ var stats_view = {
       85,
       90
     ];
-    let test_event = stats_model.events;
-    test_event.forEach((event, i) => {
+    
+    stats_model.events.forEach((event, i) => {
       let w = Math.ceil(Math.random() * 18 - 1);
       let when = times[w] - Math.ceil(Math.random() * 5);
 
-      console.log(`${event.subject} made a ${event.event} at ${when} minute!`);
+      event.Minute = when;
+
+      console.log(`${event.subject} made a ${event.event} at ${event.Minute} minute!`);
     });
   }
 };

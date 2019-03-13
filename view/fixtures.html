@@ -22,13 +22,32 @@
     <!-- Fixtures -->
     <div class="container container-fluid">
       <div class="row">
-        <div class="col-12 d-flex">
+        <div class="col-6 d-flex">
           <img
             src="/img/logo.png"
             height="43px"
             class="align-self-center"
           /><span class="display-4"><h5 id="competition_name"></h5></span>
         </div>
+
+        <!-- Select Season -->
+        <div class="col-6 d-flex">
+          <div class="custom-control custom-radio custom-control-inline">
+            <input type="radio" name="league_select" value="L1">
+            <label class="custom-control-label text-muted" for="L1">League 1</label>
+          </div>
+          <div class="custom-control custom-radio custom-control-inline">
+            <input type="radio" name="league_select" value="L2">
+            <label class="custom-control-label text-muted" for="L2">League 2</label>
+          </div>
+          <div class="custom-control custom-radio custom-control-inline">
+            <input type="radio" name="league_select" value="L3" >
+            <label class="custom-control-label text-muted" for="L2">League 3</label>
+          </div>
+            <select id="season_select">
+            </select>
+        </div>
+
         <div class="col-12 mx-auto">
           <div class="">
             <button
