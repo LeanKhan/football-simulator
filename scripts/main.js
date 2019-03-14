@@ -168,8 +168,8 @@ var view = {
       home_ccn = document.getElementById("home_ccn"),
       home_pn = document.getElementById("home_pn"),
       away_pn = document.getElementById("away_pn"),
-      home_af = document.getElementById("away_af"),
-      away_af = document.getElementById("home_af"),
+      home_af = document.getElementById("home_af"),
+      away_af = document.getElementById("away_af"),
       home_df = document.getElementById("home_df"),
       away_df = document.getElementById("away_df");
 
@@ -329,6 +329,8 @@ var view = {
 
     stats_view.displaySquadInfo();
 
+    view.displayTimeline(stats_model.events);
+
     controller.sendToServer(match);
   },
   showTeams() {
@@ -355,6 +357,58 @@ var view = {
       view.displayResults(selected_fixture);
     }
     stats_model.getMatch();
+  },
+  displayTimeline(events){
+
+    let timeline_container = document.getElementById("timeline");
+    timeline_container.innerHTML = "";
+
+     if(events.length == 0){
+      timeline_container.innerHTML = "<div class='mx-auto h4' >No events yet!</div>"
+    }else{
+
+      let dividing_line = document.createElement("div");
+
+      dividing_line.setAttribute("class","dividing-line");
+
+    events.forEach((event,i)=>{
+
+      let event_el = document.createElement("div");
+      event_el.setAttribute("class","event mb-2");
+
+      let side_el = document.createElement("div");
+      side_el.setAttribute("class",`${event.side}-event d-flex`);
+      
+      let time_el = document.createElement("span");
+      time_el.style = "font-weight: bold; font-size: larger; margin-left: 0.25rem";
+
+      let player_name = document.createElement("span");
+      player_name.style = "align-self: center;";
+
+      time_el.innerText = `${event.minute}'`;
+      player_name.innerText = event.subject;
+
+      side_el.appendChild(time_el);
+      side_el.appendChild(player_name);
+
+      let event_marker = document.createElement("div");
+      
+      let event_obj = identifyEventType(event.code);
+
+      event_marker.setAttribute("class",event_obj.class_value); 
+      
+      event_marker.innerHTML = `<img src="${event_obj.icon}">`;
+
+      event_el.appendChild(side_el);
+
+      event_el.appendChild(event_marker);
+
+      timeline_container.appendChild(event_el);
+
+      timeline_container.appendChild(dividing_line);
+
+    });
+    }
   }
 };
 // Object containing season.season_text and season.season_code
@@ -363,7 +417,8 @@ var controller = {
   sendToServer(match_object) {
     match_object.details.HomeSquadStats = home_players;
     match_object.details.AwaySquadStats = away_players;
-    console.log("In send to server");
+    match_object.details.Events = stats_model.events;
+    console.log("Sent events =>",match_object.details.Events);
     let xhttp = new XMLHttpRequest();
 
     xhttp.onreadystatechange = function() {
@@ -417,6 +472,7 @@ var controller = {
           // Set Squad stats
           home_players = selected_fixture.HomeSquadStats;
           away_players = selected_fixture.AwaySquadStats;
+          stats_model.events = selected_fixture.Events;
         }
 
         home_team_code = selected_fixture.HomeClubCode;
@@ -482,6 +538,7 @@ var handlers = {
           initialPoints(home_players);
           initialPoints(away_players);
           stats_model.points = [];
+          stats_model.events = [];
           view.showResults(new_match);
         }
       } else {
@@ -650,7 +707,8 @@ var stats_model = {
         this.events.push({
           subject: squad_obj.att[who]["LastName"],
           event: "Goal",
-          code: 1
+          code: 1,
+          side: identifySide(squad_obj.att[who]["ClubCode"])
         });
       } else if (chance >= 4 && chance <= 8) {
         who = Math.ceil(Math.random() * squad_obj.mid.length) - 1;
@@ -659,7 +717,8 @@ var stats_model = {
         this.events.push({
           subject: squad_obj.mid[who]["LastName"],
           event: "Goal",
-          code: 1
+          code: 1,
+          side: identifySide(squad_obj.mid[who]["ClubCode"])
         });
       } else if (chance == 2 || chance == 3) {
         who = Math.ceil(Math.random() * squad_obj.def.length) - 1;
@@ -668,7 +727,8 @@ var stats_model = {
         this.events.push({
           subject: squad_obj.def[who]["LastName"],
           event: "Goal",
-          code: 1
+          code: 1,
+          side: identifySide(squad_obj.def[who]["ClubCode"])
         });
       } else if (chance < 2) {
         squad_obj.gk[0]["GoalsScored"]++;
@@ -676,7 +736,8 @@ var stats_model = {
         this.events.push({
           subject: squad_obj.gk[0]["LastName"],
           event: "Goal",
-          code: 1
+          code: 1,
+          side: identifySide(squad_obj.gk[0]["ClubCode"])
         });
       }
     }
@@ -703,12 +764,14 @@ var stats_model = {
       this.events.push({
         subject: squad_obj.gk[0]["LastName"],
         event: "Save",
-        code: 3
+        code: 3,
+        side: identifySide(squad_obj.gk[0]["ClubCode"])
       });
       this.events.push({
         subject: squad_obj.att[who]["LastName"],
         event: "Shot",
-        code: 4
+        code: 4,
+        side: identifySide(squad_obj.att[who]["ClubCode"])
       });
     }
     // Distribute Yellow Cards
@@ -719,7 +782,8 @@ var stats_model = {
         this.events.push({
           subject: squad_obj.def[0]["LastName"],
           event: "Yellow Card",
-          code: 2
+          code: 2,
+          side: identifySide(squad_obj.def[who]["ClubCode"])
         });
         squad_obj.def[who]["Points"] -= 0.2;
       } else if (chance == 7 || chance == 8) {
@@ -727,7 +791,8 @@ var stats_model = {
         this.events.push({
           subject: squad_obj.mid[0]["LastName"],
           event: "Yellow Card",
-          code: 2
+          code: 2,
+          side: identifySide(squad_obj.mid[who]["ClubCode"])
         });
         squad_obj.mid[who]["Points"] -= 0.2;
       } else if (chance == 6) {
@@ -735,7 +800,8 @@ var stats_model = {
         this.events.push({
           subject: squad_obj.att[0]["LastName"],
           event: "Yellow Card",
-          code: 2
+          code: 2,
+          side: identifySide(squad_obj.att[who]["ClubCode"])
         });
         squad_obj.att[who]["Points"] -= 0.2;
       } else if (chance == 5) {
@@ -743,6 +809,7 @@ var stats_model = {
           subject: squad_obj.gk[0]["LastName"],
           event: "Yellow Card",
           code: 2,
+          side: identifySide(squad_obj.gk[0]["ClubCode"])
         });
         squad_obj.gk[0]["Points"] -= 0.2;
       }
@@ -763,14 +830,19 @@ var stats_model = {
       player.Points += TeamDetails.DefensiveForm / 7;
     });
 
+     if (stats_model.points.length < 14) {
+        // Only add new points if not all the players' points have been added
+        stats_model.points.push({
+          points: players[i].Points,
+          id: side + "-" + i
+        });
+      };
+
+    stats_view.timeEvents();
+
     return squad_obj.gk.concat(squad_obj.def, squad_obj.mid, squad_obj.att);
     // home_players = home.gk.concat(home.def,home.mid,home.att);
   }
-  // calculateSquadClass(squad, type) {
-  //   return squad.reduce((sum, player) => {
-  //     return sum + parseInt(player[type]);
-  //   }, 0);
-  // }
 };
 
 var stats_view = {
@@ -791,6 +863,8 @@ var stats_view = {
       return b.points - a.points;
     });
     stats_view.displayMOTM();
+  
+   view.displayTimeline(stats_model.events);
   },
   displaySquadFormation(current, previous, players, side) {
     let formation_table = document.getElementsByName("formation");
@@ -806,13 +880,13 @@ var stats_view = {
       let name = document.createElement("span");
       let shirt_number = document.createElement("span");
 
-      if (stats_model.points.length < 14) {
-        // Only add new points if all the players' points have been added
-        stats_model.points.push({
-          points: players[i].Points,
-          id: side + "-" + i
-        });
-      }
+      // if (stats_model.points.length < 14) {
+      //   // Only add new points if all the players' points have been added
+      //   stats_model.points.push({
+      //     points: players[i].Points,
+      //     id: side + "-" + i
+      //   });
+      // };
 
       formation_table[pos].setAttribute("class", "text-center");
       formation_table[pos].setAttribute("id", side + "-" + i);
@@ -904,7 +978,6 @@ var stats_view = {
 
     motm_element.appendChild(motm_icon);
   },
-  timeline: [],
   timeEvents() {
     let times = [
       5,
@@ -931,9 +1004,12 @@ var stats_view = {
       let w = Math.ceil(Math.random() * 18 - 1);
       let when = times[w] - Math.ceil(Math.random() * 5);
 
-      event.Minute = when;
+      event.minute = when;
 
-      console.log(`${event.subject} made a ${event.event} at ${event.Minute} minute!`);
+      // console.log(`${event.subject} made a ${event.event} at ${event.minute} minute!`);
+    }); 
+    stats_model.events.sort((a,b)=>{
+      return a.minute - b.minute;
     });
   }
 };
@@ -962,6 +1038,14 @@ function initialPoints(players) {
   stats_model.points = [];
 }
 
+function identifySide(club_code){
+  if(club_code == home_team_code){
+    return "home";
+  }else if(club_code == away_team_code){
+    return "away";
+  }
+}
+
 function sortPlayers() {
   home_players.sort((a, b) => {
     return a.PositionNumber - b.PositionNumber;
@@ -982,7 +1066,30 @@ function makeStats(match) {
     away,
     match.AwayTeamDetails
   );
-}
+};
+
+function identifyEventType(event_code){
+  let event_obj = { };
+  switch (event_code) {
+    case 1:
+      event_obj.class_value = "event-marker goal-event";
+      event_obj.icon = "/img/ball.png";
+      break;
+    case 2:
+      event_obj.class_value = "event-marker yellow-card-event";
+      event_obj.icon = "";
+      break;
+    case 3:
+      event_obj.class_value = "event-marker";
+      event_obj.icon = "";
+      break;
+    case 4:
+      event_obj.class_value = "event-marker";
+      event_obj.icon = "";
+      break;
+  }
+  return event_obj;
+};
 
 // 10-02-19 11pm
 /**

@@ -173,7 +173,7 @@ body {
 }
 
 .dividing-line {
-  height: 80%;
+  height: 95%;
   width: 3px;
   border-radius: 2px;
   background-color: #343a40;
@@ -181,61 +181,71 @@ body {
   position: absolute;
   /* z-index: -5; */
   top: 20px;
-  left: 322px;
+  left: 314px;
 }
 
 .event {
   position: relative;
   height: 50px;
 }
-.event .left {
+.event .home-event {
   float: left;
   text-align: left;
   width: 185px;
   background-color: white;
-  margin-top: 1rem;
+  /* margin-top: 1rem; */
   margin-left: 2rem;
   padding: 0.45rem;
+  justify-content: space-between;
 }
-.event .right {
+.event .away-event {
   float: right;
   text-align: left;
   width: 185px;
   background-color: white;
-  margin-top: 1rem;
+  /* margin-top: 1rem; */
   margin-right: 2rem;
   padding: 0.45rem;
+  justify-content: space-between;
 }
-.right + .event-marker {
+.away-event + .event-marker {
   position: relative;
   margin: 9px;
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: #1013183e;
+  /* background-color: #1013183e; */
   display: flex !important;
   z-index: 2;
-  left: 348px;
-  top: 15px;
+  left: 318px;
+  top: 4px;
 }
 
-.left + .event-marker {
+.home-event + .event-marker {
   position: relative;
   margin: 9px;
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: #1013183e;
+  background-color: aliceblue;
   display: flex !important;
   z-index: 2;
-  left: 15px;
-  top: 15px;
+  left: 44px;
+  top: 3px;
 }
 .event img {
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   align-self: center;
   margin-left: auto !important;
   margin-right: auto !important;
   /* position: absolute; */
+}
+
+.goal-event {
+  background-color: #01fd86;
+}
+
+.yellow-card-event {
+  background-color: aliceblue;
 }

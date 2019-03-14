@@ -60,6 +60,7 @@ const MatchSchema = new Schema({
   },
   HomeSquadStats: [],
   AwaySquadStats: [],
+  Events: [],
   Time: Date,
   Stadium: String
 });

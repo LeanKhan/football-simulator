@@ -19,7 +19,7 @@ match_router.post("/new", (req, res) => {
   let match_code = req.query.match_code;
   let updated_match_details = req.body.match;
 
-  // Find the associated season to selet the specific fixture.
+  // Find the associated season to select the specific fixture.
   // and update it with the recieved data.
   Season.findOneAndUpdate(
     { SeasonLongCode: season_code, "Fixtures.MatchCode": match_code },
@@ -35,6 +35,7 @@ match_router.post("/new", (req, res) => {
         ["Fixtures.$.AwayTeamDetails"]: updated_match_details.AwayTeamDetails,
         ["Fixtures.$.HomeSquadStats"]: updated_match_details.HomeSquadStats,
         ["Fixtures.$.AwaySquadStats"]: updated_match_details.AwaySquadStats,
+        ["Fixtures.$.Events"]: updated_match_details.Events,
         ["Fixtures.$.Time"]: updated_match_details.Time
       }
     },
@@ -54,6 +55,7 @@ match_router.post("/new", (req, res) => {
         fixture.AwayTeamDetails = updated_match_details.AwayTeamDetails;
         fixture.HomeSquadStats = updated_match_details.HomeSquadStats;
         fixture.AwaySquadStats = updated_match_details.AwaySquadStats;
+        fixture.Events = updated_match_details.Events;
         fixture.Time = updated_match_details.Time;
         saveMatch(fixture);
         updateStandings(fixture, season_code);
@@ -99,6 +101,9 @@ function updateMatch(fixture) {
       Loser: fixture.Loser,
       HomeTeamDetails: fixture.HomeTeamDetails,
       AwayTeamDetails: fixture.AwayTeamDetails,
+      HomeSquadStats: fixture.HomeSquadStats,
+      AwaySquadStats: fixture.AwaySquadStats,
+      Events: fixture.Events,
       Time: fixture.Time
     },
     (err, doc) => {
