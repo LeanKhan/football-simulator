@@ -473,6 +473,7 @@ var controller = {
           home_players = selected_fixture.HomeSquadStats;
           away_players = selected_fixture.AwaySquadStats;
           stats_model.events = selected_fixture.Events;
+          setPoints(home_players,"home",away_players,"away");
         }
 
         home_team_code = selected_fixture.HomeClubCode;
@@ -830,14 +831,6 @@ var stats_model = {
       player.Points += TeamDetails.DefensiveForm / 7;
     });
 
-     if (stats_model.points.length < 14) {
-        // Only add new points if not all the players' points have been added
-        stats_model.points.push({
-          points: players[i].Points,
-          id: side + "-" + i
-        });
-      };
-
     stats_view.timeEvents();
 
     return squad_obj.gk.concat(squad_obj.def, squad_obj.mid, squad_obj.att);
@@ -859,9 +852,6 @@ var stats_view = {
       away_players,
       "away"
     );
-    stats_model.points.sort((a, b) => {
-      return b.points - a.points;
-    });
     stats_view.displayMOTM();
   
    view.displayTimeline(stats_model.events);
@@ -879,14 +869,6 @@ var stats_view = {
     stats_model.formations[current].forEach((pos, i) => {
       let name = document.createElement("span");
       let shirt_number = document.createElement("span");
-
-      // if (stats_model.points.length < 14) {
-      //   // Only add new points if all the players' points have been added
-      //   stats_model.points.push({
-      //     points: players[i].Points,
-      //     id: side + "-" + i
-      //   });
-      // };
 
       formation_table[pos].setAttribute("class", "text-center");
       formation_table[pos].setAttribute("id", side + "-" + i);
@@ -1066,6 +1048,31 @@ function makeStats(match) {
     away,
     match.AwayTeamDetails
   );
+  setPoints(home_players, "home",away_players,"away");
+};
+
+function setPoints(home_squad, home_side, away_squad, away_side){
+
+  // Push all home players
+  home_squad.forEach((player,index)=>{
+    stats_model.points.push({
+      points: player.Points,
+      id: home_side + "-" + index
+    });
+  });
+
+  // Push all away players
+  away_squad.forEach((player,index)=>{
+    stats_model.points.push({
+      points: player.Points,
+      id: away_side + "-" + index
+    });
+  });
+
+  // After pushing all players' points to the points array, sort!
+  stats_model.points.sort((a, b) => {
+    return b.points - a.points;
+  });
 };
 
 function identifyEventType(event_code){
