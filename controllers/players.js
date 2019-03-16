@@ -42,7 +42,6 @@ players_router.get("/new", (req, res) => {
       if (!err) {
         res.send(`<a href="/">Back to main page</a>`);
         console.log(doc);
-        console.log(result);
       } else {
         res.send("Could not add player :(", err);
       }

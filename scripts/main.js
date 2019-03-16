@@ -321,6 +321,8 @@ var view = {
   showResults(match) {
     match.simulate();
 
+    selected_fixture = match.details;
+
     view.displayResults(match.details);
 
     makeStats(match.details);
@@ -543,6 +545,7 @@ var handlers = {
           view.showResults(new_match);
         }
       } else {
+        stats_model.events = [];
         home_team_object = new Team(
           selected_fixture.Home,
           selected_fixture.HomeTeamAC,
@@ -657,8 +660,13 @@ var stats_model = {
         clubs = JSON.parse(xhttp.response);
 
         if (!fixture.Played) {
-          home_players = clubs[0].Players;
-          away_players = clubs[1].Players;
+          if(home_team_code == clubs[0].ClubCode){
+            home_players = clubs[0].Players;
+            away_players = clubs[1].Players;
+          }else if(away_team_code == clubs[0].ClubCode) {
+            away_players = clubs[0].Players;
+            home_players = clubs[1].Players;
+          }
           initialPoints(home_players);
           initialPoints(away_players);
         }
@@ -878,7 +886,7 @@ var stats_view = {
 
       formation_table[
         pos
-      ].innerHTML = `<img src="/img/generic_player_kit.png" height="50px">`;
+      ].innerHTML = `<img src="/img/kits/${players[i].ClubCode}-kit.png" height="52px">`;
 
       shirt_number.setAttribute("class", "shirt_number");
       // formation_table[pos].appendChild(ball);
@@ -909,14 +917,14 @@ var stats_view = {
     // Home squad stuff
     home_squad_icon.innerHTML = `<img src="/img/${home_team_code}.png" height="40px">`;
     home_squad_name.innerText = home_team_code;
-    home_kit_icon.innerHTML = `<img src="/img/generic_player_kit.png" height="40px">`;
+    home_kit_icon.innerHTML = `<img src="/img/kits/${home_team_code}-kit.png" height="40px">`;
     home_manager_name.innerText = clubs[0].Manager;
     home_squad_list.innerHTML = "";
 
     // Away squad stuff
     away_squad_icon.innerHTML = `<img src="/img/${away_team_code}.png" height="40px">`;
     away_squad_name.innerText = away_team_code;
-    away_kit_icon.innerHTML = `<img src="/img/generic_player_kit.png" height="40px">`;
+    away_kit_icon.innerHTML = `<img src="/img/kits/${away_team_code}-kit.png" height="40px">`;
     away_manager_name.innerText = clubs[1].Manager;
     away_squad_list.innerHTML = "";
 
@@ -952,13 +960,15 @@ var stats_view = {
     });
   },
   displayMOTM() {
-    let motm_element = document.getElementById(stats_model.points[0].id);
+    if(selected_fixture.Played){
+      let motm_element = document.getElementById(stats_model.points[0].id);
 
-    let motm_icon = document.createElement("img");
-    motm_icon.setAttribute("src", "/img/motm.png");
-    motm_icon.setAttribute("class", "ball motm_icon");
-
-    motm_element.appendChild(motm_icon);
+      let motm_icon = document.createElement("img");
+      motm_icon.setAttribute("src", "/img/motm.png");
+      motm_icon.setAttribute("class", "ball motm_icon");
+  
+      motm_element.appendChild(motm_icon);
+    }
   },
   timeEvents() {
     let times = [
@@ -1057,7 +1067,8 @@ function setPoints(home_squad, home_side, away_squad, away_side){
   home_squad.forEach((player,index)=>{
     stats_model.points.push({
       points: player.Points,
-      id: home_side + "-" + index
+      id: home_side + "-" + index,
+      name: player.FirstName + " " + player.LastName
     });
   });
 
@@ -1065,7 +1076,8 @@ function setPoints(home_squad, home_side, away_squad, away_side){
   away_squad.forEach((player,index)=>{
     stats_model.points.push({
       points: player.Points,
-      id: away_side + "-" + index
+      id: away_side + "-" + index,
+      name: player.FirstName + " " + player.LastName
     });
   });
 
@@ -1080,19 +1092,19 @@ function identifyEventType(event_code){
   switch (event_code) {
     case 1:
       event_obj.class_value = "event-marker goal-event";
-      event_obj.icon = "/img/ball.png";
+      event_obj.icon = "/img/shot3.png";
       break;
     case 2:
       event_obj.class_value = "event-marker yellow-card-event";
-      event_obj.icon = "";
+      event_obj.icon = "/img/yellow-card.png";
       break;
     case 3:
       event_obj.class_value = "event-marker";
-      event_obj.icon = "";
+      event_obj.icon = "/img/save.png";
       break;
     case 4:
       event_obj.class_value = "event-marker";
-      event_obj.icon = "";
+      event_obj.icon = "/img/shot.png";
       break;
   }
   return event_obj;

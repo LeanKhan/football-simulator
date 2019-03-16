@@ -87,7 +87,7 @@ body {
   left: 1px;
   background: none;
   border: none;
-  font-size: 10px;
+  font-size: 13px;
   color: black;
 }
 
@@ -214,11 +214,11 @@ body {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  /* background-color: #1013183e; */
+  /* background-color: aliceblue; */
   display: flex !important;
   z-index: 2;
   left: 318px;
-  top: 4px;
+  top: 1px;
 }
 
 .home-event + .event-marker {
@@ -227,15 +227,15 @@ body {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: aliceblue;
+  /* background-color: aliceblue; */
   display: flex !important;
   z-index: 2;
   left: 44px;
   top: 3px;
 }
 .event img {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   align-self: center;
   margin-left: auto !important;
   margin-right: auto !important;
@@ -247,5 +247,5 @@ body {
 }
 
 .yellow-card-event {
-  background-color: aliceblue;
+  height: 34px !important;
 }
