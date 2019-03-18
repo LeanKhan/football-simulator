@@ -33,6 +33,9 @@ var model = {
     xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhttp.send();
   },
+  season_details: {
+    SeasonLongCode: ""
+  },
   makeFixtures() {
     if (season.LeagueCode == "L1") {
       // Week 1
@@ -192,6 +195,9 @@ function Match(teamA, teamB) {
 
 var view = {
   displayFixtures(fixtures, isOld) {
+    if (areAllPlayed(fixtures)) {
+      this.displayAlert();
+    }
     let fixture_list = document.getElementById("list");
     fixture_list.innerHTML = "";
 
@@ -280,11 +286,31 @@ var view = {
       option_element.setAttribute("value", season.SeasonLongCode);
       option_element.setAttribute("name", "season_select");
       option_element.addEventListener("click", ev => {
-        console.log(ev.target.value);
+        // console.log(ev.target.value);
+        if (model.season_details.SeasonLongCode == "") {
+          model.season_details.SeasonLongCode = ev.target.value;
+        }
+        fixtures = season.Fixtures;
         view.displayFixtures(season.Fixtures, true);
       });
       season_select.appendChild(option_element);
     });
+  },
+  displayAlert() {
+    let alert_div = document.getElementById("alerts");
+
+    let alert_marquee = document.createElement("div");
+    alert_marquee.setAttribute("class", "alert h4 text-white shadow");
+    alert_marquee.setAttribute(
+      "style",
+      "background: url('/img/season_banner.png');background-position: center; background-size: cover;"
+    );
+
+    alert_marquee.innerHTML = `Hooray! Season is over! See the season stats <a href="/data/view/stats/${
+      model.season_details.SeasonLongCode
+    }">Here</a>`;
+
+    alert_div.appendChild(alert_marquee);
   }
 };
 
@@ -333,6 +359,12 @@ var handlers = {
     });
   }
 };
+
+function areAllPlayed(fixtures) {
+  return fixtures.every((fixture, i) => {
+    return fixture.Played;
+  });
+}
 
 model.getCompetionDetails();
 

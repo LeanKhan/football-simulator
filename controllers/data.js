@@ -91,6 +91,11 @@ data_router.get("/view/seasons", (req, res) => {
   res.sendFile(path.join(__dirname, "../view/fixtures.html"));
 });
 
+// Endpoint used to go to the stats page
+data_router.get("/view/stats/:season_long_code", (req, res) => {
+  res.sendFile(path.join(__dirname, "../view/stats.html"));
+});
+
 // Endpoint used to send competition details to the client.
 data_router.get("/competition-details", (req, res) => {
   res.send(season);
@@ -150,6 +155,18 @@ data_router.get("/seasons/:season/fixtures", (req, res) => {
     } else {
       res.send("Error in getting season fixtures", err);
       console.log("Error in getting season fixtures ", err);
+    }
+  });
+});
+
+// Endpoint used to send a particular season to the client
+data_router.get("/get/seasons/:season", (req, res) => {
+  let season_long_code = req.params.season;
+  Season.findOne({ SeasonLongCode: season_long_code }, (err, season) => {
+    if (!err) {
+      res.send(JSON.stringify(season));
+    } else {
+      res.send("Error in getting season", err);
     }
   });
 });

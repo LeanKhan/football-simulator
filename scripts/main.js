@@ -312,11 +312,6 @@ var view = {
     away_df.setAttribute("class", "progress-bar away-progress-bar");
     away_df.setAttribute("style", `width: ${away_df_value}%`);
     away_df.innerText = match.AwayTeamDetails.DefensiveForm;
-    // } else {
-    //   home_score.innerHTML = `<b>${match.teamA.goals}</b>`;
-    //   away_score.innerHTML = `<b>${match.teamB.goals}</b>`;
-    //   score_divider.innerHTML = "<span>-</span>";
-    // }
   },
   showResults(match) {
     match.simulate();

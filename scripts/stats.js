@@ -1,73 +1,44 @@
-// Hiii!
-let match_code;
-let fixture;
-let clubs;
-let home_players;
-let away_players;
+let selected_season;
+let season_long_code = document.URL.split("/")[6];
+let standings;
+let league_result;
+let player_rankings = {
+  TopScorer: "",
+  TopAssists: "",
+  MostCleanSheets: ""
+}
+
 var model = {
-  getMatch() {
-    match_code = document.URL.split("/")[4];
-    match_number = document.URL.split("/")[5];
+  getSeason() {
     let xhttp = new XMLHttpRequest();
-
     xhttp.onreadystatechange = () => {
       if (xhttp.readyState == 4 && xhttp.status == 200) {
-        fixture = JSON.parse(xhttp.response);
-        model.getClubs();
+        selected_season = JSON.parse(xhttp.response);
+        this.sortStandings(selected_season.Standings);
+        this.setLeagueResults();
       }
     };
-
-    xhttp.open("GET", `/match/get/${match_code}/${match_number}/stats`, true);
+    xhttp.open("GET", "/data/get/seasons/" + season_long_code, true);
     xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhttp.send();
   },
-  getClubs() {
-    let xhttp = new XMLHttpRequest();
-
-    xhttp.onreadystatechange = () => {
-      if (xhttp.readyState == 4 && xhttp.status == 200) {
-        clubs = JSON.parse(xhttp.response);
-        home_players = clubs[0].Players;
-        away_players = clubs[1].Players;
-        view.displayFormation(home_players, away_players);
+  sortStandings(standings_array) {
+    standings = standings_array.sort((a, b) => {
+      if (b.Points == a.Points) {
+        if (b.GD == b.GD) {
+          return b.GF - a.GF;
+        } else {
+          b.GD - a.GD;
+        }
+      } else {
+        return b.Points - a.Points;
       }
-    };
-
-    xhttp.open(
-      "GET",
-      `/data/clubs/${fixture.HomeClubCode}/${fixture.AwayClubCode}`,
-      true
-    );
-    xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhttp.send();
+    });
   },
-  formations: {
-    p3_2_1: [3, 15, 17, 19, 23, 25, 31]
+  setLeagueResults(){
+    league_result.Winner = standings[0];
+    league_result.Relegated = standings[length - 1];
   }
 };
 
-var view = {
-  displayFormation(home, away) {
-    // Regular formation:
-    // 1-3-2-1
-    let formation_table = document.getElementsByName("formation");
-
-    // Sort players according to position
-    home_players.sort((a, b) => {
-      return a.PositionNumber - b.PositionNumber;
-    });
-    away_players.sort((a, b) => {
-      return a.PositionNumber - b.PositionNumber;
-    });
-
-    model.formations.p3_2_1.forEach((pos, i) => {
-      formation_table[pos].setAttribute("class", "bg-warning text-center");
-      formation_table[
-        pos
-      ].innerHTML = `<img src="/img/generic_player_kit.png" height="50px">`;
-      // formation_table[pos].innerText = away_players[i].ShirtNumber;
-    });
-  }
-};
-
-model.getMatch();
+model.getSeason();
