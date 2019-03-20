@@ -1,5 +1,6 @@
 const mongoose = require("mongoose"),
   Club = require("../models/club"),
+  Season = require("../models/season"),
   players_router = require("express").Router(),
   player_functions = require("../utils/player");
 
@@ -29,9 +30,9 @@ players_router.get("/new", (req, res) => {
     GoalkeepingClass: req.query.gk_class,
     Value: value,
     Rating: rating,
-    GoalsScored: "",
-    Assists: "",
-    CleanSheets: "",
+    GoalsScored: 0,
+    Assists: 0,
+    CleanSheets: 0,
     PositionNumber: pos_number
   };
   club_code = player.ClubCode;
@@ -48,5 +49,53 @@ players_router.get("/new", (req, res) => {
     }
   );
 });
+
+players_router.post("/update", (req, res) => {
+  let home_squad_stats = req.body.home_squad_stats;
+  let away_squad_stats = req.body.away_squad_stats;
+
+  let season_long_code = req.query.season;
+
+  var response = {};
+
+  home_squad_stats.forEach((player, i) => {
+    response.message = updatePlayerStats(
+      player.Player_ID,
+      season_long_code,
+      player
+    );
+  });
+
+  away_squad_stats.forEach((player, id) => {
+    updatePlayerStats(player.Player_ID, season_long_code, player);
+  });
+
+  res.send(response).status(200);
+});
+
+function updatePlayerStats(id, season_long_code, stats) {
+  Season.update(
+    { SeasonLongCode: season_long_code, "Players.Player_ID": id },
+    {
+      $inc: {
+        ["Players.$.GoalsScored"]: stats.GoalsScored,
+        ["Players.$.Assists"]: stats.Assists,
+        ["Players.$.Points"]: stats.Points,
+        ["Players.$.CleanSheets"]: stats.CleanSheets
+      }
+    },
+    (err, doc) => {
+      if (err) {
+        console.log("Error!", err);
+        response = "Error in updating player stats" + err;
+      } else if (!err) {
+        console.log("Done! ");
+        response = "Player stats updated successfully!";
+      }
+    }
+  );
+
+  return response;
+}
 
 module.exports = players_router;

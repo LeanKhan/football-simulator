@@ -62,6 +62,10 @@ data_router.get("/new/season", (req, res) => {
   season.SeasonCode = params["season_code"];
   season.LeagueCode = params["league_code"];
   season.SeasonLongCode = params["league_code"] + ":" + params["season_code"];
+
+  // Add all the players to the season
+  setPlayersInSeason(params["league_code"], season.SeasonLongCode);
+
   // sessionStorage.setItem("season", JSON.stringify(season));
   let _season = new Season(season);
   _season.save((err, season) => {
@@ -73,8 +77,38 @@ data_router.get("/new/season", (req, res) => {
   });
 });
 
-// Endpoint used to access season
+// Endpoint used to push players to a season
+function pushPlayers(players, season_long_code) {
+  Season.findOneAndUpdate(
+    { SeasonLongCode: season_long_code },
+    { Players: players },
+    (err, doc) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log("Players added successfully to Season!");
+      }
+    }
+  );
+}
 
+// Function that get's all Clubs in a particular league
+function setPlayersInSeason(league_code, season_long_code) {
+  players = [];
+  Club.find({ LeagueCode: league_code }, (err, clubs) => {
+    if (!err) {
+      players = clubs.reduce((arr, club, i) => {
+        p = club.Players;
+        return arr.concat(p);
+      }, []);
+      pushPlayers(players, season_long_code);
+    } else {
+      return "Error in getting clubs";
+    }
+  });
+}
+
+// Endpoint used to access season
 data_router.get("/seasons/:season", (req, res) => {
   season.SeasonLongCode = req.params.season;
   Season.find({ SeasonLongCode: season.SeasonLongCode }, (err, season) => {
@@ -113,6 +147,7 @@ data_router.get("/clubs/:league", (req, res) => {
   });
 });
 
+// Endpoint to get the two clubs playing.
 data_router.get("/clubs/:home_club_code/:away_club_code", (req, res) => {
   let home_club_code = req.params.home_club_code;
   let away_club_code = req.params.away_club_code;
@@ -146,7 +181,7 @@ data_router.post("/seasons/:season/fixtures", (req, res) => {
   );
 });
 
-// Enpoint used to send all fixtures of a particular season to the client
+// Endpoint used to send all fixtures of a particular season to the client
 data_router.get("/seasons/:season/fixtures", (req, res) => {
   let season_long_code = req.params.season;
   Season.findOne({ SeasonLongCode: season_long_code }, (err, season) => {

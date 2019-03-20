@@ -6,7 +6,7 @@ let player_rankings = {
   TopScorer: "",
   TopAssists: "",
   MostCleanSheets: ""
-}
+};
 
 var model = {
   getSeason() {
@@ -35,7 +35,7 @@ var model = {
       }
     });
   },
-  setLeagueResults(){
+  setLeagueResults() {
     league_result.Winner = standings[0];
     league_result.Relegated = standings[length - 1];
   }

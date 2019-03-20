@@ -131,19 +131,40 @@ function calculateRating(position, attacking_class, defensive_class, gk_class) {
   return rating;
 }
 
-function setPositionNumber(position){
+function setPositionNumber(position) {
   let pos_number;
-  if(position == "GK"){
+  if (position == "GK") {
     pos_number = 1;
-  }else if(position == "DEF"){
+  } else if (position == "DEF") {
     pos_number = 2;
-  }else if(position == "MID"){
+  } else if (position == "MID") {
     pos_number = 3;
-  }else if(position == "ATT"){
+  } else if (position == "ATT") {
     pos_number = 4;
   }
   return pos_number;
 }
+
+// function updatePlayerStats(id, season_long_code, stats, Season) {
+//   Season.update(
+//     { SeasonLongCode: season_long_code, "Players.Player_ID": id },
+//     {
+//       $inc: {
+//         ["Players.$.GoalsScored"]: stats.GoalsScored,
+//         ["Players.$.Assists"]: stats.Assists,
+//         ["Players.$.Points"]: stats.Points,
+//         ["Players.$.CleanSheets"]: stats.CleanSheets
+//       }
+//     },
+//     (err, doc) => {
+//       if (err) {
+//         console.log("Error!", err);
+//       } else if (!err) {
+//         console.log("Done! ");
+//       }
+//     }
+//   );
+// }
 
 module.exports = {
   calculateValue,

@@ -433,6 +433,8 @@ var controller = {
     );
     xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhttp.send(JSON.stringify({ match: match_object.details }));
+
+    this.sendPlayerStatsToServer(home_players,away_players);
   },
   getFixtureDetails() {
     let to_fixtures_link = document.getElementById("to_fixtures_link");
@@ -483,6 +485,20 @@ var controller = {
     xhttp.open("GET", `/data/seasons/${SeasonLongCode}/fixtures`, true);
     xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhttp.send();
+  },
+  sendPlayerStatsToServer(home_squad,away_squad){
+    let xhttp = new XMLHttpRequest();
+
+    xhttp.onreadystatechange = ()=>{
+      if(xhttp.readyState == 4 && xhttp.status == 200){
+        console.log(xhttp.responseText);
+      }
+    }
+
+    // Yaga!
+    xhttp.open("POST",`/data/players/update?season=${SeasonLongCode}`,true);
+    xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhttp.send(JSON.stringify({home_squad_stats: home_squad, away_squad_stats: away_squad}));
   }
 };
 

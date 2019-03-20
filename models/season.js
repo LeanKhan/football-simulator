@@ -21,6 +21,9 @@ var SeasonSchema = new Schema({
   },
   Standings: {
     type: Array
+  },
+  Players: {
+    type: Array
   }
 });
 
