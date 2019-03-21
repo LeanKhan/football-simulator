@@ -1,12 +1,17 @@
 let selected_season;
 let season_long_code = document.URL.split("/")[6];
 let standings;
-let league_result;
+let players;
+let league_result = {
+  Winner: "",
+  Relegated: ""
+};
 let player_rankings = {
   TopScorer: "",
   TopAssists: "",
-  MostCleanSheets: ""
+  TopPoints: ""
 };
+let clubs = {};
 
 var model = {
   getSeason() {
@@ -14,6 +19,7 @@ var model = {
     xhttp.onreadystatechange = () => {
       if (xhttp.readyState == 4 && xhttp.status == 200) {
         selected_season = JSON.parse(xhttp.response);
+        players = selected_season.Players;
         this.sortStandings(selected_season.Standings);
         this.setLeagueResults();
       }
@@ -37,8 +43,27 @@ var model = {
   },
   setLeagueResults() {
     league_result.Winner = standings[0];
-    league_result.Relegated = standings[length - 1];
+    league_result.Relegated = standings[standings["length"] - 1];
+    player_rankings.TopScorer = sortPlayersByAspect(players, "GoalsScored")[0];
+    player_rankings.TopAssists = sortPlayersByAspect(players, "Assists")[0];
+    player_rankings.TopPoints = sortPlayersByAspect(players, "Points")[0];
+    this.arrangePlayersByClub();
+  },
+  arrangePlayersByClub() {
+    standings.forEach((club, i) => {
+      clubs[club.TeamCode] = players.filter((player, i) => {
+        if (player.ClubCode == club.TeamCode) {
+          return player;
+        }
+      });
+    });
   }
 };
+
+function sortPlayersByAspect(players, aspect) {
+  return players.sort((a, b) => {
+    return b[aspect] - a[aspect];
+  });
+}
 
 model.getSeason();

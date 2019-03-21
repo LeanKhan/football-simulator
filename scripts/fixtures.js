@@ -298,7 +298,7 @@ var view = {
   },
   displayAlert() {
     let alert_div = document.getElementById("alerts");
-
+    alert_div.innerHTML = "";
     let alert_marquee = document.createElement("div");
     alert_marquee.setAttribute("class", "alert h4 text-white shadow");
     alert_marquee.setAttribute(
