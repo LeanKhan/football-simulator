@@ -74,6 +74,7 @@ players_router.post("/update", (req, res) => {
 });
 
 function updatePlayerStats(id, season_long_code, stats) {
+  let response;
   Season.update(
     { SeasonLongCode: season_long_code, "Players.Player_ID": id },
     {

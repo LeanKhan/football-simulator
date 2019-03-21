@@ -851,9 +851,20 @@ var stats_model = {
     });
 
     stats_view.timeEvents();
+    
 
     return squad_obj.gk.concat(squad_obj.def, squad_obj.mid, squad_obj.att);
     // home_players = home.gk.concat(home.def,home.mid,home.att);
+  },
+  setMOTM(players){
+    let motm = stats_model.points[0];
+    let motm_index = players.findIndex((player,i)=>{
+      return player.Player_ID == motm.player_id;
+    });
+    console.log(motm_index);
+    if(motm_index != -1){
+      players[motm_index].MOTM = true;
+    }
   }
 };
 
@@ -1037,6 +1048,7 @@ function initialPoints(players) {
     player.Assists = 0;
     player.GoalsScored = 0;
     player.CleanSheets = 0;
+    player.MOTM = false;
   });
   stats_model.points = [];
 }
@@ -1070,6 +1082,8 @@ function makeStats(match) {
     match.AwayTeamDetails
   );
   setPoints(home_players, "home",away_players,"away");
+  stats_model.setMOTM(home_players);
+  stats_model.setMOTM(away_players)
 };
 
 function setPoints(home_squad, home_side, away_squad, away_side){
@@ -1079,7 +1093,8 @@ function setPoints(home_squad, home_side, away_squad, away_side){
     stats_model.points.push({
       points: player.Points,
       id: home_side + "-" + index,
-      name: player.FirstName + " " + player.LastName
+      name: player.FirstName + " " + player.LastName,
+      player_id: player.Player_ID
     });
   });
 
@@ -1088,7 +1103,8 @@ function setPoints(home_squad, home_side, away_squad, away_side){
     stats_model.points.push({
       points: player.Points,
       id: away_side + "-" + index,
-      name: player.FirstName + " " + player.LastName
+      name: player.FirstName + " " + player.LastName,
+      player_id: player.Player_ID
     });
   });
 
