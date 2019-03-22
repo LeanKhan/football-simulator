@@ -82,7 +82,8 @@ function updatePlayerStats(id, season_long_code, stats) {
         ["Players.$.GoalsScored"]: stats.GoalsScored,
         ["Players.$.Assists"]: stats.Assists,
         ["Players.$.Points"]: stats.Points,
-        ["Players.$.CleanSheets"]: stats.CleanSheets
+        ["Players.$.CleanSheets"]: stats.CleanSheets,
+        ["Players.$.MOTM"]: stats.MOTM == true ? 1 : 0
       }
     },
     (err, doc) => {
@@ -90,7 +91,6 @@ function updatePlayerStats(id, season_long_code, stats) {
         console.log("Error!", err);
         response = "Error in updating player stats" + err;
       } else if (!err) {
-        console.log("Done! ");
         response = "Player stats updated successfully!";
       }
     }

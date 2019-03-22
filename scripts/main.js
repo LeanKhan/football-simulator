@@ -857,11 +857,13 @@ var stats_model = {
     // home_players = home.gk.concat(home.def,home.mid,home.att);
   },
   setMOTM(players){
+    // Find the player that has the highest points
+    // and make his MOTM field to be 'true'
     let motm = stats_model.points[0];
     let motm_index = players.findIndex((player,i)=>{
       return player.Player_ID == motm.player_id;
     });
-    console.log(motm_index);
+    
     if(motm_index != -1){
       players[motm_index].MOTM = true;
     }

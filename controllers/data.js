@@ -101,6 +101,9 @@ function setPlayersInSeason(league_code, season_long_code) {
         p = club.Players;
         return arr.concat(p);
       }, []);
+      players.forEach((player, i) => {
+        player.MOTM = 0;
+      });
       pushPlayers(players, season_long_code);
     } else {
       return "Error in getting clubs";
