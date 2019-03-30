@@ -16,6 +16,10 @@ var SeasonSchema = new Schema({
     type: String,
     required: true
   },
+  created_at: {
+    type: Date,
+    default: new Date()
+  },
   Fixtures: {
     type: Array
   },
