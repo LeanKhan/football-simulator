@@ -47,7 +47,7 @@ var model = {
     player_rankings.TopScorer = sortPlayersByAspect(players, "GoalsScored")[0];
     player_rankings.TopAssists = sortPlayersByAspect(players, "Assists")[0];
     player_rankings.TopPoints = sortPlayersByAspect(players, "Points")[0];
-    player_rankings.mostMOTM = sortPlayersByAspect(players, "MOTM");
+    player_rankings.mostMOTM = sortPlayersByAspect(players, "MOTM")[0];
     this.arrangePlayersByClub();
   },
   arrangePlayersByClub() {

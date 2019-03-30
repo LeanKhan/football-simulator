@@ -5,23 +5,41 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>Match Stats</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link
+    <!-- <link
       rel="stylesheet"
       type="text/css"
       media="screen"
       href="/css/bootstrap.css"
-    />
+    /> -->
     <link
       rel="stylesheet"
       type="text/css"
       media="screen"
       href="/css/fresh.css"
     />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      media="screen"
+      href="/css/stats.css"
+    />
   </head>
   <body>
-    <div class="container container-fluid">
+    <div class="container-fluid">
       <div class="row">
-        
+        <!-- Display the winner of the league. -->
+        <div class="col-12" id="winner-container">
+          <span>Winner!</span>
+          <div id="winner-img"></div>
+          <div id="winner-stats"></div>
+        </div>
+
+        <!-- Display the top players by category -->
+        <div class="col-12" id="players-container">
+          <div class="card card-primary" id="player-of-the-year"></div>
+          <div class="card outline-warning" id="top-scorer"></div>
+          <div class="card card-primary" id="top-assists"></div>
+        </div>
       </div>
     </div>
     <script src="/stats.js"></script>
