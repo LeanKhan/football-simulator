@@ -2,6 +2,7 @@ let selected_season;
 let season_long_code = document.URL.split("/")[6];
 let standings;
 let players;
+let new_player_skill_points = [];
 let league_result = {
   Winner: "",
   Relegated: ""
@@ -65,6 +66,81 @@ function sortPlayersByAspect(players, aspect) {
   return players.sort((a, b) => {
     return b[aspect] - a[aspect];
   });
+}
+
+function collateNewSkillPoints() {
+  players.forEach((player, i) => {
+    new_player_skill_points.push(
+      calculateNewSkillPoints(player, player.Position, player.Points)
+    );
+  });
+}
+
+function calculateNewSkillPoints(player, position, points) {
+  let new_stats = {};
+  let avg_points;
+  new_stats.Player_ID = player.Player_ID;
+  new_stats.Position = player.Position;
+  if (position == "ATT") {
+    avg_points = points / 6 / 2;
+
+    new_stats.average_points = avg_points;
+
+    new_stats.AttackingClassIncrement = (avg_points / 100) * 70;
+    new_stats.AttackingClass =
+      (avg_points / 100) * 70 + parseFloat(player.AttackingClass);
+
+    new_stats.DefensiveClassIncrement = (avg_points / 100) * 30;
+    new_stats.DefensiveClass =
+      (avg_points / 100) * 30 + parseFloat(player.DefensiveClass);
+
+    new_stats.GoalkeepingClass = parseFloat(player.GoalkeepingClass);
+  } else if (position == "MID") {
+    avg_points = points / 6 / 2;
+
+    new_stats.average_points = avg_points;
+
+    new_stats.AttackingClassIncrement = (avg_points / 100) * 50;
+    new_stats.AttackingClass =
+      (avg_points / 100) * 50 + parseFloat(player.AttackingClass);
+
+    new_stats.DefensiveClassIncrement = (avg_points / 100) * 50;
+    new_stats.DefensiveClass =
+      (avg_points / 100) * 50 + parseFloat(player.DefensiveClass);
+
+    new_stats.GoalkeepingClass = parseFloat(player.GoalkeepingClass);
+  } else if (position == "DEF") {
+    avg_points = points / 6 / 2;
+
+    new_stats.average_points = avg_points;
+
+    new_stats.AttackingClassIncrement = (avg_points / 100) * 30;
+    new_stats.AttackingClass =
+      (avg_points / 100) * 30 + parseFloat(player.AttackingClass);
+
+    new_stats.DefensiveClassIncrement = (avg_points / 100) * 70;
+    new_stats.DefensiveClass =
+      (avg_points / 100) * 70 + parseFloat(player.DefensiveClass);
+
+    new_stats.GoalkeepingClass = parseFloat(player.GoalkeepingClass);
+  } else if (position == "GK") {
+    avg_points = points / 6 / 2;
+
+    new_stats.average_points = avg_points;
+
+    new_stats.AttackingClassIncrement = (avg_points / 100) * 5;
+    new_stats.AttackingClass =
+      (avg_points / 100) * 5 + parseFloat(player.AttackingClass);
+
+    new_stats.DefensiveClassIncrement = (avg_points / 100) * 5;
+    new_stats.DefensiveClass =
+      (avg_points / 100) * 5 + parseFloat(player.DefensiveClass);
+
+    new_stats.GoalkeepingClassIncrement = (avg_points / 100) * 90;
+    new_stats.GoalkeepingClass =
+      (avg_points / 100) * 90 + parseFloat(player.GoalkeepingClass);
+  }
+  return new_stats;
 }
 
 model.getSeason();

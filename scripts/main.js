@@ -843,12 +843,12 @@ var stats_model = {
     }
     // Distribute Attacking form
     squad_obj.att.forEach((player, i) => {
-      player.Points += (player.Points < 10) ? TeamDetails.AttackingForm / 4 : 0;
+      player.Points += (player.Points < 10) ? TeamDetails.AttackingForm / 3 : 0;
       player.Points = this.trimPointsToTen(player.Points);
     });
     squad_obj.mid.forEach((player, i) => {
-      player.Points += (player.Points < 10) ? (TeamDetails.AttackingForm / 4) / 2 : 0;
-      player.Points += (player.Points < 10) ? (TeamDetails.DefensiveForm / 4) / 2 : 0;
+      player.Points += (player.Points < 10) ? (TeamDetails.AttackingForm / 3) / 2 : 0;
+      player.Points += (player.Points < 10) ? (TeamDetails.DefensiveForm / 3) / 2 : 0;
       player.Points = this.trimPointsToTen(player.Points);
     });
     // Distribute Defensive Form
@@ -976,11 +976,11 @@ var stats_view = {
       player_el.innerHTML = `<b>${player.LastName}</b> ${player.Position} ${
         player.ShirtNumber
       }`;
-      if (player.Points >= 3) {
+      if (player.Points >= 8) {
         player_el.setAttribute("class", "good_form");
-      } else if (player.Points > 1 && player.Points < 3) {
+      } else if (player.Points >= 5 && player.Points < 8) {
         player_el.setAttribute("class", "average_form");
-      } else if (player.Points <= 1) {
+      } else if (player.Points < 5) {
         player_el.setAttribute("class", "poor_form");
       }
       home_squad_list.appendChild(player_el);
@@ -992,11 +992,11 @@ var stats_view = {
       player_el.innerHTML = `<b>${player.LastName}</b> ${player.Position} ${
         player.ShirtNumber
       }`;
-      if (player.Points > 3) {
+      if (player.Points >= 8) {
         player_el.setAttribute("class", "good_form");
-      } else if (player.Points > 1 && player.Points < 3) {
+      } else if (player.Points >= 5 && player.Points < 8) {
         player_el.setAttribute("class", "average_form");
-      } else if (player.Points <= 1) {
+      } else if (player.Points < 5) {
         player_el.setAttribute("class", "poor_form");
       }
       away_squad_list.appendChild(player_el);
