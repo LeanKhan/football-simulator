@@ -723,7 +723,8 @@ var stats_model = {
       if (chance >= 7) {
         who = Math.ceil(Math.random() * squad_obj.att.length) - 1;
         squad_obj.att[who]["GoalsScored"]++;
-        squad_obj.att[who]["Points"]++;
+        // squad_obj.att[who]["Points"]++;
+        squad_obj.att[who]["Points"] += (squad_obj.att[who]["Points"] < 10) ? 2.5 : 0; 
         this.events.push({
           subject: squad_obj.att[who]["LastName"],
           event: "Goal",
@@ -733,7 +734,8 @@ var stats_model = {
       } else if (chance >= 4 && chance <= 8) {
         who = Math.ceil(Math.random() * squad_obj.mid.length) - 1;
         squad_obj.mid[who]["GoalsScored"]++;
-        squad_obj.mid[who]["Points"]++;
+        // squad_obj.mid[who]["Points"]++;
+        squad_obj.mid[who]["Points"] += (squad_obj.mid[who]["Points"] < 10) ? 2.5 : 0;
         this.events.push({
           subject: squad_obj.mid[who]["LastName"],
           event: "Goal",
@@ -743,7 +745,8 @@ var stats_model = {
       } else if (chance == 2 || chance == 3) {
         who = Math.ceil(Math.random() * squad_obj.def.length) - 1;
         squad_obj.def[who]["GoalsScored"]++;
-        squad_obj.def[who]["Points"]++;
+        // squad_obj.def[who]["Points"]++;
+        squad_obj.def[who]["Points"] += (squad_obj.def[who]["Points"] < 10) ? 2.5 : 0;
         this.events.push({
           subject: squad_obj.def[who]["LastName"],
           event: "Goal",
@@ -752,7 +755,8 @@ var stats_model = {
         });
       } else if (chance < 2) {
         squad_obj.gk[0]["GoalsScored"]++;
-        squad_obj.gk[0]["Points"]++;
+        // squad_obj.gk[0]["Points"]++;
+        squad_obj.gk[0]["Points"] += (squad_obj.gk[0]["Points"] < 10) ? 2.5 : 0;
         this.events.push({
           subject: squad_obj.gk[0]["LastName"],
           event: "Goal",
@@ -767,15 +771,18 @@ var stats_model = {
       if (chance >= 7) {
         who = Math.ceil(Math.random() * squad_obj.mid.length) - 1;
         squad_obj.mid[who]["Assists"]++;
-        squad_obj.mid[who]["Points"]++;
+        // squad_obj.mid[who]["Points"]++;
+        squad_obj.mid[who]["Points"] += (squad_obj.mid[who]["Points"] < 10) ? 2 : 0;
       } else if (chance >= 3 && chance <= 8) {
         who = Math.ceil(Math.random() * squad_obj.att.length) - 1;
         squad_obj.att[who]["Assists"]++;
-        squad_obj.att[who]["Points"]++;
+        // squad_obj.att[who]["Points"]++;
+        squad_obj.att[who]["Points"] += (squad_obj.att[who]["Points"] < 10) ? 2 : 0;
       } else if (chance >= 1 && chance < 3) {
         who = Math.ceil(Math.random() * squad_obj.def.length) - 1;
         squad_obj.def[who]["Assists"]++;
-        squad_obj.def[who]["Points"]++;
+        // squad_obj.def[who]["Points"]++;
+        squad_obj.def[who]["Points"] += (squad_obj.def[who]["Points"] < 10) ? 2 : 0;
       }
     }
     // Distribute Saves and Shots
@@ -836,18 +843,22 @@ var stats_model = {
     }
     // Distribute Attacking form
     squad_obj.att.forEach((player, i) => {
-      player.Points += TeamDetails.AttackingForm / 7;
+      player.Points += (player.Points < 10) ? TeamDetails.AttackingForm / 4 : 0;
+      player.Points = this.trimPointsToTen(player.Points);
     });
     squad_obj.mid.forEach((player, i) => {
-      player.Points += TeamDetails.AttackingForm / 7 / 2;
-      player.Points += TeamDetails.DefensiveForm / 7 / 2;
+      player.Points += (player.Points < 10) ? (TeamDetails.AttackingForm / 4) / 2 : 0;
+      player.Points += (player.Points < 10) ? (TeamDetails.DefensiveForm / 4) / 2 : 0;
+      player.Points = this.trimPointsToTen(player.Points);
     });
     // Distribute Defensive Form
     squad_obj.def.forEach((player, i) => {
-      player.Points += TeamDetails.DefensiveForm / 7;
+      player.Points += (player.Points < 10) ? TeamDetails.DefensiveForm / 2 : 0;
+      player.Points = this.trimPointsToTen(player.Points);
     });
     squad_obj.gk.forEach((player, i) => {
-      player.Points += TeamDetails.DefensiveForm / 7;
+      player.Points += (player.Points < 10) ? TeamDetails.DefensiveForm / 2 : 0;
+      player.Points = this.trimPointsToTen(player.Points);
     });
 
     stats_view.timeEvents();
@@ -856,6 +867,14 @@ var stats_model = {
     return squad_obj.gk.concat(squad_obj.def, squad_obj.mid, squad_obj.att);
     // home_players = home.gk.concat(home.def,home.mid,home.att);
   },
+  trimPointsToTen(points){
+    if(points > 10){
+      return points - (points%10);
+    }else{
+      return points
+    }
+  }
+  ,
   setMOTM(players){
     // Find the player that has the highest points
     // and make his MOTM field to be 'true'

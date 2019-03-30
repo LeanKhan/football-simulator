@@ -307,7 +307,7 @@ var view = {
     );
 
     alert_marquee.innerHTML = `Hooray! Season is over! See the season stats <a href="/data/view/stats/${
-      model.season_details.SeasonLongCode
+      season.SeasonLongCode
     }">Here</a>`;
 
     alert_div.appendChild(alert_marquee);
