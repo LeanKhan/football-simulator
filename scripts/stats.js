@@ -82,63 +82,101 @@ function calculateNewSkillPoints(player, position, points) {
   new_stats.Player_ID = player.Player_ID;
   new_stats.Position = player.Position;
   if (position == "ATT") {
-    avg_points = points / 6 / 2;
+    avg_points = points / 6;
 
     new_stats.average_points = avg_points;
 
-    new_stats.AttackingClassIncrement = (avg_points / 100) * 70;
-    new_stats.AttackingClass =
-      (avg_points / 100) * 70 + parseFloat(player.AttackingClass);
+    // Check if the player's avg_points are 2 or below
+    if (avg_points <= 2) {
+      new_stats.DefensiveClassIncrement = -1;
+      new_stats.AttackingClassIncrement = -1;
+    } else {
+      new_stats.AttackingClassIncrement = (avg_points / 100) * 70;
+      new_stats.DefensiveClassIncrement = (avg_points / 100) * 30;
+    }
 
-    new_stats.DefensiveClassIncrement = (avg_points / 100) * 30;
+    // new_stats.AttackingClassIncrement = (avg_points / 100) * 70;
+    new_stats.AttackingClass =
+      new_stats.AttackingClassIncrement + parseFloat(player.AttackingClass);
+
+    // new_stats.DefensiveClassIncrement = (avg_points / 100) * 30;
     new_stats.DefensiveClass =
-      (avg_points / 100) * 30 + parseFloat(player.DefensiveClass);
+      new_stats.DefensiveClassIncrement + parseFloat(player.DefensiveClass);
 
     new_stats.GoalkeepingClass = parseFloat(player.GoalkeepingClass);
   } else if (position == "MID") {
-    avg_points = points / 6 / 2;
+    avg_points = points / 6;
 
     new_stats.average_points = avg_points;
 
-    new_stats.AttackingClassIncrement = (avg_points / 100) * 50;
-    new_stats.AttackingClass =
-      (avg_points / 100) * 50 + parseFloat(player.AttackingClass);
+    // Check if this player's avg_points are 2 or below
+    if (avg_points <= 2) {
+      new_stats.DefensiveClassIncrement = -1;
+      new_stats.AttackingClassIncrement = -1;
+    } else {
+      new_stats.AttackingClassIncrement = (avg_points / 100) * 50;
+      new_stats.DefensiveClassIncrement = (avg_points / 100) * 50;
+    }
 
-    new_stats.DefensiveClassIncrement = (avg_points / 100) * 50;
+    // new_stats.AttackingClassIncrement = (avg_points / 100) * 50;
+    new_stats.AttackingClass =
+      new_stats.AttackingClassIncrement + parseFloat(player.AttackingClass);
+
+    // new_stats.DefensiveClassIncrement = (avg_points / 100) * 50;
     new_stats.DefensiveClass =
-      (avg_points / 100) * 50 + parseFloat(player.DefensiveClass);
+      new_stats.DefensiveClassIncrement + parseFloat(player.DefensiveClass);
 
     new_stats.GoalkeepingClass = parseFloat(player.GoalkeepingClass);
   } else if (position == "DEF") {
-    avg_points = points / 6 / 2;
+    avg_points = points / 6;
 
     new_stats.average_points = avg_points;
 
-    new_stats.AttackingClassIncrement = (avg_points / 100) * 30;
-    new_stats.AttackingClass =
-      (avg_points / 100) * 30 + parseFloat(player.AttackingClass);
+    // Check to see if the player's avg_points are 2 or below
+    if (avg_points <= 2) {
+      new_stats.DefensiveClassIncrement = -1;
+      new_stats.AttackingClassIncrement = -1;
+    } else {
+      new_stats.AttackingClassIncrement = (avg_points / 100) * 30;
+      new_stats.DefensiveClassIncrement = (avg_points / 100) * 70;
+    }
 
-    new_stats.DefensiveClassIncrement = (avg_points / 100) * 70;
+    // new_stats.AttackingClassIncrement = (avg_points / 100) * 30;
+    new_stats.AttackingClass =
+      new_stats.AttackingClassIncrement + parseFloat(player.AttackingClass);
+
+    // new_stats.DefensiveClassIncrement = (avg_points / 100) * 70;
     new_stats.DefensiveClass =
-      (avg_points / 100) * 70 + parseFloat(player.DefensiveClass);
+      new_stats.DefensiveClassIncrement + parseFloat(player.DefensiveClass);
 
     new_stats.GoalkeepingClass = parseFloat(player.GoalkeepingClass);
   } else if (position == "GK") {
-    avg_points = points / 6 / 2;
+    avg_points = points / 6;
 
     new_stats.average_points = avg_points;
 
-    new_stats.AttackingClassIncrement = (avg_points / 100) * 5;
+    // Check if a player's points are 2 or below
+    if (avg_points <= 2) {
+      new_stats.DefensiveClassIncrement = -1;
+      new_stats.AttackingClassIncrement = -1;
+      new_stats.GoalkeepingClassIncrement = -1;
+    } else {
+      new_stats.AttackingClassIncrement = (avg_points / 100) * 5;
+      new_stats.DefensiveClassIncrement = (avg_points / 100) * 5;
+      new_stats.GoalkeepingClassIncrement = (avg_points / 100) * 90;
+    }
+
+    // new_stats.AttackingClassIncrement = (avg_points / 100) * 5;
     new_stats.AttackingClass =
-      (avg_points / 100) * 5 + parseFloat(player.AttackingClass);
+      new_stats.AttackingClassIncrement + parseFloat(player.AttackingClass);
 
-    new_stats.DefensiveClassIncrement = (avg_points / 100) * 5;
+    // new_stats.DefensiveClassIncrement = (avg_points / 100) * 5;
     new_stats.DefensiveClass =
-      (avg_points / 100) * 5 + parseFloat(player.DefensiveClass);
+      new_stats.DefensiveClassIncrement + parseFloat(player.DefensiveClass);
 
-    new_stats.GoalkeepingClassIncrement = (avg_points / 100) * 90;
+    // new_stats.GoalkeepingClassIncrement = (avg_points / 100) * 90;
     new_stats.GoalkeepingClass =
-      (avg_points / 100) * 90 + parseFloat(player.GoalkeepingClass);
+      new_stats.GoalkeepingClassIncrement + parseFloat(player.GoalkeepingClass);
   }
   return new_stats;
 }
