@@ -7,7 +7,10 @@ function calculateValue(age, rating) {
   let value;
 
   if (age >= 17 && age < 20) {
-    if (rating >= 60 && rating < 70) {
+    if (rating <= 60){
+      value = 1000000;
+    }
+    else if (rating >= 60 && rating < 70) {
       value = 2000000;
     } else if (rating >= 70 && rating < 75) {
       value = 4000000;
@@ -25,7 +28,10 @@ function calculateValue(age, rating) {
       value = 0;
     }
   } else if (age >= 20 && age < 24) {
-    if (rating >= 60 && rating < 70) {
+    if(rating <= 60 ){
+      value = 500000;
+    }
+    else if (rating >= 60 && rating < 70) {
       value = 4000000;
     } else if (rating >= 70 && rating < 75) {
       value = 6000000;
@@ -43,7 +49,10 @@ function calculateValue(age, rating) {
       value = 0;
     }
   } else if (age >= 24 && age < 26) {
-    if (rating >= 60 && rating < 70) {
+    if(rating <= 60){
+      value = 400000;
+    }
+    else if (rating >= 60 && rating < 70) {
       value = 3000000;
     } else if (rating >= 70 && rating < 75) {
       value = 18000000;
@@ -61,7 +70,10 @@ function calculateValue(age, rating) {
       value = 0;
     }
   } else if (age >= 26 && age < 30) {
-    if (rating >= 60 && rating < 70) {
+    if(rating <= 60){
+      value = 350000;
+    }
+    else if (rating >= 60 && rating < 70) {
       value = 2500000;
     } else if (rating >= 70 && rating < 75) {
       value = 15000000;
@@ -79,7 +91,10 @@ function calculateValue(age, rating) {
       value = 0;
     }
   } else if (age >= 30 && age < 36) {
-    if (rating >= 60 && rating < 70) {
+    if( rating <= 60){
+      value = 350000;
+    }
+    else if (rating >= 60 && rating < 70) {
       value = 2000000;
     } else if (rating >= 70 && rating < 75) {
       value = 12000000;
