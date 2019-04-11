@@ -5,12 +5,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>Match Stats</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- <link
+    <link
       rel="stylesheet"
       type="text/css"
       media="screen"
       href="/css/bootstrap.css"
-    /> -->
+    />
     <link
       rel="stylesheet"
       type="text/css"
@@ -26,22 +26,57 @@
   </head>
   <body>
     <div class="container-fluid">
+      <!-- Top row START -->
       <div class="row">
-        <!-- Display the winner of the league. -->
-        <div class="col-12" id="winner-container">
-          <span>Winner!</span>
-          <div id="winner-img"></div>
-          <div id="winner-stats"></div>
+        <div class="col-md-4">
+          <h3 id="seasonTitle"></h3>
+          <span class="text-muted text-info ml-2" id="leagueTitle"></span
+          ><img width="100px" id="leagueLogo" />
         </div>
 
-        <!-- Display the top players by category -->
-        <div class="col-12" id="players-container">
-          <div class="card card-primary" id="player-of-the-year"></div>
-          <div class="card outline-warning" id="top-scorer"></div>
-          <div class="card card-primary" id="top-assists"></div>
+        <div
+          class="col-md-8 alert alert-success d-flex justify-content-around"
+          id="league-details"
+        >
+          <span class="text-bold text-white" id="seasonMatches"></span>
+          <span class="text-bold text-white" id="seasonGoals"></span>
+          <span class="text-bold text-white" id="seasonWinner"></span>
+        </div>
+      </div>
+      <!-- Top row END -->
+
+      <div class="row">
+        <div class="col-md-4 p-2">
+          <div class="club-card">
+            <h4>Winner</h4>
+            <img id="winner-logo" />
+            <h5></h5>
+            <ul id="winning-stats" class="list-inline"></ul>
+          </div>
+        </div>
+        <div class="col-md-6 p-2">
+          <div class="players">
+            <div class="player-card" id="top-player"></div>
+
+            <div class="player-card" id="top-scorer"></div>
+
+            <div class="player-card" id="top-assists"></div>
+
+            <div class="player-card" id="top-gk"></div>
+          </div>
+        </div>
+        <div class="col-md-2 bg-primary list-group"></div>
+      </div>
+
+      <!-- Other functions -->
+
+      <div class="row">
+        <div class="col-12">
+          <button class="btn btn-danger" id="end-season">End Season</button>
         </div>
       </div>
     </div>
+
     <script src="/stats.js"></script>
   </body>
 </html>

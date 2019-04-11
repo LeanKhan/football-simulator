@@ -4,7 +4,8 @@ const data_router = require("express").Router(),
   url = require("url"),
   querystring = require("querystring"),
   Season = require("../models/season"),
-  players_router = require("./players");
+  players_router = require("./players"),
+  player_functions = require("../utils/player");
 
 //   Season
 
@@ -105,6 +106,7 @@ function setPlayersInSeason(league_code, season_long_code) {
         player.MOTM = 0;
       });
       pushPlayers(players, season_long_code);
+      console.log("Players", players);
     } else {
       return "Error in getting clubs";
     }
@@ -239,5 +241,78 @@ data_router.post("/seasons/:season/standings", (req, res) => {
     }
   );
 });
+
+data_router.post("/club/update", (req, res) => {
+  let club = req.body.club;
+  let club_code = req.query.club_code;
+
+  let new_attacking_class = ((club.TotalAC / 700) * 12).toFixed(1);
+  let new_defensive_class = ((club.TotalDC / 700) * 12).toFixed(1);
+
+  Club.findOneAndUpdate(
+    { ClubCode: club_code },
+    {
+      AttackingClass: new_attacking_class,
+      DefensiveClass: new_defensive_class
+    },
+    (err, doc, result) => {
+      if (!err) {
+        res.status(200).send({
+          message: club_code + " club skill points updated successfully!"
+        });
+        club.Squad.forEach((player, i) => {
+          updatePlayerSkillPoints(player.Player_ID, player, club_code);
+        });
+      } else {
+        res
+          .status(401)
+          .send({ message: "Error updating club skill points", err: err });
+        console.log("Error updating Club", err);
+      }
+    }
+  );
+});
+
+function updatePlayerSkillPoints(id, stats, club_code) {
+  let new_ac = stats.AttackingClass.toFixed(2);
+  let new_dc = stats.DefensiveClass.toFixed(2);
+  let new_gkc = stats.GoalkeepingClass.toFixed(2);
+  let new_age = parseInt(stats.Age) + 1;
+
+  let new_rating = player_functions.calculateRating(
+    stats.Position,
+    new_ac,
+    new_dc,
+    new_gkc
+  );
+
+  let new_value = player_functions.calculateValue(new_age, new_rating);
+
+  Club.update(
+    { ClubCode: club_code, "Players.Player_ID": id },
+    {
+      $inc: {
+        ["Players.$.GoalsScored"]: stats.GoalsScored,
+        ["Players.$.Assists"]: stats.Assists,
+        ["Players.$.MOTM"]: stats.MOTM
+      },
+      $set: {
+        ["Players.$.AttackingClass"]: new_ac,
+        ["Players.$.DefensiveClass"]: new_dc,
+        ["Players.$.GoalkeepingClass"]: new_gkc,
+        ["Players.$.Age"]: new_age,
+        ["Players.$.Rating"]: new_rating,
+        ["Players.$.Value"]: new_value
+      }
+    },
+    (err, doc, result) => {
+      if (!err) {
+        console.log("Player updated succesfully", doc);
+      } else {
+        console.log("Error in updating player :(", err);
+      }
+    }
+  );
+}
 
 module.exports = data_router;
