@@ -89,6 +89,7 @@ var model = {
     xhttp.open("POST", "/data/club/update?club_code=" + club_code, true);
     xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhttp.send(JSON.stringify({ club: club }));
+    console.log("SendClubStats - Clicked!");
   }
 };
 
@@ -226,7 +227,15 @@ var handlers = {
     let endSeasonButton = document.getElementById("end-season");
 
     endSeasonButton.onclick = () => {
-      model.endSeason();
+      let ans = confirm(
+        "Are you sure you want to end season? \n This is IRREVERSIBLE! "
+      );
+
+      if (ans) {
+        model.endSeason();
+      } else {
+        console.log("Poops!");
+      }
     };
   }
 };
@@ -418,6 +427,44 @@ function calculateRating(position, attacking_class, defensive_class, gk_class) {
     );
   }
   return rating;
+}
+
+// Accordion stuff...
+
+var acc = document.getElementsByClassName("accordion");
+var i;
+
+// for (i = 0; i < acc.length; i++) {
+//   acc[i].addEventListener("click", function() {
+//     /* Toggle between adding and removing the "active" class,
+//     to highlight the button that controls the panel */
+//     this.classList.toggle("active");
+
+//     /* Toggle between hiding and showing the active panel */
+//     var panel = this.nextElementSibling;
+//     if (panel.style.display === "block") {
+//       panel.style.display = "none";
+//     } else {
+//       panel.style.display = "block";
+//     }
+//   });
+// }
+
+for (i = 0; i < acc.length; i++) {
+  acc[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var panel = this.nextElementSibling;
+    if (panel.style.display === "block") {
+      panel.style.display = "none";
+    } else {
+      panel.style.display = "block";
+    }
+    if (panel.style.maxHeight) {
+      panel.style.maxHeight = null;
+    } else {
+      panel.style.maxHeight = panel.scrollHeight + "px";
+    }
+  });
 }
 
 model.getSeason();
