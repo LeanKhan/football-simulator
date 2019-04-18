@@ -9,30 +9,30 @@ var fixtures = [];
 var seasons = [];
 
 var model = {
-  getCompetionDetails() {
-    let xhttp = new XMLHttpRequest();
-    let competition_name = document.getElementById("competition_name");
-    xhttp.onreadystatechange = () => {
-      if (xhttp.readyState == 4 && xhttp.status == 200) {
-        let res = xhttp.response;
-        if (res.LeagueCode == "") {
-          season = JSON.parse(sessionStorage.getItem("season"));
-        } else {
-          season = JSON.parse(xhttp.response);
-          sessionStorage.setItem("season", xhttp.response);
-        }
-        console.log(xhttp.response);
-        league_code = season.LeagueCode;
+  // getCompetionDetails() {
+  //   let xhttp = new XMLHttpRequest();
+  //   let competition_name = document.getElementById("competition_name");
+  //   xhttp.onreadystatechange = () => {
+  //     if (xhttp.readyState == 4 && xhttp.status == 200) {
+  //       let res = xhttp.response;
+  //       if (res.LeagueCode == "") {
+  //         season = JSON.parse(sessionStorage.getItem("season"));
+  //       } else {
+  //         season = JSON.parse(xhttp.response);
+  //         sessionStorage.setItem("season", xhttp.response);
+  //       }
+  //       console.log(xhttp.response);
+  //       league_code = season.LeagueCode;
 
-        competition_name.innerText = season.SeasonLongCode;
-        clubs = controller.getClubs(league_code);
-      }
-    };
+  //       competition_name.innerText = season.SeasonLongCode;
+  //       clubs = controller.getClubs();
+  //     }
+  //   };
 
-    xhttp.open("GET", "/data/competition-details", true);
-    xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhttp.send();
-  },
+  //   xhttp.open("GET", "/data/competition-details", true);
+  //   xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+  //   xhttp.send();
+  // },
   season_details: {
     SeasonLongCode: ""
   },
@@ -316,7 +316,7 @@ var view = {
 
 var controller = {
   // Get the list of the clubs in the selected league
-  getClubs(league) {
+  getClubs() {
     let xhttp = new XMLHttpRequest();
 
     xhttp.onreadystatechange = () => {
@@ -339,6 +339,12 @@ var controller = {
     xhttp.onreadystatechange = () => {
       if (xhttp.readyState == 4 && xhttp.status == 200) {
         seasons = JSON.parse(xhttp.response);
+
+        season.SeasonCode = seasons[0].SeasonCode;
+        season.SeasonLongCode = seasons[0].SeasonLongCode;
+        season.SeasonTitle = seasons[0].SeasonTitle;
+        season.LeagueCode = seasons[0].LeagueCode;
+
         view.populateSeasonsSelect(seasons);
       }
     };
@@ -366,6 +372,6 @@ function areAllPlayed(fixtures) {
   });
 }
 
-model.getCompetionDetails();
+// model.getCompetionDetails();
 
 handlers.setUpEventListeners();
