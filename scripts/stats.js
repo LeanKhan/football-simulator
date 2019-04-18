@@ -26,6 +26,7 @@ var model = {
         this.sortStandings(selected_season.Standings);
         this.setLeagueResults();
         view.displaySeasonDetails();
+        this.doClubThings();
       }
     };
     xhttp.open("GET", "/data/get/seasons/" + season_long_code, true);
@@ -69,10 +70,12 @@ var model = {
     Matches: "",
     Goals: ""
   },
-  endSeason() {
+  doClubThings() {
     collateNewSkillPoints();
     clubsTotalPoints(clubs);
-
+    displayClubAccordion(clubs);
+  },
+  endSeason() {
     clubs.forEach((club, i) => {
       model.sendClubStatsToServer(club.ClubCode, club);
     });
@@ -86,10 +89,28 @@ var model = {
       }
     };
 
-    xhttp.open("POST", "/data/club/update?club_code=" + club_code, true);
+    xhttp.open("POST", `/clubs/update/club?club_code=${club_code}`, true);
     xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhttp.send(JSON.stringify({ club: club }));
-    console.log("SendClubStats - Clicked!");
+    // console.log("SendClubStats - Clicked!");
+  },
+  sendWinnerToServer(results, league_code) {
+    var xhttp = new XMLHttpRequest();
+
+    xhttp.onreadystatechange = () => {
+      if (xhttp.readyState == 4 && xhttp.status == 200) {
+        console.log(xhttp.response);
+      }
+    };
+
+    xhttp.open(
+      "GET",
+      `/clubs/update/change_league?league_code=${league_code}&winner=${
+        results.Winner
+      }&relegated=${results.Relegated}`
+    );
+    xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhttp.send();
   }
 };
 
@@ -257,6 +278,7 @@ function collateNewSkillPoints() {
     player.AttackingClass = new_player_stats.AttackingClass;
     player.DefensiveClass = new_player_stats.DefensiveClass;
     player.GoalkeepingClass = new_player_stats.GoalkeepingClass;
+    player.AvgPoints = new_player_stats.average_points;
   });
   model.arrangePlayersByClub();
 }
@@ -431,40 +453,63 @@ function calculateRating(position, attacking_class, defensive_class, gk_class) {
 
 // Accordion stuff...
 
-var acc = document.getElementsByClassName("accordion");
-var i;
+function setUpAccordionListener() {
+  var acc = document.getElementsByClassName("accordion");
 
-// for (i = 0; i < acc.length; i++) {
-//   acc[i].addEventListener("click", function() {
-//     /* Toggle between adding and removing the "active" class,
-//     to highlight the button that controls the panel */
-//     this.classList.toggle("active");
+  for (var i = 0; i < acc.length; i++) {
+    acc[i].addEventListener("click", function() {
+      this.classList.toggle("active");
+      var panel = this.nextElementSibling;
+      if (panel.style.display === "block") {
+        panel.style.display = "none";
+      } else {
+        panel.style.display = "block";
+      }
+      if (panel.style.maxHeight) {
+        panel.style.maxHeight = null;
+      } else {
+        panel.style.maxHeight = panel.scrollHeight + "px";
+      }
+    });
+  }
+}
 
-//     /* Toggle between hiding and showing the active panel */
-//     var panel = this.nextElementSibling;
-//     if (panel.style.display === "block") {
-//       panel.style.display = "none";
-//     } else {
-//       panel.style.display = "block";
-//     }
-//   });
-// }
+function displayClubAccordion(clubs) {
+  let club_accordion_el = document.getElementById("club-accordion");
 
-for (i = 0; i < acc.length; i++) {
-  acc[i].addEventListener("click", function() {
-    this.classList.toggle("active");
-    var panel = this.nextElementSibling;
-    if (panel.style.display === "block") {
-      panel.style.display = "none";
-    } else {
-      panel.style.display = "block";
-    }
-    if (panel.style.maxHeight) {
-      panel.style.maxHeight = null;
-    } else {
-      panel.style.maxHeight = panel.scrollHeight + "px";
-    }
+  clubs.forEach((club, i) => {
+    let club_button_el = document.createElement("button");
+    club_button_el.setAttribute("class", "accordion");
+    club_button_el.innerHTML = `<img src="/img/${club.ClubCode}.png"><span>${
+      club.ClubCode
+    }</span>`;
+
+    // Make panel
+    let club_panel_el = document.createElement("div");
+    club_panel_el.setAttribute("class", "panel");
+    // club_panel_el.innerHtml = `${
+    //   club.Name
+    // } players go here :) thank you Jesus!`;
+
+    // Make List
+    let squad_list = document.createElement("ul");
+    squad_list.setAttribute("class", "list");
+
+    club.Squad.forEach((player, i) => {
+      let player_el = document.createElement("li");
+      player_el.innerHTML = `<i>${player.Position}</i> - ${player.FirstName} ${
+        player.LastName
+      } <span>${player.AvgPoints.toFixed(2)}</span>`;
+
+      squad_list.appendChild(player_el);
+    });
+
+    club_accordion_el.appendChild(club_button_el);
+    club_panel_el.appendChild(squad_list);
+    club_accordion_el.appendChild(club_panel_el);
   });
+
+  setUpAccordionListener();
 }
 
 model.getSeason();

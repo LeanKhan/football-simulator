@@ -355,56 +355,54 @@ var view = {
     }
     stats_model.getMatch();
   },
-  displayTimeline(events){
-
+  displayTimeline(events) {
     let timeline_container = document.getElementById("timeline");
     timeline_container.innerHTML = "";
 
-     if(events.length == 0){
-      timeline_container.innerHTML = "<div class='mx-auto h4' >No events yet!</div>"
-    }else{
-
+    if (events.length == 0) {
+      timeline_container.innerHTML =
+        "<div class='mx-auto h4' >No events yet!</div>";
+    } else {
       let dividing_line = document.createElement("div");
 
-      dividing_line.setAttribute("class","dividing-line");
+      dividing_line.setAttribute("class", "dividing-line");
 
-    events.forEach((event,i)=>{
+      events.forEach((event, i) => {
+        let event_el = document.createElement("div");
+        event_el.setAttribute("class", "event mb-2");
 
-      let event_el = document.createElement("div");
-      event_el.setAttribute("class","event mb-2");
+        let side_el = document.createElement("div");
+        side_el.setAttribute("class", `${event.side}-event d-flex`);
 
-      let side_el = document.createElement("div");
-      side_el.setAttribute("class",`${event.side}-event d-flex`);
-      
-      let time_el = document.createElement("span");
-      time_el.style = "font-weight: bold; font-size: larger; margin-left: 0.25rem";
+        let time_el = document.createElement("span");
+        time_el.style =
+          "font-weight: bold; font-size: larger; margin-left: 0.25rem";
 
-      let player_name = document.createElement("span");
-      player_name.style = "align-self: center;";
+        let player_name = document.createElement("span");
+        player_name.style = "align-self: center;";
 
-      time_el.innerText = `${event.minute}'`;
-      player_name.innerText = event.subject;
+        time_el.innerText = `${event.minute}'`;
+        player_name.innerText = event.subject;
 
-      side_el.appendChild(time_el);
-      side_el.appendChild(player_name);
+        side_el.appendChild(time_el);
+        side_el.appendChild(player_name);
 
-      let event_marker = document.createElement("div");
-      
-      let event_obj = identifyEventType(event.code);
+        let event_marker = document.createElement("div");
 
-      event_marker.setAttribute("class",event_obj.class_value); 
-      
-      event_marker.innerHTML = `<img src="${event_obj.icon}">`;
+        let event_obj = identifyEventType(event.code);
 
-      event_el.appendChild(side_el);
+        event_marker.setAttribute("class", event_obj.class_value);
 
-      event_el.appendChild(event_marker);
+        event_marker.innerHTML = `<img src="${event_obj.icon}">`;
 
-      timeline_container.appendChild(event_el);
+        event_el.appendChild(side_el);
 
-      timeline_container.appendChild(dividing_line);
+        event_el.appendChild(event_marker);
 
-    });
+        timeline_container.appendChild(event_el);
+
+        timeline_container.appendChild(dividing_line);
+      });
     }
   }
 };
@@ -415,7 +413,7 @@ var controller = {
     match_object.details.HomeSquadStats = home_players;
     match_object.details.AwaySquadStats = away_players;
     match_object.details.Events = stats_model.events;
-    console.log("Sent events =>",match_object.details.Events);
+    console.log("Sent events =>", match_object.details.Events);
     let xhttp = new XMLHttpRequest();
 
     xhttp.onreadystatechange = function() {
@@ -434,7 +432,7 @@ var controller = {
     xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhttp.send(JSON.stringify({ match: match_object.details }));
 
-    this.sendPlayerStatsToServer(home_players,away_players);
+    this.sendPlayerStatsToServer(home_players, away_players);
   },
   getFixtureDetails() {
     let to_fixtures_link = document.getElementById("to_fixtures_link");
@@ -472,7 +470,7 @@ var controller = {
           home_players = selected_fixture.HomeSquadStats;
           away_players = selected_fixture.AwaySquadStats;
           stats_model.events = selected_fixture.Events;
-          setPoints(home_players,"home",away_players,"away");
+          setPoints(home_players, "home", away_players, "away");
         }
 
         home_team_code = selected_fixture.HomeClubCode;
@@ -486,19 +484,24 @@ var controller = {
     xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhttp.send();
   },
-  sendPlayerStatsToServer(home_squad,away_squad){
+  sendPlayerStatsToServer(home_squad, away_squad) {
     let xhttp = new XMLHttpRequest();
 
-    xhttp.onreadystatechange = ()=>{
-      if(xhttp.readyState == 4 && xhttp.status == 200){
+    xhttp.onreadystatechange = () => {
+      if (xhttp.readyState == 4 && xhttp.status == 200) {
         console.log(xhttp.responseText);
       }
-    }
+    };
 
     // Yaga!
-    xhttp.open("POST",`/data/players/update?season=${SeasonLongCode}`,true);
+    xhttp.open("POST", `/clubs/players/update?season=${SeasonLongCode}`, true);
     xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhttp.send(JSON.stringify({home_squad_stats: home_squad, away_squad_stats: away_squad}));
+    xhttp.send(
+      JSON.stringify({
+        home_squad_stats: home_squad,
+        away_squad_stats: away_squad
+      })
+    );
   }
 };
 
@@ -671,10 +674,10 @@ var stats_model = {
         clubs = JSON.parse(xhttp.response);
 
         if (!fixture.Played) {
-          if(home_team_code == clubs[0].ClubCode){
+          if (home_team_code == clubs[0].ClubCode) {
             home_players = clubs[0].Players;
             away_players = clubs[1].Players;
-          }else if(away_team_code == clubs[0].ClubCode) {
+          } else if (away_team_code == clubs[0].ClubCode) {
             away_players = clubs[0].Players;
             home_players = clubs[1].Players;
           }
@@ -693,7 +696,9 @@ var stats_model = {
 
     xhttp.open(
       "GET",
-      `/data/clubs/${fixture.HomeClubCode}/${fixture.AwayClubCode}`,
+      `/clubs/get/clubs?home_club_code=${fixture.HomeClubCode}&away_club_code=${
+        fixture.AwayClubCode
+      }`,
       true
     );
     xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
@@ -724,7 +729,8 @@ var stats_model = {
         who = Math.ceil(Math.random() * squad_obj.att.length) - 1;
         squad_obj.att[who]["GoalsScored"]++;
         // squad_obj.att[who]["Points"]++;
-        squad_obj.att[who]["Points"] += (squad_obj.att[who]["Points"] < 10) ? 2.5 : 0; 
+        squad_obj.att[who]["Points"] +=
+          squad_obj.att[who]["Points"] < 10 ? 2.5 : 0;
         this.events.push({
           subject: squad_obj.att[who]["LastName"],
           event: "Goal",
@@ -735,7 +741,8 @@ var stats_model = {
         who = Math.ceil(Math.random() * squad_obj.mid.length) - 1;
         squad_obj.mid[who]["GoalsScored"]++;
         // squad_obj.mid[who]["Points"]++;
-        squad_obj.mid[who]["Points"] += (squad_obj.mid[who]["Points"] < 10) ? 2.5 : 0;
+        squad_obj.mid[who]["Points"] +=
+          squad_obj.mid[who]["Points"] < 10 ? 2.5 : 0;
         this.events.push({
           subject: squad_obj.mid[who]["LastName"],
           event: "Goal",
@@ -746,7 +753,8 @@ var stats_model = {
         who = Math.ceil(Math.random() * squad_obj.def.length) - 1;
         squad_obj.def[who]["GoalsScored"]++;
         // squad_obj.def[who]["Points"]++;
-        squad_obj.def[who]["Points"] += (squad_obj.def[who]["Points"] < 10) ? 2.5 : 0;
+        squad_obj.def[who]["Points"] +=
+          squad_obj.def[who]["Points"] < 10 ? 2.5 : 0;
         this.events.push({
           subject: squad_obj.def[who]["LastName"],
           event: "Goal",
@@ -756,7 +764,7 @@ var stats_model = {
       } else if (chance < 2) {
         squad_obj.gk[0]["GoalsScored"]++;
         // squad_obj.gk[0]["Points"]++;
-        squad_obj.gk[0]["Points"] += (squad_obj.gk[0]["Points"] < 10) ? 2.5 : 0;
+        squad_obj.gk[0]["Points"] += squad_obj.gk[0]["Points"] < 10 ? 2.5 : 0;
         this.events.push({
           subject: squad_obj.gk[0]["LastName"],
           event: "Goal",
@@ -772,17 +780,20 @@ var stats_model = {
         who = Math.ceil(Math.random() * squad_obj.mid.length) - 1;
         squad_obj.mid[who]["Assists"]++;
         // squad_obj.mid[who]["Points"]++;
-        squad_obj.mid[who]["Points"] += (squad_obj.mid[who]["Points"] < 10) ? 2 : 0;
+        squad_obj.mid[who]["Points"] +=
+          squad_obj.mid[who]["Points"] < 10 ? 2 : 0;
       } else if (chance >= 3 && chance <= 8) {
         who = Math.ceil(Math.random() * squad_obj.att.length) - 1;
         squad_obj.att[who]["Assists"]++;
         // squad_obj.att[who]["Points"]++;
-        squad_obj.att[who]["Points"] += (squad_obj.att[who]["Points"] < 10) ? 2 : 0;
+        squad_obj.att[who]["Points"] +=
+          squad_obj.att[who]["Points"] < 10 ? 2 : 0;
       } else if (chance >= 1 && chance < 3) {
         who = Math.ceil(Math.random() * squad_obj.def.length) - 1;
         squad_obj.def[who]["Assists"]++;
         // squad_obj.def[who]["Points"]++;
-        squad_obj.def[who]["Points"] += (squad_obj.def[who]["Points"] < 10) ? 2 : 0;
+        squad_obj.def[who]["Points"] +=
+          squad_obj.def[who]["Points"] < 10 ? 2 : 0;
       }
     }
     // Distribute Saves and Shots
@@ -843,47 +854,47 @@ var stats_model = {
     }
     // Distribute Attacking form
     squad_obj.att.forEach((player, i) => {
-      player.Points += (player.Points < 10) ? TeamDetails.AttackingForm / 3 : 0;
+      player.Points += player.Points < 10 ? TeamDetails.AttackingForm / 3 : 0;
       player.Points = this.trimPointsToTen(player.Points);
     });
     squad_obj.mid.forEach((player, i) => {
-      player.Points += (player.Points < 10) ? (TeamDetails.AttackingForm / 3) / 2 : 0;
-      player.Points += (player.Points < 10) ? (TeamDetails.DefensiveForm / 3) / 2 : 0;
+      player.Points +=
+        player.Points < 10 ? TeamDetails.AttackingForm / 3 / 2 : 0;
+      player.Points +=
+        player.Points < 10 ? TeamDetails.DefensiveForm / 3 / 2 : 0;
       player.Points = this.trimPointsToTen(player.Points);
     });
     // Distribute Defensive Form
     squad_obj.def.forEach((player, i) => {
-      player.Points += (player.Points < 10) ? TeamDetails.DefensiveForm / 2 : 0;
+      player.Points += player.Points < 10 ? TeamDetails.DefensiveForm / 2 : 0;
       player.Points = this.trimPointsToTen(player.Points);
     });
     squad_obj.gk.forEach((player, i) => {
-      player.Points += (player.Points < 10) ? TeamDetails.DefensiveForm / 2 : 0;
+      player.Points += player.Points < 10 ? TeamDetails.DefensiveForm / 2 : 0;
       player.Points = this.trimPointsToTen(player.Points);
     });
 
     stats_view.timeEvents();
-    
 
     return squad_obj.gk.concat(squad_obj.def, squad_obj.mid, squad_obj.att);
     // home_players = home.gk.concat(home.def,home.mid,home.att);
   },
-  trimPointsToTen(points){
-    if(points > 10){
-      return points - (points%10);
-    }else{
-      return points
+  trimPointsToTen(points) {
+    if (points > 10) {
+      return points - (points % 10);
+    } else {
+      return points;
     }
-  }
-  ,
-  setMOTM(players){
+  },
+  setMOTM(players) {
     // Find the player that has the highest points
     // and make his MOTM field to be 'true'
     let motm = stats_model.points[0];
-    let motm_index = players.findIndex((player,i)=>{
+    let motm_index = players.findIndex((player, i) => {
       return player.Player_ID == motm.player_id;
     });
-    
-    if(motm_index != -1){
+
+    if (motm_index != -1) {
       players[motm_index].MOTM = true;
     }
   }
@@ -904,8 +915,8 @@ var stats_view = {
       "away"
     );
     stats_view.displayMOTM();
-  
-   view.displayTimeline(stats_model.events);
+
+    view.displayTimeline(stats_model.events);
   },
   displaySquadFormation(current, previous, players, side) {
     let formation_table = document.getElementsByName("formation");
@@ -927,9 +938,9 @@ var stats_view = {
       name.innerText = players[i].LastName;
       shirt_number.innerText = players[i].ShirtNumber;
 
-      formation_table[
-        pos
-      ].innerHTML = `<img src="/img/kits/${players[i].ClubCode}-kit.png" height="52px">`;
+      formation_table[pos].innerHTML = `<img src="/img/kits/${
+        players[i].ClubCode
+      }-kit.png" height="52px">`;
 
       shirt_number.setAttribute("class", "shirt_number");
       // formation_table[pos].appendChild(ball);
@@ -1003,13 +1014,13 @@ var stats_view = {
     });
   },
   displayMOTM() {
-    if(selected_fixture.Played){
+    if (selected_fixture.Played) {
       let motm_element = document.getElementById(stats_model.points[0].id);
 
       let motm_icon = document.createElement("img");
       motm_icon.setAttribute("src", "/img/motm.png");
       motm_icon.setAttribute("class", "ball motm_icon");
-  
+
       motm_element.appendChild(motm_icon);
     }
   },
@@ -1034,7 +1045,7 @@ var stats_view = {
       85,
       90
     ];
-    
+
     stats_model.events.forEach((event, i) => {
       let w = Math.ceil(Math.random() * 18 - 1);
       let when = times[w] - Math.ceil(Math.random() * 5);
@@ -1042,8 +1053,8 @@ var stats_view = {
       event.minute = when;
 
       // console.log(`${event.subject} made a ${event.event} at ${event.minute} minute!`);
-    }); 
-    stats_model.events.sort((a,b)=>{
+    });
+    stats_model.events.sort((a, b) => {
       return a.minute - b.minute;
     });
   }
@@ -1074,10 +1085,10 @@ function initialPoints(players) {
   stats_model.points = [];
 }
 
-function identifySide(club_code){
-  if(club_code == home_team_code){
+function identifySide(club_code) {
+  if (club_code == home_team_code) {
     return "home";
-  }else if(club_code == away_team_code){
+  } else if (club_code == away_team_code) {
     return "away";
   }
 }
@@ -1102,15 +1113,14 @@ function makeStats(match) {
     away,
     match.AwayTeamDetails
   );
-  setPoints(home_players, "home",away_players,"away");
+  setPoints(home_players, "home", away_players, "away");
   stats_model.setMOTM(home_players);
-  stats_model.setMOTM(away_players)
-};
+  stats_model.setMOTM(away_players);
+}
 
-function setPoints(home_squad, home_side, away_squad, away_side){
-
+function setPoints(home_squad, home_side, away_squad, away_side) {
   // Push all home players
-  home_squad.forEach((player,index)=>{
+  home_squad.forEach((player, index) => {
     stats_model.points.push({
       points: player.Points,
       id: home_side + "-" + index,
@@ -1120,7 +1130,7 @@ function setPoints(home_squad, home_side, away_squad, away_side){
   });
 
   // Push all away players
-  away_squad.forEach((player,index)=>{
+  away_squad.forEach((player, index) => {
     stats_model.points.push({
       points: player.Points,
       id: away_side + "-" + index,
@@ -1133,10 +1143,10 @@ function setPoints(home_squad, home_side, away_squad, away_side){
   stats_model.points.sort((a, b) => {
     return b.points - a.points;
   });
-};
+}
 
-function identifyEventType(event_code){
-  let event_obj = { };
+function identifyEventType(event_code) {
+  let event_obj = {};
   switch (event_code) {
     case 1:
       event_obj.class_value = "event-marker goal-event";
@@ -1156,7 +1166,7 @@ function identifyEventType(event_code){
       break;
   }
   return event_obj;
-};
+}
 
 // 10-02-19 11pm
 /**

@@ -98,44 +98,77 @@ ul#winning-stats li > span {
   color: black;
 }
 
+#club-accordion {
+  max-height: 500px;
+}
+
 /* Style the buttons that are used to open and close the accordion panel */
 .accordion {
-  background-color: #eee;
-  color: #444;
+  background-color: #101318;
+  color: #c23361;
   cursor: pointer;
-  padding: 18px;
+  padding: 10px;
   width: 100%;
   text-align: left;
   border: none;
   outline: none;
-  transition: 0.4s;
+  position: relative;
+}
+
+.panel > ul {
+  list-style-type: none;
+  margin: 0;
+  font-size: 14px;
+  padding: 0;
+}
+
+.panel li {
+  padding: 3px;
+  color: #444;
+  text-decoration: underline dotted;
+}
+
+.panel li span {
+  color: #c23361;
+  text-decoration: none;
 }
 
 /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
-.active,
-.accordion:hover {
-  background-color: #ccc;
+.active {
+  box-shadow: 0px 4px 7px #00000073;
 }
-
+.accordion:hover {
+  outline: solid 2px #7535ed;
+}
 /* Style the accordion panel. Note: hidden by default */
 .panel {
-  padding: 0 18px;
+  padding: 0 5px;
   background-color: white;
   display: none;
-
+  border: 1px solid #101318;
   max-height: 0;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   transition: max-height 0.2s ease-out;
 }
 
 .accordion:after {
   content: "\02795"; /* Unicode character for "plus" sign (+) */
-  font-size: 13px;
+  font-size: 15px;
   color: #777;
   float: right;
   margin-left: 5px;
+  border: none;
 }
 
 .active:after {
   content: "\2796"; /* Unicode character for "minus" sign (-) */
+}
+
+.accordion > img {
+  height: 38px;
+}
+
+.accordion:focus {
+  outline: none;
 }

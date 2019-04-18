@@ -306,7 +306,7 @@ var view = {
       "background: url('/img/season_banner.png');background-position: center; background-size: cover;"
     );
 
-    alert_marquee.innerHTML = `Hooray! Season is over! See the season stats <a href="/data/view/stats/${
+    alert_marquee.innerHTML = `Hooray! Season is over! See the season stats <a href="/views/page/stats/${
       season.SeasonLongCode
     }">Here</a>`;
 
@@ -327,7 +327,7 @@ var controller = {
 
     xhttp.open(
       "GET",
-      `/data/clubs/${season.SeasonLongCode.split(":")[0]}`,
+      `/clubs/all/clubs?league_code=${season.SeasonLongCode.split(":")[0]}`,
       true
     );
     xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");

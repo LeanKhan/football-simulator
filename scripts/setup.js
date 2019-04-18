@@ -20,7 +20,7 @@ var controller = {
   },
   newClub() {
     let main_setup = document.getElementById("main_setup");
-    main_setup.innerHTML = ` <form class="form-control" action="/data/new/club" method="POST" name="club_details">
+    main_setup.innerHTML = ` <form class="form-control" action="/clubs/new/club" method="POST" name="club_details">
       <select class="form-control select" name="league_code">
               <option value="L3" name="league_select"
                 >Bellean Football League III</option
@@ -38,7 +38,7 @@ var controller = {
           <input type="submit" class="btn btn-primary-outline">New Club</input>
   </form>`;
   },
-  newPlayer(){
-    let main_setup
+  newPlayer() {
+    let main_setup;
   }
 };

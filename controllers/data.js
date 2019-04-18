@@ -3,9 +3,7 @@ const data_router = require("express").Router(),
   Club = require("../models/club"),
   url = require("url"),
   querystring = require("querystring"),
-  Season = require("../models/season"),
-  players_router = require("./players"),
-  player_functions = require("../utils/player");
+  Season = require("../models/season");
 
 //   Season
 
@@ -16,45 +14,45 @@ var season = {
   SeasonLongCode: ""
 };
 
-data_router.use("/players", players_router);
+// data_router.use("/players", players_router);
 
 // Endpoint used to go to the tables view
-data_router.get("/table", (req, res) => {
-  res.sendFile(path.join(__dirname, "../view/league_table.html"));
-});
+// data_router.get("/table", (req, res) => {
+//   res.sendFile(path.join(__dirname, "../view/league_table.html"));
+// });
 
 // Enpoint to create new Club
-data_router.post("/new/club", (req, res) => {
-  console.log(req.body);
-  let club = {
-    Name: req.body.club_name,
-    ClubCode: req.body.club_code,
-    LeagueCode: req.body.league_code,
-    AttackingClass: req.body.club_attacking_class,
-    DefensiveClass: req.body.club_defensive_class,
-    Manager: req.body.manager_name,
-    Stadium: req.body.stadium_name
-  };
-  // Save the club object in the Club collection.
-  let _club = new Club(club);
-  _club.save((err, club) => {
-    if (!err) {
-      console.log(`${club.Name} created successfully :)`);
-      res.write(`<div class="card shadow-sm">
-          <p>${club.Name} Club created successfully!</p>
-          <p><a href="/">Back to setup</a></p>
-      </div>`);
-      res.end();
-    } else {
-      console.error("Error in creating club: ", err);
-      res.write(`<div class="card shadow-sm">
-          <p>Error in creating club</p>
-          <p><a href="/">Back to setup</a></p>
-      </div>`);
-      res.end();
-    }
-  });
-});
+// data_router.post("/new/club", (req, res) => {
+//   console.log(req.body);
+//   let club = {
+//     Name: req.body.club_name,
+//     ClubCode: req.body.club_code,
+//     LeagueCode: req.body.league_code,
+//     AttackingClass: req.body.club_attacking_class,
+//     DefensiveClass: req.body.club_defensive_class,
+//     Manager: req.body.manager_name,
+//     Stadium: req.body.stadium_name
+//   };
+//   // Save the club object in the Club collection.
+//   let _club = new Club(club);
+//   _club.save((err, club) => {
+//     if (!err) {
+//       console.log(`${club.Name} created successfully :)`);
+//       res.write(`<div class="card shadow-sm">
+//           <p>${club.Name} Club created successfully!</p>
+//           <p><a href="/">Back to setup</a></p>
+//       </div>`);
+//       res.end();
+//     } else {
+//       console.error("Error in creating club: ", err);
+//       res.write(`<div class="card shadow-sm">
+//           <p>Error in creating club</p>
+//           <p><a href="/">Back to setup</a></p>
+//       </div>`);
+//       res.end();
+//     }
+//   });
+// });
 
 // Endpoint to create new season
 data_router.get("/new/season", (req, res) => {
@@ -125,15 +123,15 @@ data_router.get("/seasons/:season", (req, res) => {
   });
 });
 
-// Endpoint used to go to Fixtures page
-data_router.get("/view/seasons", (req, res) => {
-  res.sendFile(path.join(__dirname, "../view/fixtures.html"));
-});
+// // Endpoint used to go to Fixtures page
+// data_router.get("/view/seasons", (req, res) => {
+//   res.sendFile(path.join(__dirname, "../view/fixtures.html"));
+// });
 
-// Endpoint used to go to the stats page
-data_router.get("/view/stats/:season_long_code", (req, res) => {
-  res.sendFile(path.join(__dirname, "../view/stats.html"));
-});
+// // Endpoint used to go to the stats page
+// data_router.get("/view/stats/:season_long_code", (req, res) => {
+//   res.sendFile(path.join(__dirname, "../view/stats.html"));
+// });
 
 // Endpoint used to send competition details to the client.
 data_router.get("/competition-details", (req, res) => {
@@ -141,30 +139,30 @@ data_router.get("/competition-details", (req, res) => {
 });
 
 // Endpoint to get all clubs in a particular league
-data_router.get("/clubs/:league", (req, res) => {
-  let league_code = req.params.league;
-  Club.find({ LeagueCode: league_code }, (err, clubs) => {
-    if (!err) {
-      res.send(clubs);
-    } else {
-      res.send("Error in getting clubs");
-    }
-  });
-});
+// data_router.get("/clubs/:league", (req, res) => {
+//   let league_code = req.params.league;
+//   Club.find({ LeagueCode: league_code }, (err, clubs) => {
+//     if (!err) {
+//       res.send(clubs);
+//     } else {
+//       res.send("Error in getting clubs");
+//     }
+//   });
+// });
 
 // Endpoint to get the two clubs playing.
-data_router.get("/clubs/:home_club_code/:away_club_code", (req, res) => {
-  let home_club_code = req.params.home_club_code;
-  let away_club_code = req.params.away_club_code;
-  Club.find(
-    { ClubCode: { $in: [home_club_code, away_club_code] } },
-    (err, clubs) => {
-      if (!err) {
-        res.send(clubs);
-      }
-    }
-  );
-});
+// data_router.get("/clubs/:home_club_code/:away_club_code", (req, res) => {
+//   let home_club_code = req.params.home_club_code;
+//   let away_club_code = req.params.away_club_code;
+//   Club.find(
+//     { ClubCode: { $in: [home_club_code, away_club_code] } },
+//     (err, clubs) => {
+//       if (!err) {
+//         res.send(clubs);
+//       }
+//     }
+//   );
+// });
 
 // Endpoint to save the fixtures of a season
 data_router.post("/seasons/:season/fixtures", (req, res) => {
@@ -242,77 +240,84 @@ data_router.post("/seasons/:season/standings", (req, res) => {
   );
 });
 
-data_router.post("/club/update", (req, res) => {
-  let club = req.body.club;
-  let club_code = req.query.club_code;
+// Endpoint used to update a Club's ratings at the end of a season
+// data_router.post("/club/update", (req, res) => {
+//   let club = req.body.club;
+//   let club_code = req.query.club_code;
 
-  let new_attacking_class = ((club.TotalAC / 700) * 12).toFixed(1);
-  let new_defensive_class = ((club.TotalDC / 700) * 12).toFixed(1);
+//   // now = new Date();
 
-  Club.findOneAndUpdate(
-    { ClubCode: club_code },
-    {
-      AttackingClass: new_attacking_class,
-      DefensiveClass: new_defensive_class
-    },
-    (err, doc, result) => {
-      if (!err) {
-        res.status(200).send({
-          message: club_code + " club skill points updated successfully!"
-        });
-        club.Squad.forEach((player, i) => {
-          updatePlayerSkillPoints(player.Player_ID, player, club_code);
-        });
-      } else {
-        res
-          .status(401)
-          .send({ message: "Error updating club skill points", err: err });
-        console.log("Error updating Club", err);
-      }
-    }
-  );
-});
+//   // console.log("From client at - " + now.toLocaleTimeString());
 
-function updatePlayerSkillPoints(id, stats, club_code) {
-  let new_ac = stats.AttackingClass.toFixed(2);
-  let new_dc = stats.DefensiveClass.toFixed(2);
-  let new_gkc = stats.GoalkeepingClass.toFixed(2);
-  let new_age = parseInt(stats.Age) + 1;
+//   // res.send(`From server at - ${now.toLocaleTimeString()}`);
 
-  let new_rating = player_functions.calculateRating(
-    stats.Position,
-    new_ac,
-    new_dc,
-    new_gkc
-  );
+//   let new_attacking_class = ((club.TotalAC / 700) * 12).toFixed(1);
+//   let new_defensive_class = ((club.TotalDC / 700) * 12).toFixed(1);
 
-  let new_value = player_functions.calculateValue(new_age, new_rating);
+//   Club.findOneAndUpdate(
+//     { ClubCode: club_code },
+//     {
+//       AttackingClass: new_attacking_class,
+//       DefensiveClass: new_defensive_class
+//     },
+//     (err, doc, result) => {
+//       if (!err) {
+//         res.status(200).send({
+//           message: club_code + " club skill points updated successfully!"
+//         });
+//         club.Squad.forEach((player, i) => {
+//           updatePlayerSkillPoints(player.Player_ID, player, club_code);
+//         });
+//       } else {
+//         res
+//           .status(401)
+//           .send({ message: "Error updating club skill points", err: err });
+//         console.log("Error updating Club", err);
+//       }
+//     }
+//   );
+// });
 
-  Club.update(
-    { ClubCode: club_code, "Players.Player_ID": id },
-    {
-      $inc: {
-        ["Players.$.GoalsScored"]: stats.GoalsScored,
-        ["Players.$.Assists"]: stats.Assists,
-        ["Players.$.MOTM"]: stats.MOTM
-      },
-      $set: {
-        ["Players.$.AttackingClass"]: new_ac,
-        ["Players.$.DefensiveClass"]: new_dc,
-        ["Players.$.GoalkeepingClass"]: new_gkc,
-        ["Players.$.Age"]: new_age,
-        ["Players.$.Rating"]: new_rating,
-        ["Players.$.Value"]: new_value
-      }
-    },
-    (err, doc, result) => {
-      if (!err) {
-        console.log("Player updated succesfully", doc);
-      } else {
-        console.log("Error in updating player :(", err);
-      }
-    }
-  );
-}
+// function updatePlayerSkillPoints(id, stats, club_code) {
+//   let new_ac = stats.AttackingClass.toFixed(2);
+//   let new_dc = stats.DefensiveClass.toFixed(2);
+//   let new_gkc = stats.GoalkeepingClass.toFixed(2);
+//   let new_age = parseInt(stats.Age) + 1;
+
+//   let new_rating = player_functions.calculateRating(
+//     stats.Position,
+//     new_ac,
+//     new_dc,
+//     new_gkc
+//   );
+
+//   let new_value = player_functions.calculateValue(new_age, new_rating);
+
+//   Club.update(
+//     { ClubCode: club_code, "Players.Player_ID": id },
+//     {
+//       $inc: {
+//         ["Players.$.GoalsScored"]: stats.GoalsScored,
+//         ["Players.$.Assists"]: stats.Assists,
+//         ["Players.$.MOTM"]: stats.MOTM
+//       },
+//       $set: {
+//         ["Players.$.AttackingClass"]: new_ac,
+//         ["Players.$.DefensiveClass"]: new_dc,
+//         ["Players.$.GoalkeepingClass"]: new_gkc,
+//         ["Players.$.Age"]: new_age,
+//         ["Players.$.Rating"]: new_rating,
+//         ["Players.$.Value"]: new_value
+//       }
+//     },
+//     (err, doc, result) => {
+//       if (!err) {
+//         console.log("Player updated succesfully", id);
+//       } else {
+//         console.log("Error in updating player :(", err);
+//       }
+//     }
+//   );
+// }
 
 module.exports = data_router;

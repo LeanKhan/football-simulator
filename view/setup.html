@@ -29,7 +29,7 @@
             class="align-self-center"
           /><span class="display-4">Football Simulator</span>
           <div class="ml-auto">
-            <a class="btn link" href="/data/view/seasons">Go to Seasons</a>
+            <a class="btn link" href="/views/page/seasons">Go to Seasons</a>
           </div>
         </div>
         <div class="col-12 mx-auto">
@@ -59,27 +59,135 @@
         <form method="GET" action="/data/players/new">
           <table>
             <tr>
-              <td><input type="radio" name="club_code" class="custom-radio" value="DR"><img src="/img/DR.png" height="50px">Dagada Rangers F.C</td>
-              <td><input type="radio" name="club_code" class="custom-radio" value="SPR"><img src="/img/SPR.png" height="50px">Southport Rangers F.C</td>
-              <td><input type="radio" name="club_code" class="custom-radio" value="RP"><img src="/img/RP.png" height="50px">Royal Philamentia S.C</td>
-              <td><input type="radio" name="club_code" class="custom-radio" value="RB"><img src="/img/RB.png" height="50px">Rainbow Boys A.C</td>
-              <td><input type="radio" name="club_code" class="custom-radio" value="RT"><img src="/img/RT.png" height="50px">Rising Thunders A.C</td>
+              <td>
+                <input
+                  type="radio"
+                  name="club_code"
+                  class="custom-radio"
+                  value="DR"
+                /><img src="/img/DR.png" height="50px" />Dagada Rangers F.C
+              </td>
+              <td>
+                <input
+                  type="radio"
+                  name="club_code"
+                  class="custom-radio"
+                  value="SPR"
+                /><img src="/img/SPR.png" height="50px" />Southport Rangers F.C
+              </td>
+              <td>
+                <input
+                  type="radio"
+                  name="club_code"
+                  class="custom-radio"
+                  value="RP"
+                /><img src="/img/RP.png" height="50px" />Royal Philamentia S.C
+              </td>
+              <td>
+                <input
+                  type="radio"
+                  name="club_code"
+                  class="custom-radio"
+                  value="RB"
+                /><img src="/img/RB.png" height="50px" />Rainbow Boys A.C
+              </td>
+              <td>
+                <input
+                  type="radio"
+                  name="club_code"
+                  class="custom-radio"
+                  value="RT"
+                /><img src="/img/RT.png" height="50px" />Rising Thunders A.C
+              </td>
             </tr>
-              <tr>
-                  <td><input type="radio" name="club_code" class="custom-radio" value="K94"><img src="/img/K94.png" height="50px">Khashiru 94 A.C</td>
-                  <td><input type="radio" name="club_code" class="custom-radio" value="BWH"><img src="/img/BWH.png" height="50px">Brickwall Hadad S.C</td>
-                    <td><input type="radio" name="club_code" class="custom-radio" value="IB"><img src="/img/IB.png" height="50px">Ivania Boys A.C</td>
-                    <td><input type="radio" name="club_code" class="custom-radio" value="BFC"><img src="/img/BFC.png" height="50px">Binatone F.C</td>
-                    <td><input type="radio" name="club_code" class="custom-radio" value="ZD"><img src="/img/ZD.png" height="50px">Zander Dragons A.C</td>
-              </tr>
-             <tr>
-                <td><input type="radio" name="club_code" class="custom-radio" value="NSM"><img src="/img/NSM.png" height="50px">New Simeone Mirrors F.C</td>
-                <td><input type="radio" name="club_code" class="custom-radio" value="GU"><img src="/img/GU.png" height="50px">Guttersburg United S.C</td>
-                <td><input type="radio" name="club_code" class="custom-radio" value="LRU"><img src="/img/LRU.png" height="50px">LonenRaid 01 United</td>
-                <td><input type="radio" name="club_code" class="custom-radio" value="LU"><img src="/img/LU.png" height="50px">Lasena United F.C</td>
-                <td><input type="radio" name="club_code" class="custom-radio" value="FREE"><img src="/img/generic_player_kit.png" height="50px">Free market</td>
-              </tr>
+            <tr>
+              <td>
+                <input
+                  type="radio"
+                  name="club_code"
+                  class="custom-radio"
+                  value="K94"
+                /><img src="/img/K94.png" height="50px" />Khashiru 94 A.C
+              </td>
+              <td>
+                <input
+                  type="radio"
+                  name="club_code"
+                  class="custom-radio"
+                  value="BWH"
+                /><img src="/img/BWH.png" height="50px" />Brickwall Hadad S.C
+              </td>
+              <td>
+                <input
+                  type="radio"
+                  name="club_code"
+                  class="custom-radio"
+                  value="IB"
+                /><img src="/img/IB.png" height="50px" />Ivania Boys A.C
+              </td>
+              <td>
+                <input
+                  type="radio"
+                  name="club_code"
+                  class="custom-radio"
+                  value="BFC"
+                /><img src="/img/BFC.png" height="50px" />Binatone F.C
+              </td>
+              <td>
+                <input
+                  type="radio"
+                  name="club_code"
+                  class="custom-radio"
+                  value="ZD"
+                /><img src="/img/ZD.png" height="50px" />Zander Dragons A.C
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <input
+                  type="radio"
+                  name="club_code"
+                  class="custom-radio"
+                  value="NSM"
+                /><img src="/img/NSM.png" height="50px" />New Simeone Mirrors
+                F.C
+              </td>
+              <td>
+                <input
+                  type="radio"
+                  name="club_code"
+                  class="custom-radio"
+                  value="GU"
+                /><img src="/img/GU.png" height="50px" />Guttersburg United S.C
+              </td>
+              <td>
+                <input
+                  type="radio"
+                  name="club_code"
+                  class="custom-radio"
+                  value="LRU"
+                /><img src="/img/LRU.png" height="50px" />LonenRaid 01 United
+              </td>
+              <td>
+                <input
+                  type="radio"
+                  name="club_code"
+                  class="custom-radio"
+                  value="LU"
+                /><img src="/img/LU.png" height="50px" />Lasena United F.C
+              </td>
+              <td>
+                <input
+                  type="radio"
+                  name="club_code"
+                  class="custom-radio"
+                  value="FREE"
+                /><img src="/img/generic_player_kit.png" height="50px" />Free
+                market
+              </td>
+            </tr>
           </table>
+
           <select class="form-control select" name="position">
             <option disabled><em>Players Position</em></option>
             <option value="GK" name="position">Goal Keeper</option>
@@ -87,19 +195,54 @@
             <option value="MID" name="position">Midfielder</option>
             <option value="ATT" name="position">Attacker</option>
           </select>
-          <input type="string" class="form-control my-1" name="fname" placeholder="Player's First Name">
-          <input type="string" class="form-control my-1" name="lname" placeholder="Player's Last Name">
-          <input type="number" class="form-control mb-1" name="age" placeholder="Age">
-          <input type="number" class="form-control mb-1" name="shirt_number" placeholder="Shirt number">
-          <input type="number" class="form-control mb-1" name="attacking_class" placeholder="Attacking Class">
-          <input type="number" class="form-control mb-1" name="defensive_class" placeholder="Defensive Class">
-          <input type="number" class="form-control mb-1" name="gk_class" placeholder="Goalkeeping Class">
+          <input
+            type="string"
+            class="form-control my-1"
+            name="fname"
+            placeholder="Player's First Name"
+          />
+          <input
+            type="string"
+            class="form-control my-1"
+            name="lname"
+            placeholder="Player's Last Name"
+          />
+          <input
+            type="number"
+            class="form-control mb-1"
+            name="age"
+            placeholder="Age"
+          />
+          <input
+            type="number"
+            class="form-control mb-1"
+            name="shirt_number"
+            placeholder="Shirt number"
+          />
+          <input
+            type="number"
+            class="form-control mb-1"
+            name="attacking_class"
+            placeholder="Attacking Class"
+          />
+          <input
+            type="number"
+            class="form-control mb-1"
+            name="defensive_class"
+            placeholder="Defensive Class"
+          />
+          <input
+            type="number"
+            class="form-control mb-1"
+            name="gk_class"
+            placeholder="Goalkeeping Class"
+          />
           <button class="btn btn-success" type="submit">Create player!</button>
         </form>
       </div>
     </div>
 
     <!-- Script! -->
-    <script src="setup.js"></script>
+    <script src="/setup.js"></script>
   </body>
 </html>
