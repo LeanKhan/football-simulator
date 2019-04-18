@@ -104,7 +104,7 @@ function setPlayersInSeason(league_code, season_long_code) {
         player.MOTM = 0;
       });
       pushPlayers(players, season_long_code);
-      console.log("Players", players);
+      // console.log("Players", players);
     } else {
       return "Error in getting clubs";
     }

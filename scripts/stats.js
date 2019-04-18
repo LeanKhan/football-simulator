@@ -76,9 +76,10 @@ var model = {
     displayClubAccordion(clubs);
   },
   endSeason() {
-    clubs.forEach((club, i) => {
-      model.sendClubStatsToServer(club.ClubCode, club);
-    });
+    // clubs.forEach((club, i) => {
+    //   model.sendClubStatsToServer(club.ClubCode, club);
+    // });
+    this.promoteClub(league_result.Winner.ClubCode, selected_season);
   },
   sendClubStatsToServer(club_code, club) {
     var xhttp = new XMLHttpRequest();
@@ -94,7 +95,7 @@ var model = {
     xhttp.send(JSON.stringify({ club: club }));
     // console.log("SendClubStats - Clicked!");
   },
-  sendWinnerToServer(results, league_code) {
+  promoteClub(promoted_club, league_code) {
     var xhttp = new XMLHttpRequest();
 
     xhttp.onreadystatechange = () => {
@@ -105,9 +106,23 @@ var model = {
 
     xhttp.open(
       "GET",
-      `/clubs/update/change_league?league_code=${league_code}&winner=${
-        results.Winner
-      }&relegated=${results.Relegated}`
+      `/clubs/update/club/promote?promoted_club=${promoted_club}&league_code=${league_code}`
+    );
+    xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhttp.send();
+  },
+  relegateClub(relegated_club, league_code) {
+    var xhttp = new XMLHttpRequest();
+
+    xhttp.onreadystatechange = () => {
+      if (xhttp.readyState == 4 && xhttp.status == 200) {
+        console.log(xhttp.response);
+      }
+    };
+
+    xhttp.open(
+      "GET",
+      `/clubs/update/club/relegate?promoted_club=${relegated_club}&league_code=${league_code}`
     );
     xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhttp.send();

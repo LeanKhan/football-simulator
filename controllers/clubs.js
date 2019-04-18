@@ -69,12 +69,6 @@ club_router.post("/update/club", (req, res) => {
   let club = req.body.club;
   let club_code = req.query.club_code;
 
-  // now = new Date();
-
-  // console.log("From client at - " + now.toLocaleTimeString());
-
-  // res.send(`From server at - ${now.toLocaleTimeString()}`);
-
   let new_attacking_class = ((club.TotalAC / 700) * 12).toFixed(1);
   let new_defensive_class = ((club.TotalDC / 700) * 12).toFixed(1);
 
@@ -143,5 +137,27 @@ function updatePlayerSkillPoints(id, stats, club_code) {
     }
   );
 }
+
+// -------------------- //
+
+// Endpoint to promote club...
+club_router.get("/update/club/promote", (req, res) => {
+  let club_code = req.query.promoted_club;
+
+  Club.findOne({ ClubCode: club_code }, (err, club) => {
+    console.log(club);
+  });
+});
+
+// Endpoint to relegate club..
+club_router.get("/update/club/relegate", (req, res) => {
+  let club_code = req.query.relegated_club;
+
+  Club.findOne({ ClubCode: club_code }, (err, club) => {
+    console.log(club);
+  });
+});
+
+// ------------------- //
 
 module.exports = club_router;

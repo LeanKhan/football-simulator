@@ -17,35 +17,35 @@
       media="screen"
       href="/css/style.css"
     />
-    <link rel="stylesheet"
-    type="text/css"
-    media="screen"
-    href="/css/fresh.css"/>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      media="screen"
+      href="/css/fresh.css"
+    />
   </head>
   <body>
     <div class="container-fluid">
-      
       <div class="row mt-3" id="main">
-          <!-- <div class="col-md-12 d-flex justify-content-between">
+        <!-- <div class="col-md-12 d-flex justify-content-between">
               <span class="alert alert-success" id="notifications"></span>
               
             </div> -->
         <!-- Side panel -->
 
         <div class="col-md-1" id="side_panel">
-
           <div>
-            <img src="/img/logo.png" height="40px">
+            <img src="/img/logo.png" height="40px" />
             <span>Football Simulator</span>
           </div>
 
           <ul class="list flex-column nav m-0">
-              <li class="nav-item"><a  href="/data/table">Tables</a></li>
-              <li class="nav-item"><a href="#">Teams</a></li>
-              <li class="nav-item"><a  id="to_fixtures_link">Back to fixtures</a>
-              </li>
-            </ul>
-
+            <li class="nav-item"><a href="/views/page/table">Tables</a></li>
+            <li class="nav-item"><a href="#">Teams</a></li>
+            <li class="nav-item">
+              <a id="to_fixtures_link">Back to fixtures</a>
+            </li>
+          </ul>
         </div>
 
         <!-- Main panel -->
@@ -53,10 +53,13 @@
           <div class="d-flex">
             <span id="league_detail"></span>
             <div class="ml-auto">
-                <button class="btn btn-primary mx-2" id="simulate_button">Play!</button>
-                <button class="btn btn-secondary my-1" id="clear_button">Clear</button>
+              <button class="btn btn-primary mx-2" id="simulate_button">
+                Play!
+              </button>
+              <button class="btn btn-secondary my-1" id="clear_button">
+                Clear
+              </button>
             </div>
-              
           </div>
           <!-- League Detail -->
           <div class="row text-center">
@@ -80,196 +83,255 @@
             <div class="col" id="match_details_labels">
               <span class="text-muted" id="ccr_label"></span>
               <div class="progress shadow">
-                <div class="progress-bar" role="progressbar" id="home_ccr" aria-valuemin="0" aria-valuemax="100"></div>
-                <div class="progress-bar" role="progressbar" id="away_ccr" aria-valuemin="0" aria-valuemax="100"></div>
+                <div
+                  class="progress-bar"
+                  role="progressbar"
+                  id="home_ccr"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                ></div>
+                <div
+                  class="progress-bar"
+                  role="progressbar"
+                  id="away_ccr"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                ></div>
               </div>
               <span class="text-muted" id="ccn_label"></span>
               <div class="progress shadow">
-                <div class="progress-bar" role="progressbar" id="home_ccn" aria-valuemin="0" aria-valuemax="100"></div>
-                <div class="progress-bar" role="progressbar" id="away_ccn" aria-valuemin="0" aria-valuemax="100"></div>
+                <div
+                  class="progress-bar"
+                  role="progressbar"
+                  id="home_ccn"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                ></div>
+                <div
+                  class="progress-bar"
+                  role="progressbar"
+                  id="away_ccn"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                ></div>
               </div>
               <span class="text-muted" id="pn_label"></span>
               <div class="progress shadow">
-                <div class="progress-bar" role="progressbar" id="home_pn" aria-valuemin="0" aria-valuemax="100"></div>
-                <div class="progress-bar" role="progressbar" id="away_pn" aria-valuemin="0" aria-valuemax="100"></div>
+                <div
+                  class="progress-bar"
+                  role="progressbar"
+                  id="home_pn"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                ></div>
+                <div
+                  class="progress-bar"
+                  role="progressbar"
+                  id="away_pn"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                ></div>
               </div>
               <span class="text-muted" id="af_label"></span>
               <div class="progress shadow">
-                <div class="progress-bar" role="progressbar" id="home_af" aria-valuemin="0" aria-valuemax="100"></div>
-                <div class="progress-bar" role="progressbar" id="away_af" aria-valuemin="0" aria-valuemax="100"></div>
+                <div
+                  class="progress-bar"
+                  role="progressbar"
+                  id="home_af"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                ></div>
+                <div
+                  class="progress-bar"
+                  role="progressbar"
+                  id="away_af"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                ></div>
               </div>
               <span class="text-muted" id="df_label"></span>
               <div class="progress shadow">
-                <div class="progress-bar" role="progressbar" id="home_df" aria-valuemin="0" aria-valuemax="100"></div>
-                <div class="progress-bar" role="progressbar" id="away_df" aria-valuemin="0" aria-valuemax="100"></div>
-              </div>    
+                <div
+                  class="progress-bar"
+                  role="progressbar"
+                  id="home_df"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                ></div>
+                <div
+                  class="progress-bar"
+                  role="progressbar"
+                  id="away_df"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                ></div>
+              </div>
             </div>
-            
           </div>
 
           <!-- Other info! -->
           <div class="row mt-5" id="match_overview">
             <div class="col-12">
-                <div class="header shadow">
-                  <span class="ml-3">Match Timeline</span>
-                </div>
-                <div class="dark-bg timeline-container text-dark pt-3" id="timeline">
-                  <!-- <div class="dividing-line"></div> -->
-                </div>
+              <div class="header shadow">
+                <span class="ml-3">Match Timeline</span>
+              </div>
+              <div
+                class="dark-bg timeline-container text-dark pt-3"
+                id="timeline"
+              >
+                <!-- <div class="dividing-line"></div> -->
+              </div>
             </div>
           </div>
-
         </div>
         <!-- Stats panel -->
         <div class="col-md-5" id="stats">
           <div class="m-0 p-1" id="marquee"></div>
-            <div class="d-flex">
-                <div class="pitch">
-                    <table id="formation_table">
-                      <tbody>
-                        <tr>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                        </tr>
-                        <tr>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                        </tr>
-                        <tr>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                        </tr>
-                        <tr>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                        </tr>
-                        <tr>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                        </tr>
-                        <tr>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                        </tr>
-                        <tr>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                        </tr>
-                        <tr>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                        </tr>
-                        <tr>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                        </tr>
-                        <tr>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                          <td name="formation"></td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                  <div class="squads px-1">
-                    <!-- Home Squad Section -->
-                    <div id="home_squad">
-                        <select class="select custom-select">
-                          <option name="home_formation" value="home_321">
-                          <em>3-2-1</em>
-                        </option>
-                        <option name="home_formation" value="home_321_back">
-                          <em>3-2-1 Back</em>
-                        </option>
-                        <option name="home_formation" value="home_321_wide">
-                          <em>3-2-1 Wide</em>
-                        </option>
-                        </select>
-                        <h5 id="home_squad_name"></h5>
-                        <div>
-                          <span id="home_squad_icon"></span>
-                          <span id="home_kit_icon"></span>
-                          <p id="home_manager_name"></p>
-                        </div>
-                        <ul class="list-group" id="home_squad_list">
-                        </ul>
-                    </div>
-                    <!-- Away Squad Section -->
-                    <div id="away_squad">
-                      <select class="select custom-select">
-                        <option name="away_formation" value="away_321">
-                          <em>3-2-1</em>
-                        </option>
-                        <option name="away_formation" value="away_321_back">
-                          <em>3-2-1 Back</em>
-                        </option>
-                        <option name="away_formation" value="away_321_wide">
-                          <em>3-2-1 Wide</em>
-                        </option>
-                        <option name="away_formation" value="away_2121_wide">
-                          <em>2-1-2-1 Wide</em>
-                        </option>
-                      </select>
-                      <h5 id="away_squad_name"></h5>
-                      <div>
-                        <span id="away_squad_icon"></span>
-                        <span id="away_kit_icon"></span>
-                        <p id="away_manager_name"></p>
-                      </div>
-                      <ul class="list-group" id="away_squad_list">
-                      </ul>
-                  </div>
-                </div>
+          <div class="d-flex">
+            <div class="pitch">
+              <table id="formation_table">
+                <tbody>
+                  <tr>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                  </tr>
+                  <tr>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                  </tr>
+                  <tr>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                  </tr>
+                  <tr>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                  </tr>
+                  <tr>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                  </tr>
+                  <tr>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                  </tr>
+                  <tr>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                  </tr>
+                  <tr>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                  </tr>
+                  <tr>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                  </tr>
+                  <tr>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                    <td name="formation"></td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
+            <div class="squads px-1">
+              <!-- Home Squad Section -->
+              <div id="home_squad">
+                <select class="select custom-select">
+                  <option name="home_formation" value="home_321">
+                    <em>3-2-1</em>
+                  </option>
+                  <option name="home_formation" value="home_321_back">
+                    <em>3-2-1 Back</em>
+                  </option>
+                  <option name="home_formation" value="home_321_wide">
+                    <em>3-2-1 Wide</em>
+                  </option>
+                </select>
+                <h5 id="home_squad_name"></h5>
+                <div>
+                  <span id="home_squad_icon"></span>
+                  <span id="home_kit_icon"></span>
+                  <p id="home_manager_name"></p>
+                </div>
+                <ul class="list-group" id="home_squad_list"></ul>
+              </div>
+              <!-- Away Squad Section -->
+              <div id="away_squad">
+                <select class="select custom-select">
+                  <option name="away_formation" value="away_321">
+                    <em>3-2-1</em>
+                  </option>
+                  <option name="away_formation" value="away_321_back">
+                    <em>3-2-1 Back</em>
+                  </option>
+                  <option name="away_formation" value="away_321_wide">
+                    <em>3-2-1 Wide</em>
+                  </option>
+                  <option name="away_formation" value="away_2121_wide">
+                    <em>2-1-2-1 Wide</em>
+                  </option>
+                </select>
+                <h5 id="away_squad_name"></h5>
+                <div>
+                  <span id="away_squad_icon"></span>
+                  <span id="away_kit_icon"></span>
+                  <p id="away_manager_name"></p>
+                </div>
+                <ul class="list-group" id="away_squad_list"></ul>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
