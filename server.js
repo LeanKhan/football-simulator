@@ -2,10 +2,8 @@ const express = require("express"),
   app = express(),
   path = require("path"),
   bodyparser = require("body-parser"),
-  router = express.Router(),
-  mongoose = require("mongoose"),
-  match_router = require("./controllers/matches"),
-  data_router = require("./controllers/data");
+  router = require("./controllers/router"),
+  mongoose = require("mongoose");
 
 app.use(require("cors")());
 app.use(bodyparser.json());
@@ -34,18 +32,19 @@ mongoose.connection.once("open", () => {
 });
 
 app.use("/", router);
-app.use("/match", match_router);
-app.use("/data",data_router);
 
-router.get("/", (req, res) => {
-  // res.writeHead(200, { "Content-Type": "text/html" });
-  res.sendFile(path.join(__dirname, "view/setup.html"));
-});
+// app.use("/match", match_router);
+// app.use("/data", data_router);
 
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "view/404.html"));
-});
+// router.get("/", (req, res) => {
+//   // res.writeHead(200, { "Content-Type": "text/html" });
+//   res.sendFile(path.join(__dirname, "view/setup.html"));
+// });
+
+// app.get("*", (req, res) => {
+//   res.sendFile(path.join(__dirname, "view/404.html"));
+// });
 
 app.listen("4200", "localhost", () => {
-  console.log("Server started successfully :)");
+  console.log(`Server started successfully at :) 4200`);
 });
