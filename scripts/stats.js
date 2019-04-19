@@ -76,10 +76,9 @@ var model = {
     displayClubAccordion(clubs);
   },
   endSeason() {
-    // clubs.forEach((club, i) => {
-    //   model.sendClubStatsToServer(club.ClubCode, club);
-    // });
-    this.promoteClub(league_result.Winner.ClubCode, selected_season);
+    clubs.forEach((club, i) => {
+      model.sendClubStatsToServer(club.ClubCode, club);
+    });
   },
   sendClubStatsToServer(club_code, club) {
     var xhttp = new XMLHttpRequest();
@@ -122,7 +121,7 @@ var model = {
 
     xhttp.open(
       "GET",
-      `/clubs/update/club/relegate?promoted_club=${relegated_club}&league_code=${league_code}`
+      `/clubs/update/club/relegate?relegated_club=${relegated_club}&league_code=${league_code}`
     );
     xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhttp.send();

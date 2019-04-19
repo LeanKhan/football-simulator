@@ -143,6 +143,7 @@ function updatePlayerSkillPoints(id, stats, club_code) {
 // Endpoint to promote club...
 club_router.get("/update/club/promote", (req, res) => {
   let club_code = req.query.promoted_club;
+  let league_code = req.query.league_code;
 
   Club.findOne({ ClubCode: club_code }, (err, club) => {
     console.log(club);
