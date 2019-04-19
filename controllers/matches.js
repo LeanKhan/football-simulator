@@ -193,7 +193,7 @@ function updateStandings(fixture, season_code) {
 
 // Endpoint used to save the match details before a match is played.
 match_router.get("/play/:match_code/:match_number", (req, res) => {
-  res.sendFile(path.join(__dirname, "../view/index.html"));
+  res.sendFile(path.join(__dirname, "../view/match.html"));
   // console.log(req.params.match_code);
   match.match_code = req.params.match_code;
   match.match_number = req.params.match_number;
