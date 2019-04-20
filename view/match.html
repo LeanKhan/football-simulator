@@ -23,6 +23,12 @@
       media="screen"
       href="/css/fresh.css"
     />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      media="screen"
+      href="/css/match.css"
+    />
   </head>
   <body>
     <div class="container-fluid">
@@ -284,6 +290,8 @@
                 </tbody>
               </table>
             </div>
+
+            <!-- Squad Selection -->
             <div class="squads px-1">
               <!-- Home Squad Section -->
               <div id="home_squad">
@@ -306,6 +314,7 @@
                 </div>
                 <ul class="list-group" id="home_squad_list"></ul>
               </div>
+
               <!-- Away Squad Section -->
               <div id="away_squad">
                 <select class="select custom-select">
@@ -335,6 +344,18 @@
         </div>
       </div>
     </div>
+
+    <!-- Loader Modal -->
+
+    <div id="modal">
+      <div class="modal-content">
+        <div id="myProgress">
+          <div id="myBar"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loader Modal -->
     <script src="/match.js"></script>
   </body>
 </html>

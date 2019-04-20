@@ -17,6 +17,7 @@ var home_team_object;
 var away_team_object;
 var home_team_code;
 var away_team_code;
+var whistle = new Audio("/sounds/whistle1.mp3");
 
 function Team(name, attacking_class, defensive_class) {
   this.name = name;
@@ -404,6 +405,16 @@ var view = {
         timeline_container.appendChild(dividing_line);
       });
     }
+  },
+  openModal(modal) {
+    modal.style.display = "block";
+    move();
+    setTimeout(() => {
+      view.closeModal(modal);
+    }, 2000);
+  },
+  closeModal(modal) {
+    modal.style.display = "none";
   }
 };
 // Object containing season.season_text and season.season_code
@@ -515,6 +526,9 @@ var handlers = {
     var home_team_icon = document.getElementById("home_icon");
     var away_team_icon = document.getElementById("away_icon");
 
+    // Modal
+    var modal_el = document.getElementById("modal");
+
     var home_match_details_element = document.getElementById(
       "home_match_details"
     );
@@ -559,6 +573,7 @@ var handlers = {
           view.showResults(new_match);
         }
       } else {
+        view.openModal(modal_el);
         stats_model.events = [];
         home_team_object = new Team(
           selected_fixture.Home,
@@ -572,7 +587,9 @@ var handlers = {
         );
         new_match = new Match(home_team_object, away_team_object);
 
-        view.showResults(new_match);
+        setTimeout(() => {
+          view.showResults(new_match);
+        }, 2000);
       }
     });
     clear_button.addEventListener("click", ev => {
@@ -1166,6 +1183,21 @@ function identifyEventType(event_code) {
       break;
   }
   return event_obj;
+}
+
+function move() {
+  var elem = document.getElementById("myBar");
+  var width = 1;
+  var id = setInterval(frame, 5);
+  function frame() {
+    if (width >= 100) {
+      whistle.play();
+      clearInterval(id);
+    } else {
+      width++;
+      elem.style.width = width + "%";
+    }
+  }
 }
 
 // 10-02-19 11pm
