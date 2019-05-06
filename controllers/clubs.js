@@ -64,6 +64,18 @@ club_router.get("/get/clubs", (req, res) => {
   );
 });
 
+// Endpoint to get ALL clubs in ALL leagues
+
+club_router.get("/get/all/clubs", (req, res) => {
+  Club.find({}, (err, clubs) => {
+    if (!err) {
+      res.status(200).send({ message: "Query successful!", results: clubs });
+    } else {
+      res.status(409).send({ message: "Error in gettign clubs!", err: err });
+    }
+  });
+});
+
 // Endpoint used to update a Club's ratings at the end of a season
 club_router.post("/update/club", (req, res) => {
   let club = req.body.club;
