@@ -1,6 +1,8 @@
 const express = require("express"),
   app = express(),
   path = require("path"),
+  http = require("http").Server(app),
+  io = require("socket.io")(http),
   bodyparser = require("body-parser"),
   router = require("./controllers/router"),
   mongoose = require("mongoose");
@@ -33,6 +35,10 @@ mongoose.connection.once("open", () => {
 
 app.use("/", router);
 
+io.on("connection", socket => {
+  console.log("Connection made ", socket.client.id);
+});
+
 // app.use("/match", match_router);
 // app.use("/data", data_router);
 
@@ -45,6 +51,6 @@ app.use("/", router);
 //   res.sendFile(path.join(__dirname, "view/404.html"));
 // });
 
-app.listen("4200", "localhost", () => {
+http.listen("4200", "0.0.0.0", () => {
   console.log(`Server started successfully at :) 4200`);
 });
